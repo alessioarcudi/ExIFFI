@@ -182,6 +182,37 @@ def dataset(name, path = "../data/"):
     
     return X,y
 
+def csv_dataset(name, path = "../data/"):
+    """
+    Upload a dataset from a .csv file. This function was used for the Diabetes and Moodify datasets. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name :         string
+        Dataset's name
+    path:          string
+        Path of the .csv file containing the dataset
+
+    Returns
+    -------
+    X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
+        
+    """
+    datapath = path + name + ".csv"
+    data=pd.read_csv(datapath,index_col=0)
+    if 'Unnamed: 0' in data.columns:
+        data=data.drop(columns=['Unnamed: 0'])
+    
+    X=data[data.columns[data.columns!='Target']]
+    y=data['Target']
+    
+    X,y = drop_duplicates(X,y)
+    print(name, "\n")
+    print_dataset_resume(X,y)
+    
+    return X,y
+
 def print_dataset_resume(X,y):
     """
     Print some useful information about a dataset loaded using the dataset(name,path) function 
