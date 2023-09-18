@@ -4,8 +4,9 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sklearn
 
-from models.Extended_DIFFI import Extended_DIFFI
-from models.forests import *
+from models.Extended_DIFFI_original import *
+from models.Extended_IF import * 
+#from models.forests import *
 
 #from utils.utils import *
 from utils import *
@@ -13,6 +14,49 @@ from utils import *
 #functions used in the feature selection tasks
             
 def compute_feature_selection(importances, dim, X, X_train, y, y_train, precision, n_trees, name, feature_ranking_algorithm):
+    """
+    Compute and save in pkl files the information needed to obtain the Feature Selection Plot. For each different set of input features compute 
+    the Average Precision of the EIF_plus model on multiple executions. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+
+    importances: dict
+            Dictionary containing the Importance Scores sorted in decreasing order, obtained from the make_importances_file function
+    
+    dim: int
+            Number of features in the dataset
+
+    X: pd.DataFrame
+            Input dataset
+    
+    X_train: pd.DataFrame
+            Training Set for the Isolation-based models.
+    
+    y: np.array
+            Input labels
+
+    y_train: np.array 
+            Training Set labels
+
+    precision: int
+            Number of executions used to compute the Average Precision values
+
+    n_trees: int
+            Number of trees to use in the definition of the EIF_plus model
+    
+    name: string
+            Dataset's name
+
+    feature_ranking_algorithm: string
+            Name of the Feature Ranking Algorithm used to perform Feature Selection
+
+    Returns
+    ----------
+    A dictionary containing the Average Precision scores for each different set of input features is saved in a pkl file. 
+    """
+
     # Casual Feature Selection -> remove a random feature at every step 
     if feature_ranking_algorithm=="casual":
         precisionsEIF=[]
@@ -29,7 +73,7 @@ def compute_feature_selection(importances, dim, X, X_train, y, y_train, precisio
                     X_red,y_red = X[:,l],y
                     X_red_train,y_red_train=drop_duplicates(X_red_train,y_red_train)
                     X_red,y_red = drop_duplicates(X_red,y_red)
-                    EIF = ExtendedIsolationForest(n_estimators=n_trees,plus=1)
+                    EIF=ExtendedIF(n_trees=n_trees,plus=1)
                     EIF.fit(X_red_train)
                     score = EIF.predict(X_red)
                     avg_prec = sklearn.metrics.average_precision_score(y_red,score)
@@ -57,7 +101,7 @@ def compute_feature_selection(importances, dim, X, X_train, y, y_train, precisio
             for s in range(precision):
             
                 try:
-                    EIF = ExtendedIsolationForest(n_estimators=n_trees,plus=1)
+                    EIF=ExtendedIF(n_trees=n_trees,plus=1)
                     EIF.fit(X_red_train)
                     score = EIF.predict(X_red)
                     avg_prec = sklearn.metrics.average_precision_score(y_red,score)
@@ -77,6 +121,22 @@ def compute_feature_selection(importances, dim, X, X_train, y, y_train, precisio
 #Load the results from the pkl files            
 
 def open_precisions(name,feature_ranking_algorithm):
+    """
+    Load the pkl file obtained from the compute_feature_selection function
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name: string
+            Dataset's name
+
+    feature_ranking_algorithm: string
+            Name of the Feature Ranking Algorithm used to perform Feature Selection
+
+    Returns
+    ----------
+    precisionsEIF: Dictionary with Average Precision values for different input sets of features. 
+    """
     #path = '../results/feature_selection/results/AvgPrecisions/'+ feature_ranking_algorithm + '_' + name
     path = 'c:\\Users\\lemeda98\\Desktop\\PHD Information Engineering\\ExIFFI\\ExIFFI\\results\\feature_selection\\results\\Precisions_davide\\'+ feature_ranking_algorithm + '_' + name
     with open(path, "rb") as f:
@@ -85,8 +145,26 @@ def open_precisions(name,feature_ranking_algorithm):
 
 
 
+def plot_featsel(precisions_dict,name,pwd):
+    """
+    Obtain the Feature Selection plot exploiting the information collected with the compute_feature_selection function 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    precisions_dict: dict
+            Average Precision dicitonary loaded with the open_precisions function 
+    
+    name: string
+            Dataset's name
 
-def plot_featsel(precisions_dict, name,pwd):
+    pwd: string
+            Current working directory
+
+    Returns
+    ----------
+    Feature Selection Plot. The plot is also saved locally as a PDF on the machine executing the code.  
+    """
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
     #markers = ["P","s","o","v","*","+"]
     c=0
@@ -120,10 +198,20 @@ def plot_featsel(precisions_dict, name,pwd):
     plt.show()
     
     
-    
-    
-        
 def Random_Forest_Feature_importance(name):
+    """
+    Obtain the dataset's input features sorted in decreasing order of importance according to the Random Forest model. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name: string
+            Dataset's name
+    Returns
+    ----------
+    feature_dictionary[name]: pd.Series
+            Dataset's input features in decreasing order of importance according to the Random Forest model   
+    """
     feature_dictionary={"annthyroid"    :    pd.Series([1,5,3,2,4,0]),
                         "breastw"       :    pd.Series([1,5,2,6,7,4,0,3,8]),
                         "cardio"        :    pd.Series([17,6,7,16,9,18,8,19,11,10,3,13,12,0,1,2,4,14,20,5,15]),
@@ -146,6 +234,21 @@ def Random_Forest_Feature_importance(name):
 
 
 def Random_Forest_Feature_importance_scaled(name):
+    """
+    Obtain the dataset's input features sorted in decreasing order of importance according to the Random Forest model.
+    Differently from the Random_Forest_Feature_importance function in this case the importance scores, used to obtain the 
+    feature ranking, are obtained scaling the training set before training. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name: string
+            Dataset's name
+    Returns
+    ----------
+    feature_dictionary[name]: pd.Series
+            Dataset's input features in decreasing order of importance according to the Random Forest model   
+    """
 
     feature_dictionary={
         'wine': pd.Series([12,0,6,3,5,4,9,11,10,8,2,7,1]),
@@ -167,10 +270,10 @@ def Random_Forest_Feature_importance_scaled(name):
     return feature_dictionary[name]
 
 
-
+''' 
 def ExDIFFI_importances(name):
     path = '../results/compare_features/results/Importances_dict/depth-based/'+name+".pkl"
     with open(path, 'rb') as f:
         Importances = pickle.load(f)
     return pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["E-DIFFI"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
-    
+'''
