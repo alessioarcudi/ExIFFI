@@ -9,27 +9,58 @@ import sklearn
 
 from models.Extended_DIFFI_original import *
 
-from DIFFI_master.interpretability_module import diffi_ib
+from models.interpretability_module import diffi_ib
 
 #from utils.utils import *
 
 #functions used for the compare feature task
-    
-    
+
+''' 
 def make_confidence_interval_file(Importances, imp_alg, name):
     K = np.array([x.values.T[0] for x in Importances[imp_alg]["importances"]])
     M = mean_confidence_interval_importances(np.array(K).T)
     path = '../results/compare_features/results/conf_interval/'+imp_alg+"_"+name+".pkl"
     with open(path, 'wb') as f:
         pickle.dump(M, f)
+'''
         
 def create_Importances_dict(n_trees, precision, subsample_size, X_train, X_test, y, name):
-    '''
-    Importances = { "ExIFFI":{"importances":[],"robustness":[]},
-                    "ExDIFFI":{"importances":[],"robustness":[]},
-                    "DIFFI":{"importances":[],"robustness":[]}
-                }
-    '''
+    """
+    Create a dictionary with the importances scores of the IF,EIF,EIF_plus models over multiple executions
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    n_trees: int
+            Number of trees to use in the definition of the Isolation-based models 
+
+    precision: int
+            Number of executions used to compute the Importance scores
+
+    subsample_size: int
+            Subsample size used in the Isolation-based models. 
+
+    X_train: pd.DataFrame
+            Training Set for the Isolation-based models. 
+
+    X_test: pd.DataFrame
+            Test Set for the Isolation-based models.
+    
+    y: np.array
+            Dataset labels
+    
+    name: string
+            Dataset's name
+
+    Returns
+    ----------
+    Importances: dict
+            Dictionary with the Importances scores. This dictionary is also saved in a pkl file locally on the machine.  
+    
+    score: dict
+            Dictionary with the same structure as Importances but containing the Average Precision metric values. 
+        
+    """
 
     Importances = { "ExIFFI":{"importances":[]},
                    "ExIFFI_plus":{"importances":[]},
@@ -92,13 +123,31 @@ def create_Importances_dict(n_trees, precision, subsample_size, X_train, X_test,
     return Importances,score
 
 def make_importances_file(Importances,name):
+    """
+    Save in a pkl the average Importance Scores computed with the create_Importances_dict function 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    Importances: dict
+            Importance Scores dictionary obtained with the create_Importances_dict function 
+    
+    name: string
+            Dataset's name
+
+    Returns
+    ----------
+    Save in a pkl file a tuple with the average Importances Scores, sorted in decreasing order, for the IF,EIF and EIF_plus models.  
+        
+    """
     importances_e_diffi=pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["ExIFFI"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
     importances_e_diffi_plus=pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["ExIFFI_plus"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
     #importances_ediffi_depth=pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["ExDIFFI"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
     importances_diffi=pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["DIFFI"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
     with open('c:\\Users\\lemeda98\\Desktop\\PHD Information Engineering\\ExIFFI\\ExIFFI\\results\\compare_features\\results\\Importances_davide\\importances_'+name,'wb') as f:
         pickle.dump((importances_e_diffi,importances_e_diffi_plus,importances_diffi), f)
-        
+
+'''     
 def create_robustness_dict(precision,Importances,name):
     Robustness = {"cosine":{"ExIFFI":[],"ExDIFFI":[],"DIFFI":[]},
                   "kendall":{"ExIFFI":[],"ExDIFFI":[],"DIFFI":[]}
@@ -127,7 +176,8 @@ def create_robustness_dict(precision,Importances,name):
     with open(path, 'wb') as f:
         pickle.dump(Robustness, f)
     return Robustness 
-     
+'''
+''' 
 def create_comparison_dict(precision,Importances,name):
     results = {"ExIFFI_ExDIFFI":{"cosine":[],"kendall":[]},
            "ExIFFI_DIFFI":{"cosine":[],"kendall":[]},
@@ -155,6 +205,8 @@ def create_comparison_dict(precision,Importances,name):
         pickle.dump(results, f)   
              
     return results
+'''
+''' 
 
 def load_variables(pwd,name):
     path = '../results/compare_features/results/Importances_dict/'+name+".pkl"
@@ -167,6 +219,7 @@ def load_variables(pwd,name):
     with open(path, 'rb') as f:
         Comparison = pickle.load(f)    
     return Importances,Robustness,Comparison
+'''
 
 
     
