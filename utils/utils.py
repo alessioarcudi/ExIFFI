@@ -101,14 +101,26 @@ def extract_order(X):
     X=X.sort_values()
     return X.index
 
+class MatFileDataset:
 
-''' 
-def cosine_ordered_similarity(v,u):
-    v=np.exp((np.array(v)/np.array(v).max()))-1/(np.exp(1)-1)
-    u=np.exp((np.array(u)/np.array(u).max()))-1/(np.exp(1)-1)
-    S=1-(v).dot(u)/(np.sqrt(v.dot(v)*u.dot(u)))
-    return S
-'''
+    def __init__(self):
+        self.X = None
+        self.y = None
+        self.shape = None
+        self.datasets = data
+
+    def load(self, name: str):
+        self.name = name
+        try:
+            mat = loadmat(self.name)
+        except NotImplementedError:
+            mat = mat73.loadmat(self.name)
+
+        self.X = mat['X']
+        self.y = mat['y'].reshape(-1, 1)
+        self.shape = self.X.shape
+        self.perc_anomalies = float(sum(self.y) / len(self.y))
+        self.n_outliers = sum(self.y)
 
         
 def drop_duplicates(X,y):
@@ -259,4 +271,11 @@ def get_extended_test(n_pts,n_anomalies,cluster_distance,n_dim,anomalous_dim = [
     return X,y
 '''
 
+''' 
+def cosine_ordered_similarity(v,u):
+    v=np.exp((np.array(v)/np.array(v).max()))-1/(np.exp(1)-1)
+    u=np.exp((np.array(u)/np.array(u).max()))-1/(np.exp(1)-1)
+    S=1-(v).dot(u)/(np.sqrt(v.dot(v)*u.dot(u)))
+    return S
+'''
         
