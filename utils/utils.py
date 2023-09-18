@@ -4,8 +4,9 @@ import scipy
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
 from numba import jit
 
-import sys;sys.path.append("..//DIFFI_master")
-from interpretability_module import diffi_ib
+import sys;
+#sys.path.append("..//models")
+from models.interpretability_module import diffi_ib
 #from utils.simulation_setup import MatFileDataset
 from simulation_setup import MatFileDataset
 
@@ -62,6 +63,7 @@ def c_factor(n):
     """
     return 2.0*(np.log(n-1)+0.5772156649) - (2.0*(n-1.)/(n*1.0))
 
+#Remove?
 
 def mean_confidence_interval_importances(l, confidence=0.95):
     """
@@ -87,6 +89,8 @@ def mean_confidence_interval_importances(l, confidence=0.95):
         M.append((m, m-h, m+h))
     return M
 
+#Remove?
+
 def extract_order(X):
     X=X.sort_values(by=[0])
     X.reset_index(inplace=True)
@@ -97,20 +101,55 @@ def extract_order(X):
     X=X.sort_values()
     return X.index
 
+
+''' 
 def cosine_ordered_similarity(v,u):
     v=np.exp((np.array(v)/np.array(v).max()))-1/(np.exp(1)-1)
     u=np.exp((np.array(u)/np.array(u).max()))-1/(np.exp(1)-1)
     S=1-(v).dot(u)/(np.sqrt(v.dot(v)*u.dot(u)))
     return S
+'''
 
         
 def drop_duplicates(X,y):
+    """
+    Drop duplicate rows from a dataset
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    X :         pd.DataFrame
+        Input dataset
+    y:          np.array
+        Dataset labels
+
+    Returns
+    -------
+    X,y:      Updated dataset and labels after the duplicates removal
+        
+    """
     S=np.c_[X,y]
     S=pd.DataFrame(S).drop_duplicates().to_numpy()
     X,y = S[:,:-1], S[:,-1]
     return X,y
 
 def dataset(name, path = "../data/"):
+    """
+    Upload a dataset from a .mat file 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name :         string
+        Dataset's name
+    path:          string
+        Path of the .mat file containing the dataset
+
+    Returns
+    -------
+    X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
+        
+    """
     try: 
         datapath = path + name + ".mat"
     except FileNotFoundError:
@@ -132,6 +171,22 @@ def dataset(name, path = "../data/"):
     return X,y
 
 def print_dataset_resume(X,y):
+    """
+    Print some useful information about a dataset loaded using the dataset(name,path) function 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    X :         pd.DataFrame
+        Input dataset
+    y:          np.array
+        Dataset's labels
+
+    Returns
+    -------
+    Print a message to the screen with some information about the dataset: number of elements, contamination factor, number of features and number of outliers
+        
+    """
     n_sample=int(X.shape[0])
     perc_outliers=sum(y)/X.shape[0]
     size=int(X.shape[1])
@@ -139,6 +194,22 @@ def print_dataset_resume(X,y):
     print("[numero elementi = {}]\n[percentage outliers = {}]\n[number features = {}]\n[number outliers = {}]".format(n_sample,perc_outliers,size,n_outliers))
 
 def downsample(X,y):
+    """
+    Downsample a dataset in case it contains more than 2500 samples 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    X :         pd.DataFrame
+        Input dataset
+    y:          np.array
+        Dataset's labels
+
+    Returns
+    -------
+    X,y: Downsamples dataset and labels 
+        
+    """
     if len(X)>2500:
         print("downsampled to 2500")
         sss = SSS(n_splits=1,test_size=1-2500/len(X))
@@ -148,11 +219,28 @@ def downsample(X,y):
     return X,y
 
 def partition_data(X,y):
+    """
+    Partition a dataset in the set of inliers and the set of outliers according to the dataset labels. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    X :         pd.DataFrame
+        Input dataset
+    y:          np.array
+        Dataset's labels
+
+    Returns
+    -------
+    inliers,outliers: Returns two subsets of the input dataset X: one containing the inliers, the other containing the outliers. 
+        
+    """
     inliers=X[y==0,:]
     outliers=X[y==1,:]
     return inliers,outliers
 
 
+''' 
 def get_extended_test(n_pts,n_anomalies,cluster_distance,n_dim,anomalous_dim = [0]):
     #not_anomalous_dim     = np.setdiff1d(np.arange(n_dim),anomalous_dim)
     X1 = np.random.randn(n_pts,n_dim) + cluster_distance
@@ -169,5 +257,6 @@ def get_extended_test(n_pts,n_anomalies,cluster_distance,n_dim,anomalous_dim = [
     X = np.vstack([X1,X2])
     y = np.hstack([y1,y2])
     return X,y
+'''
 
         
