@@ -155,27 +155,6 @@ data = pd.DataFrame([['Lympho', 148, 18, 6, 0.041],
                      ['Heart', 224, 44, 10, 0.044]],
   columns=['Dataset', 'points', 'n_features', 'outliers', '(%)'])
 
-class MatFileDataset:
-
-    def __init__(self):
-        self.X = None
-        self.y = None
-        self.shape = None
-        self.datasets = data
-
-    def load(self, name: str):
-        self.name = name
-        try:
-            mat = loadmat(self.name)
-        except NotImplementedError:
-            mat = mat73.loadmat(self.name)
-
-        self.X = mat['X']
-        self.y = mat['y'].reshape(-1, 1)
-        self.shape = self.X.shape
-        self.perc_anomalies = float(sum(self.y) / len(self.y))
-        self.n_outliers = sum(self.y)
-
 
 def generating_toy_examples():
     np.random.seed(0)
