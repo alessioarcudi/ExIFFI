@@ -3,6 +3,7 @@ import pickle
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sklearn
+from sklearn.ensemble import RandomForestClassifier
 
 from models.Extended_DIFFI_original import *
 from models.Extended_IF import * 
@@ -200,7 +201,8 @@ def plot_featsel(precisions_dict,name,pwd):
     
 def Random_Forest_Feature_importance(name):
     """
-    Obtain the dataset's input features sorted in decreasing order of importance according to the Random Forest model. 
+    Obtain the dataset's input features sorted in decreasing order of importance according to the Random Forest model.
+    The hardcoded Series composing the feature_dictionary dictionary were obtained using the compute_rf_feat_imp function.  
     --------------------------------------------------------------------------------
     
     Parameters
@@ -232,12 +234,48 @@ def Random_Forest_Feature_importance(name):
                         }
     return feature_dictionary[name]
 
+def compute_rf_feat_imp(name):
+    ''' 
+    Obtain the input features of a specific dataset sorted in decreasing order of importance according to the Random Forest model. 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name: string
+            Dataset's name
+    Returns
+    ----------
+    RF.feature_importances_.argsort()[::-1]: np.array
+            Input features of the input dataset sorted in decreasing order of Feature Importance
+    '''        
+    os.chdir('c:\\Users\\lemeda98\\Desktop\\PHD Information Engineering\\ExIFFI\\ExIFFI\\data')
+    if name=='diabetes' or name=='moodify':
+        X,y=csv_dataset(name,os.getcwd()+'\\')
+    else:
+        X,y=dataset(name,os.getcwd()+'\\')
+
+    X,y=downsample(X,y)
+    X_train,X_test=partition_data(X,y)
+    scaler=StandardScaler()
+    X=np.r_[X_train,X_test]
+    X=scaler.fit_transform(X)
+    y_train=np.zeros(X_train.shape[0])
+    y_test=np.ones(X_test.shape[0])
+    y=np.concatenate([y_train,y_test])
+
+    RF=RandomForestClassifier(n_estimators=200)
+    RF.fit(X,y)
+
+    return RF.feature_importances_.argsort()[::-1]
+
+
 
 def Random_Forest_Feature_importance_scaled(name):
     """
     Obtain the dataset's input features sorted in decreasing order of importance according to the Random Forest model.
     Differently from the Random_Forest_Feature_importance function in this case the importance scores, used to obtain the 
-    feature ranking, are obtained scaling the training set before training. 
+    feature ranking, are obtained scaling the training set before training.
+    The hardcoded Series composing the feature_dictionary dictionary were obtained using the compute_rf_feat_imp function.
     --------------------------------------------------------------------------------
     
     Parameters
@@ -268,12 +306,3 @@ def Random_Forest_Feature_importance_scaled(name):
     }
 
     return feature_dictionary[name]
-
-
-''' 
-def ExDIFFI_importances(name):
-    path = '../results/compare_features/results/Importances_dict/depth-based/'+name+".pkl"
-    with open(path, 'rb') as f:
-        Importances = pickle.load(f)
-    return pd.DataFrame(np.mean(np.array([x.to_numpy() for x in Importances["E-DIFFI"]["importances"]]),axis=0)).sort_values(by=[0],ascending=False)
-'''
