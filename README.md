@@ -1,7 +1,7 @@
 # ExIFFI
 
 The Python script and Jupyter Notebooks composing this Repository contain the code used to produce the results presented in the "ExIFFI and EIF+: Interpretability and Enhanced Generalizability to Extend the
-Extended Isolation Forest" paper. 
+Extended Isolation Forest" paper https://arxiv.org/abs/2310.05468. 
 
 ## Repository Organization 
 
