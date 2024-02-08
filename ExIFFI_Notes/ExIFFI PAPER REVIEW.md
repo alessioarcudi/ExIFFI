@@ -156,6 +156,8 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 - [x] [Possible solution to the Zoom Share Screen issue](https://technoracle.com/how-to-fix-zoom-screen-sharing-on-ubuntu-22-04-quickly/)
 
 - [x] Try to organize better the GitHub repository so that also Alessio can work on that 
+	- [ ] Create Obsidian Vault to and add it to the Git Repository
+
 
 - [ ] Organize better the code to optimize it.
 	- [x] Written `make_importance` function in C with `OpenMP` → up to 130 times faster  
