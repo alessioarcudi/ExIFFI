@@ -234,7 +234,7 @@ def print_dataset_resume(X,y):
     perc_outliers=sum(y)/X.shape[0]
     size=int(X.shape[1])
     n_outliers=int(sum(y))
-    print("[numero elementi = {}]\n[percentage outliers = {}]\n[number features = {}]\n[number outliers = {}]".format(n_sample,perc_outliers,size,n_outliers))
+    print("[number of samples = {}]\n[percentage outliers = {}]\n[number features = {}]\n[number outliers = {}]".format(n_sample,perc_outliers,size,n_outliers))
 
 def downsample(X,y):
     """

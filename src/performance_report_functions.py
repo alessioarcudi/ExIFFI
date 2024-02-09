@@ -4,8 +4,9 @@ import os
 import pickle
 from tqdm import tqdm
 import sys;
-#sys.path.append("..//models")
+sys.path.append("../models")
 from models.Extended_IF import *
+from models.forests import * 
 import sklearn
 from sklearn.metrics import precision_score,recall_score,accuracy_score,balanced_accuracy_score,f1_score,average_precision_score,roc_auc_score
 from sklearn.ensemble import IsolationForest
