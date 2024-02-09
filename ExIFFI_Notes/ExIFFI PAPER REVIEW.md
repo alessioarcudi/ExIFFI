@@ -170,7 +170,7 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 - [ ] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
 	
-- [ ] Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD. See [here](https://pyod.readthedocs.io/en/latest/pyod.models.html) 
+- [x] Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD. See [here](https://pyod.readthedocs.io/en/latest/pyod.models.html) 
 
 	
 - [ ] Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]. 
@@ -212,9 +212,9 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 	- [x] Written `make_importance` function in C with `OpenMP` → up to 130 times faster  
 	- [x] <span style="color:red;">Add the new features inserted in the plot functions for inserting DIFFI in PyOD</span>
 	- [ ]  <span style="color:green;">Reboot and review old code</span> 
-- [ ] <span style="color:red;">Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD</span>
+- [x] <span style="color:red;">Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD</span>
 
-- [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]].</span> 
+- [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are </span>[[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]  
 
 - [ ] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> 
 
