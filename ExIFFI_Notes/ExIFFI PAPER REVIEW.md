@@ -222,6 +222,7 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 
 - [ ] <span style="color:red">Reboot and review experiments code -> write on a Python script</span>
 	- [ ] <span style="color:red">Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)</span>
+- [ ] Add a `contamination` parameter in `ExtendedIsolationForest` → all the PyOD models have one. Moreover it would also help in the `_predict` function instead of having to pass it as an input parameter. 
 
 	
 
