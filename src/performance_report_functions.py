@@ -36,6 +36,39 @@ def if_predict(score,p):
     y=score>np.sort(score)[::-1][int(p*len(score))]
     return y.astype(int)
 
+def performance(model,X,y):
+    """
+    Compute the classical Classification metrics for a PyOD model
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    model: PyOD Model 
+        Instance of the PyOD model
+    X: np.array
+        Input dataset
+    y: np.array
+        Dataset labels
+    Returns
+    ----------
+    d: dict
+    Dictionary containing the Classification Performance of the model
+
+    """
+
+    y_pred=model.predict(X)
+    d={}
+    d['Precision']=sklearn.metrics.precision_score(y,y_pred) 
+    d['Recall']=sklearn.metrics.recall_score(y,y_pred) 
+    d['f1 score']=sklearn.metrics.f1_score(y,y_pred) 
+    d['Accuracy']=sklearn.metrics.accuracy_score(y,y_pred) 
+    d['Balanced Accuracy']=sklearn.metrics.balanced_accuracy_score(y,y_pred) 
+    d['Average Precision']=sklearn.metrics.average_precision_score(y,y_pred) 
+    d['ROC AUC Score']=sklearn.metrics.roc_auc_score(y,y_pred) 
+    return d,y_pred
+
+    
+
 def performance_if(y,score):
     """
     Compute the classical Classification metrics for the Isolation Forest model
