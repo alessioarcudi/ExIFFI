@@ -222,7 +222,7 @@ def dataset(name, path = "../data/"):
     
     return X,y
 
-def mat_dataset(name,path=os.getcwd()):
+def mat_dataset(name,path):
     """
     Upload a dataset from a .mat file 
     --------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ def mat_dataset(name,path=os.getcwd()):
     """
 
     try:
-        data=loadmat(name)
+        data=loadmat(path)
     except FileNotFoundError:
         print('Wrong path or file extension')
 
@@ -271,8 +271,8 @@ def csv_dataset(name,path):
     X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
         
     """
-    datapath = path + name + ".csv"
-    data=pd.read_csv(datapath,index_col=0)
+    #datapath = path + name + ".csv"
+    data=pd.read_csv(path,index_col=0)
     if 'Unnamed: 0' in data.columns:
         data=data.drop(columns=['Unnamed: 0'])
     
