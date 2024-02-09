@@ -1,8 +1,8 @@
 """
 Extended Isolation Forest model 
 """
-import sys;sys.path.append('../utils')
-from utils.utils import make_rand_vector,c_factor
+import sys;sys.path.append('../src')
+from src.utils import make_rand_vector,c_factor
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import *
