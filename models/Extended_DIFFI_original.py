@@ -285,7 +285,7 @@ class Extended_DIFFI_original(ExtendedIF):
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
         filename = current_time + '_imp_scores_' + name + '.npz'
-        path_fi = pwd_imp_score  + filename
+        path_fi = pwd_imp_score  + '/' + filename
         np.savez(path_fi,fi=fi)
 
         """ 
@@ -307,7 +307,7 @@ class Extended_DIFFI_original(ExtendedIF):
         
         # Save the plt_data dictionary in a pkl file
         filename_plt = current_time + '_plt_data_' + name + '.pkl'
-        path_plt_data = pwd_plt_data + filename_plt
+        path_plt_data = pwd_plt_data + '/' + filename_plt
         with open(path_plt_data, 'wb') as fl:
             pickle.dump(plt_data,fl)
         
@@ -362,8 +362,8 @@ class Extended_DIFFI_original(ExtendedIF):
             # Save the Importance Scores in a npz file (more efficient than pkl files if we are using Python objects)
             t = time.localtime()
             current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-            filename = current_time + '_imp_scores_global' + name + '.npz'
-            path_fi = pwd_imp_score  + filename
+            filename = current_time + '_imp_scores_' + name + '.npz'
+            path_fi = pwd_imp_score  + '/' + filename
             np.savez(path_fi,fi=fi)
                     
 
@@ -378,15 +378,22 @@ class Extended_DIFFI_original(ExtendedIF):
                             'std': std_imp[mean_imp.argsort()]}
             
             # Save the plt_data dictionary in a pkl file
-            filename_plt = current_time + '_plt_data_global' + name + '.pkl'
-            path_plt_data = pwd_plt_data + filename_plt
+            filename_plt = current_time + '_plt_data_' + name + '.pkl'
+            path_plt_data = pwd_plt_data + '/' + filename_plt
             with open(path_plt_data, 'wb') as fl:
                     pickle.dump(plt_data,fl)
             
 
             return fi,plt_data,path_fi,path_plt_data
     
-    def bar_plot(self,imps_path: str, name: str, pwd: str =os.getcwd(),f: int = 6,col_names = None, is_local: bool=False, save: bool =True):
+    def bar_plot(self,
+                 imps_path: str,
+                 name: str,
+                 pwd: str =os.getcwd(),
+                 f: int = 6,
+                 col_names = None,
+                 is_local: bool=False,
+                 save: bool =True):
         """
         Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
         
@@ -671,13 +678,13 @@ class Extended_DIFFI_original(ExtendedIF):
                                  X_train: np.array,
                                  y_train: np.array,
                                  resolution: int,
-							    pwd: str =os.getcwd(),
-                                save: bool =True,
-                                m: bool =None,
-                                factor: int =3, 
-							    col_names=None,
-                                ax=None,
-                                labels: bool=True):
+                                 pwd: str =os.getcwd(),
+                                 save: bool =True,
+                                 m: bool =None,
+                                 factor: int =3, 
+                                 col_names=None,
+                                 ax=None,
+                                 labels: bool=True):
           
             """Stub method of plot_importance_map used to give the user the possibility of specifying the names of the features to compare in the Scoremap.
             
@@ -697,10 +704,10 @@ class Extended_DIFFI_original(ExtendedIF):
             labels: Boolean variable used to decide weather to include the x and y label name in the plot.
             """
             
-            feats_plot=tuple((X.columns.get_loc(col_names[0]),X.columns.get_loc(col_names[1])))
+            feats_plot=[X.columns.get_loc(col_names[0]),X.columns.get_loc(col_names[1])]           
             col_names=list(X.columns)
 
-            return self.plot_importance_map(name,X_train,y_train,resolution,pwd,save,m,factor,feats_plot,col_names,ax,labels)
+            return self.importance_map(name,X_train,y_train,resolution,pwd,save,m,factor,feats_plot,col_names,ax,labels)
 	 
 
     def complete_scoremap(self,
@@ -731,10 +738,10 @@ class Extended_DIFFI_original(ExtendedIF):
         for i in range(dim):
             for j in range(i+1,dim):
                     features = [i,j] 
-                    _,_=self.plot_importance_map(name,X, y, 50, pwd, feats_plot = (features[0],features[1]), ax=ax[i,j],save=False,labels=False)
+                    _,_=self.importance_map(name,X, y, 50, pwd, feats_plot = (features[0],features[1]), ax=ax[i,j],save=False,labels=False)
                     if half:
                         continue
-                    _,_=self.plot_importance_map(name,X, y, 50, pwd, feats_plot = (features[1],features[0]), ax=ax[j,i],save=False,labels=False)
+                    _,_=self.importance_map(name,X, y, 50, pwd, feats_plot = (features[1],features[0]), ax=ax[j,i],save=False,labels=False)
 
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
