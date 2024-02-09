@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 import scipy
+import os
+from scipy.io import loadmat
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
+from sklearn.preprocessing import StandardScaler
 from numba import jit
 
 import sys;
@@ -122,7 +125,44 @@ class MatFileDataset:
         self.perc_anomalies = float(sum(self.y) / len(self.y))
         self.n_outliers = sum(self.y)
 
-        
+
+def pre_process(X_train,X_test):
+    """
+    Pre processing function on the training and test set applying data normalization
+    --------------------------------------------------------------------------------
+
+    Parameters
+    ----------
+    X_train: pd.DataFrame
+        Training Set
+    X_test: pd.DataFrame
+        Test Set
+
+    Returns:
+    -------
+    X_train,X_test.X: Normalized version of the Training and Test Set and the normalized version of the 
+                        concatenation of X_train and X_test
+    """
+
+    X=np.r_[X_train,X_test]
+    scaler=StandardScaler()
+    X_train=scaler.fit_transform(X_train)
+    X_test=scaler.fit_transform(X_test)
+    y_train=np.zeros(X_train.shape[0])
+    y_test=np.ones(X_test.shape[0])
+    y=np.concatenate([y_train,y_test])
+    X_test=np.r_[X_train,X_test]
+    scaler2=StandardScaler()
+
+    """
+    This X here will have the same shape as X_test but it is obtained scaling X_train and X_test 
+    considered together
+    """
+
+    X=scaler2.fit_transform(X)
+    return X_train,X_test,X
+
+
 def drop_duplicates(X,y):
     """
     Drop duplicate rows from a dataset
@@ -182,7 +222,39 @@ def dataset(name, path = "../data/"):
     
     return X,y
 
-def csv_dataset(name, path = "../data/"):
+def mat_dataset(name,path=os.getcwd()):
+    """
+    Upload a dataset from a .mat file 
+    --------------------------------------------------------------------------------
+    
+    Parameters
+    ----------
+    name :         string
+        Dataset's name
+    path:          string
+        Path of the .mat file containing the dataset
+
+    Returns
+    -------
+    X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
+        
+    """
+
+    try:
+        data=loadmat(name)
+    except FileNotFoundError:
+        print('Wrong path or file extension')
+
+    X,y=data['X'],data['y']
+    X,y=drop_duplicates(X,y)
+
+    print(name, "\n")
+    print_dataset_resume(X,y)
+
+    return X,y 
+
+
+def csv_dataset(name,path):
     """
     Upload a dataset from a .csv file. This function was used for the Diabetes and Moodify datasets. 
     --------------------------------------------------------------------------------
