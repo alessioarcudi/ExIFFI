@@ -6,6 +6,7 @@ from matplotlib.pyplot import cm
 from matplotlib.pyplot import *
 import pickle
 from tqdm import tqdm
+import sys;sys.path.append('../models')
 
 from models.interpretability_module import local_diffi
 
