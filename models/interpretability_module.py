@@ -2,8 +2,8 @@ import numpy as np
 import time
 from math import ceil 
 import sys
-#sys.path.append("../DIFFI_master")
-from sklearn_mod_functions import *
+sys.path.append("../models")
+from models.sklearn_mod_functions import *
 
 
 def diffi_ib(iforest, X, adjust_iic=True): # "ib" stands for "in-bag"
