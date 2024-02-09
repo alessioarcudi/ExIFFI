@@ -4,8 +4,11 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.pyplot import cm
 from matplotlib.pyplot import *
+import pickle
+from tqdm import tqdm
 
 from models.interpretability_module import local_diffi
+
 
 def plt_importances_bars(importances, name, pwd, dim, f = 6):
     """
@@ -38,7 +41,7 @@ def plt_importances_bars(importances, name, pwd, dim, f = 6):
     importances_matrix = np.array([np.array(pd.Series(x).sort_values(ascending = False).index).T for x in importances])
     bars = [[(list(importances_matrix[:,j]).count(i)/len(importances_matrix))*100 for i in range(dim)] for j in range(dim)]
     bars = pd.DataFrame(bars)
-    display(bars)
+    print(bars)
 
     tick_names=[]
     for i in range(1,f+1):
