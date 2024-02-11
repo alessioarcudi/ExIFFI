@@ -647,8 +647,6 @@ class Extended_DIFFI_parallel(ExtendedIF):
 
         if show_plot:
             plt.show()
-        else:
-            plt.show(block=False)
 
         return fig, ax, bars
 
@@ -745,8 +743,6 @@ class Extended_DIFFI_parallel(ExtendedIF):
 
         if show_plot:
             plt.show()
-        else:
-            plt.show(block=False)
             
         return ax1,ax2
     
@@ -851,8 +847,6 @@ class Extended_DIFFI_parallel(ExtendedIF):
 
         if show_plot:
             plt.show()
-        else:
-            plt.show(block=False)
 
         return fig, ax
 	
@@ -941,8 +935,6 @@ class Extended_DIFFI_parallel(ExtendedIF):
 
         if show_plot:
             plt.show()
-        else:
-            plt.show(block=False)
     
         return fig,ax
 

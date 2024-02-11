@@ -14,7 +14,7 @@ append_dirname("ExIFFI")
 from glob import glob
 from scipy.io import loadmat
 
-from test_model import load_preprocess,get_filename
+from test_model import get_filename
 
 sys.path.append('../src')
 from src.utils import *
@@ -110,6 +110,14 @@ def parse_arguments():
         action="store_true",
         help="Include bash script"
     )
+
+    parser.add_argument(
+    "--filename",
+    type=str,   
+    default=None,
+    help="Filename of the output saved file. If None, it is automatically generated",
+    
+    )
     return parser.parse_args()
 
 def test_exiffi(
@@ -143,15 +151,18 @@ filename=None,
     plt_data_path = os.path.join(savedir, "plt_data")
     imp_path = os.path.join(savedir, "imps")
     plot_path = os.path.join(savedir, "plots")
+    npz_path = os.path.join(savedir,"npz")
     if not os.path.exists(savedir):
         os.makedirs(savedir)
+    if not os.path.exists(npz_path):
+        os.makedirs(npz_path)
     if not os.path.exists(imp_path):
         os.makedirs(imp_path)
     if not os.path.exists(plt_data_path):
         os.makedirs(plt_data_path)
     if not os.path.exists(plot_path):
         os.makedirs(plot_path)
-    filepath = os.path.join(savedir, filename)
+    filepath = os.path.join(npz_path, filename)
 
     EDIFFI = Extended_DIFFI_parallel(
         n_trees=n_trees, max_depth=100, subsample_size=256, plus=1
@@ -160,6 +171,7 @@ filename=None,
 
     start=time.time()
     # Compute the global importances
+    print('Computing Global Importances')
     fi,plt_data,fi_path,plt_data_path=EDIFFI.compute_global_importances(X_test,
                                                                         n_runs,
                                                                         name,
@@ -171,16 +183,24 @@ filename=None,
                                                                         )
     
     # Produce the Bar Plot
-    _,_,bars=EDIFFI.bar_plot(fi_path,name,plot_path)
+    print('Producing Bar Plot')
+    fig,ax,bars=EDIFFI.bar_plot(fi_path,name,plot_path,show_plot=False)
+    print(f'Bar Plot saved in {plot_path}')
 
     # Produce the Score Plot 
-    _,_,_=EDIFFI.score_plot(plt_data_path,name,plot_path)
+    print('Producing Score Plot')
+    ax1,ax2=EDIFFI.score_plot(plt_data_path,name,plot_path,show_plot=False)
+    print(f'Score Plot saved in {plot_path}')
 
     # Produce the Importance Scoremap
-    _,_=EDIFFI.importance_map(name,X_test,y_test,30,plot_path)
+    print('Producing Importance Scoremap')
+    fig,ax=EDIFFI.importance_map(name,X_test,y_test,30,plot_path,show_plot=False)
+    print(f'Importance Map saved in {plot_path}')
 
     # Produce the Complete Scoremap
-    _,_=EDIFFI.complete_scoremap(name,X_test.shape[1],X_test,y_test,plot_path,half=True)
+    print('Producing Complete Scoremap')
+    fig,ax=EDIFFI.complete_scoremap(name,X_test.shape[1],X_test,y_test,plot_path,show_plot=False,half=True)
+    print(f'Complete Scoremap saved in {plot_path}')
 
     end=time.time()
     time_stat = end-start
@@ -192,7 +212,8 @@ filename=None,
     global_imp=fi,
     arguments=args,
     time=pd.Timestamp.now(),
-)
+    )
+    print(f"Results saved in {filepath}")
 
 def main(args):
     path=os.getcwd()
@@ -246,11 +267,11 @@ def main(args):
         print("#" * 60)
         print(f"DATASET: {name}")
         print("#" * 60)
-        X_train,X_test,X,_,y_test=load_preprocess(name,dataset_paths[name])
+        X_train,X_test,X,y=load_preprocess(name,dataset_paths[name])
         test_exiffi(
             X_train=X_train,
             X_test=X_test,
-            y_test=y_test,
+            y_test=y,
             savedir=args.savedir,
             n_cores_fit=n_cores_fit,
             n_cores_importance=n_cores_importance,
