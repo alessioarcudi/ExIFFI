@@ -22,12 +22,17 @@ We need two Python Script for two different kind of experiments:
 We can use these experiments to conduct the Ablation Studies on ExIFFI: 
 
 - Change the contamination factor in the training set → In the DIF paper they used 11 contamination factors between 0 and 10%. So we can do something like `np.linspace(0,10,11)` → so $[0,1,2,3,\dots,10]$
-- Use a different percentage to divide into inliers and outliers to compute GFI in the `Global_Importance` function → use the same set of contamination values reported above 
+	- Use a different percentage to divide into inliers and outliers to compute GFI in the `Global_Importance` function → use the same set of contamination values reported above 
+
+> [!note] 
+> These two points can be considered together → if we use a contamination factor of 0.01 we will divide inliers and outliers using a percentage of 0.01  
+
 - Use a different number of trees in the definition of the ExIFFI model: 
 	- 100 
 	- 300
 	- 600
 - Include or exclude the `depth_based` parameter 
+- Different number of runs for the GFI Computation in `compute_global_importance` method 
 - Use synthetic datasets, as done in the DIF paper, to see how the model scales to dataset of increasing size and increasing dimensionality. Use the usual synthetic dataset and perform experiments computing the execution time: 
 	- Keeping constant the sample size and increasing the dimensionality (e.g. `np.linspace(16,4096,9)`)
 	- Keeping constant the dimensionality and increasing the sample size (e.g. `np.linspace(1000,256000,9)`) 
