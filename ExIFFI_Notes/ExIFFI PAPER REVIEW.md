@@ -216,7 +216,7 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 
 - [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are </span>[[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]  
 
-- [ ] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> 
+- [ ] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> → See [[EXPERIMENT SCRIPTS]]. 
 
 ## For 22 February
 
