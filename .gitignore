@@ -1,3 +1,4 @@
 *.obsidian
 __pycache__/
 results/
+src/test.py
