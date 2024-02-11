@@ -140,8 +140,8 @@ def pre_process(X_train,X_test):
 
     Returns:
     -------
-    X_train,X_test.X: Normalized version of the Training and Test Set and the normalized version of the 
-                        concatenation of X_train and X_test
+    X_train,X_test,X,y: Normalized version of the Training and Test Set, normalized version of the 
+                        concatenation of X_train and X_test and testing labels 
     """
 
     X=np.r_[X_train,X_test]
@@ -160,8 +160,41 @@ def pre_process(X_train,X_test):
     """
 
     X=scaler2.fit_transform(X)
-    return X_train,X_test,X,y_train,y_test
+    return X_train,X_test,X,y
 
+# Load and pre process data 
+
+def load_preprocess(name:str,path:str):
+    """
+    Function loading the data from a file and pre processing it with the pre_process function 
+    --------------------------------------------------------------------------------
+
+    Parameters
+    ----------
+    name: str
+        Dataset name
+    path: str
+        Dataset path 
+
+    Returns:
+    -------
+    X_train,X_test,X,y: Normalized version of the Training and Test Set, normalized version of the 
+                        concatenation of X_train and X_test and testing labels
+    """
+    extension = os.path.splitext(path)[1]
+
+    if extension == ".csv":
+        X, y = csv_dataset(name,path)
+    elif extension == ".mat":
+        print(f'Loading {name} dataset from {path}')
+        X, y = mat_dataset(name,path)
+    else:
+        raise ValueError("Extension not supported")
+    
+    X_train,X_test=partition_data(X,y)
+    X_train,X_test,X,y=pre_process(X_train,X_test)
+
+    return X_train,X_test,X,y
 
 def drop_duplicates(X,y):
     """
