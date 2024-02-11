@@ -160,7 +160,7 @@ def pre_process(X_train,X_test):
     """
 
     X=scaler2.fit_transform(X)
-    return X_train,X_test,X
+    return X_train,X_test,X,y_train,y_test
 
 
 def drop_duplicates(X,y):
