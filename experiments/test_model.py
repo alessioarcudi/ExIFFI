@@ -1,5 +1,5 @@
 """
-Python Script to launch experiments on different models. 
+Python Script to launch the Model Comparison experiments.
 """
 import os
 import sys
@@ -17,9 +17,7 @@ append_dirname("ExIFFI")
 from glob import glob
 
 from pyod.models.dif import DIF
-from pyod.models.inne import INNE
 from pyod.models.auto_encoder import AutoEncoder
-from pyod.models.suod import SUOD
 
 from scipy.io import loadmat
 
@@ -120,23 +118,21 @@ def load_preprocess(name,path):
         raise ValueError("Extension not supported")
     
     X_train,X_test=partition_data(X,y)
-    X_train,X_test,X=pre_process(X_train,X_test)
+    X_train,X_test,X,y_train,y_test=pre_process(X_train,X_test)
 
-    return X_train,X_test,X
+    return X_train,X_test,X,y_train,y_test
 
 # Use the model name str obtained from the command line and return the model object
 
 def get_model(model_name):
     if model_name == "EIF":
-        return ExtendedIsolationForest(n_trees=args.n_trees,contamination=args.contamination,plus=0)
+        return ExtendedIsolationForest(n_estimators=args.n_trees,contamination=args.contamination,plus=0)
     elif model_name == "EIF+":
-        return ExtendedIsolationForest(n_trees=args.n_trees,contamination=args.contamination,plus=1)
+        return ExtendedIsolationForest(n_estimators=args.n_trees,contamination=args.contamination,plus=1)
     elif model_name == "IF":
         return IsolationForest(n_estimators=args.n_trees,contamination=args.contamination)
     elif model_name == "DIF":
-        return DIF(contamination=args.contamination)
-    elif model_name == "INNE":
-        return INNE(contamination=args.contamination)
+        return DIF(n_estimators=args.n_trees,contamination=args.contamination)
     elif model_name == "AutoEncoder":
         return AutoEncoder(hidden_neurons=args.hidden_neurons,contamination=args.contamination)
     else:
@@ -162,12 +158,11 @@ def evaluate_model(model_name, X_train, X_test, y, name, save_dir, filename=None
 
     return perf
 
-def get_filename(dataset_name: str):
-    partial_filename = "test_performance"
+def get_filename(dataset_name: str,partial_name="test_performance"):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     partial_filename = (
-        current_time + "_" + partial_filename + "_" + dataset_name + ".npz"
+        current_time + "_" + partial_name + "_" + dataset_name + ".npz"
     )
     return partial_filename
 
