@@ -117,11 +117,22 @@ class ExtendedTree():
     
 
 class ExtendedIsolationForest():
-    def __init__(self, plus, n_estimators=100, max_samples="auto"):
+    def __init__(self, plus, n_estimators=100, max_samples="auto", contamination="auto"):
         self.n_estimators = n_estimators
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.c_norm = c_norm(self.max_samples)
         self.plus=plus
+
+        if contamination == "auto":
+            self.contamination = 0.1
+        else:
+            if not (0 <= contamination <= 0.5):
+                raise ValueError("Contamination must be between 0 and 0.5")
+            self.contamination = contamination
+
+    @property
+    def contamination_(self):
+        return self.contamination
         
     def fit(self, X, locked_dims=None):
         subsample_size = np.min((self.max_samples,len(X)))
@@ -130,12 +141,12 @@ class ExtendedIsolationForest():
             for _ in range(self.n_estimators)
         ]
         
-    def predict(self, X):
+    def Anomaly_Score(self, X):
         return np.power(2,-np.mean([tree.predict(X) for tree in self.trees], axis=0))
     
-    def _predict(self,X,p):
-        An_score = self.predict(X)
-        y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
+    def predict(self,X):
+        An_score = self.Anomaly_Score(X)
+        y_hat = An_score > sorted(An_score,reverse=True)[int(self.contamination*len(An_score))]
         return y_hat
     
     
