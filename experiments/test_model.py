@@ -104,24 +104,6 @@ def parse_arguments():
     
     return parser.parse_args()
 
-# Load and pre process data 
-
-def load_preprocess(name,path):
-    extension = os.path.splitext(path)[1]
-
-    if extension == ".csv":
-        X, y = csv_dataset(name,path)
-    elif extension == ".mat":
-        print(f'Loading {name} dataset from {path}')
-        X, y = mat_dataset(name,path)
-    else:
-        raise ValueError("Extension not supported")
-    
-    X_train,X_test=partition_data(X,y)
-    X_train,X_test,X,y_train,y_test=pre_process(X_train,X_test)
-
-    return X_train,X_test,X,y_train,y_test
-
 # Use the model name str obtained from the command line and return the model object
 
 def get_model(model_name):
