@@ -1,3 +1,6 @@
+"""
+Python Script to launch the ExIFFI experiments.
+"""
 import os
 import sys
 import argparse
@@ -87,6 +90,35 @@ def parse_arguments():
         help="Set seed for reproducibility"
     )
 
+    # Scaler to use for the data normalization
+    parser.add_argument(
+        "--scaler",
+        type=str,
+        default="StandardScaler",
+        help="""Scaler to use for the data normalization. 
+        Accepted values: ['StandardScaler','MinMaxScaler','MaxAbsScaler','RobustScaler'],
+        default StandardScaler"""
+    )
+
+    # Distribution to use for the selection of point p in the cutting hyperplanes
+    parser.add_argument(
+        "--distribution",
+        type=str,
+        default="normal_mean",
+        help="""Distribution to use for the selection of point p in the cutting hyperplanes.
+        Accepted values: ['normal_mean','normal_median','scaled_uniform'],
+        default normal_mean"""
+    )
+
+    # Scaling factor eta in the distribution for intercept p 
+    parser.add_argument(
+        "--eta",
+        type=int,
+        default=2,
+        help="""Scaling factor used in the definition of the distribution of the intercept p in the cutting hyperplanes,
+        default 2"""
+    )
+
     # Set the number of cores to use
     parser.add_argument(
     "--n_cores",
@@ -98,13 +130,14 @@ def parse_arguments():
     + "List of 1 or 3 integers, respectively num processes of fit, importance and anomaly",
     )
 
+    # Run the wrapper for timing the code
     parser.add_argument(
     "--wrapper",
     action="store_true",
     help="If set, run the wrapper for timing the code",
     )
 
-    # add_bash
+    # add_bash -c to the command for timing the code
     parser.add_argument(
         "--add_bash",
         action="store_true",
@@ -128,6 +161,7 @@ savedir: str,
 n_cores_fit,
 n_cores_importance,
 n_cores_anomaly,
+distribution,
 n_runs=10,
 depth_based=False,
 seed=None,
@@ -168,6 +202,7 @@ filename=None,
         n_trees=n_trees, max_depth=100, subsample_size=256, plus=1
     )
     EDIFFI.set_num_processes(n_cores_fit, n_cores_importance, n_cores_anomaly)
+    set_p_distribution(EDIFFI,distribution)
 
     start=time.time()
     # Compute the global importances
@@ -250,6 +285,8 @@ def main(args):
     print(f"Number of trees: {args.n_trees}")
     print(f"Depth based: {args.depth_based}")
     print(f"Contamination Factor: {args.contamination}")
+    print(f'Distribution point p: {args.distribution}')
+    print(f'Scaler for data normalization: {args.scaler}')
     print(
         f"Number of cores: fit {n_cores_fit}, importance {n_cores_importance}, anomaly {n_cores_anomaly}"
     )
@@ -276,6 +313,7 @@ def main(args):
             n_cores_fit=n_cores_fit,
             n_cores_importance=n_cores_importance,
             n_cores_anomaly=n_cores_anomaly,
+            distribution=args.distribution,
             n_runs=args.n_runs,
             depth_based=args.depth_based,
             seed=args.seed,
