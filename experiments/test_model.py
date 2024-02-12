@@ -127,7 +127,7 @@ def parse_arguments():
     # Set the model names to be used in the experiments
     parser.add_argument(
     "--model_names",
-    nargs="+",
+    #nargs="+",
     type=str,
     default='EIF+',
     help="""List of names of models on which to run the experiments.
@@ -162,9 +162,12 @@ def parse_arguments():
 
 # Use the model name str obtained from the command line and return the model object
 
-def get_model(model_name="EIF+"):
+def get_model(model_name="EIF+",distribution="normal_mean",eta=2):
     if model_name == "EIF+":
-        return ExtendedIsolationForest(n_estimators=args.n_trees,contamination=args.contamination,plus=1)
+        model=ExtendedIsolationForest(n_estimators=args.n_trees,contamination=args.contamination,plus=1)
+        set_p_distribution(model,distribution)
+        set_p_eta(model,eta)
+        return model 
     elif model_name == "EIF":
         return ExtendedIsolationForest(n_estimators=args.n_trees,contamination=args.contamination,plus=0)
     elif model_name == "IF":
@@ -176,11 +179,11 @@ def get_model(model_name="EIF+"):
     else:
         raise ValueError(f"Model {model_name} not supported")
 
-def get_filename(dataset_name: str,partial_name="test_performance"):
+def get_filename(dataset_name: str,partial_name="test_performance",file_ext='.pkl'):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     partial_filename = (
-        current_time + "_" + partial_name + "_" + dataset_name + ".npz"
+        current_time + "_" + partial_name + "_" + dataset_name + file_ext
     )
     return partial_filename
 
@@ -221,20 +224,34 @@ def main(args):
 
     print("dataset_names", dataset_names)
 
-    print("#" * 60)
-    print('Define model:')
-    print("#" * 60)
-    print(f'Model name: {args.model_names}')
-    model=get_model(args.model_names)
-    set_p_distribution(model,args.distribution)
-    set_p_eta(model,args.eta)
-    print(f'Contamination: {model.contamination_}')
-    print(f'Distribution: {model.distribution_}')
-    print(f'Eta: {model.eta_}')
+    fname=get_filename(get_filename_suffix(dataset_names))
+    fname_path=os.path.join(args.savedir,fname)
 
-    print('Define Scaler')
-    scaler=get_scaler(args.scaler)
-    print(scaler)
+    # Compute the performances on all the datasets 
+
+    path_list=[dataset_paths[name] for name in args.dataset_names]
+    model=get_model(args.model_names)
+    print(args.model_names)
+    print(model)
+    df_perf=collect_performance_df(dataset_names,path_list,scaler=args.scaler,model=model)
+    df_perf.to_pickle(fname_path)
+
+
+
+    # print("#" * 60)
+    # print('Define model:')
+    # print("#" * 60)
+    # print(f'Model name: {args.model_names}')
+    # model=get_model(args.model_names)
+    # set_p_distribution(model,args.distribution)
+    # set_p_eta(model,args.eta)
+    # print(f'Contamination: {model.contamination_}')
+    # print(f'Distribution: {model.distribution_}')
+    # print(f'Eta: {model.eta_}')
+
+    # print('Define Scaler')
+    # scaler=get_scaler(args.scaler)
+    # print(scaler)
 
     # for name in dataset_names:
     #     print("#" * 60)
