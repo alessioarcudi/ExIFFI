@@ -30,7 +30,16 @@ class ExtendedIF():
             This parameter is used to distinguish the EIF and the EIF_plus models. If plus=0 then the EIF model 
             will be used, if plus=1 than the EIF_plus model will be considered.      
     """
-    def __init__(self, n_trees, max_depth = None, min_sample = None, dims = None, subsample_size = None, plus=1):
+    def __init__(self,
+                 n_trees,
+                 max_depth = None,
+                 min_sample = None,
+                 dims = None,
+                 subsample_size = None,
+                 contamination="auto",
+                 plus=1,
+                 distribution='normal_mean',
+                 eta=2):
         self.n_trees                    = n_trees
         self.max_depth                  = max_depth
         self.min_sample                 = min_sample
@@ -38,6 +47,45 @@ class ExtendedIF():
         self.subsample_size             = subsample_size
         self.forest                     = None
         self.plus                       = plus
+        self.distribution               = distribution
+        self.eta                        = eta
+        
+        if contamination == "auto":
+            self.contamination = 0.1
+        else:
+            if not (0 <= contamination <= 0.5):
+                raise ValueError("Contamination must be between 0 and 0.5")
+            self.contamination = contamination
+
+    @property
+    def contamination_(self):
+        return self.contamination
+    
+    @property
+    def distribution_(self):
+        return self.distributionù
+    
+    @property
+    def eta_(self):
+        return self.eta
+
+    def set_distribution(
+        self, distribution
+    ):
+        """
+        Set the distribution to use in sampling the intercept point p 
+        for the cutting hyperplane 
+        """
+        if (distribution == 'normal_mean') or (distribution == 'normal_mean') or (distribution == 'scaled_uniform'):
+                self.distribution=distribution
+        else:
+                raise ValueError(f"Distribution {distribution} not supported")
+        
+    def set_eta(self,eta): 
+        """
+        Set the scaling factor eta to use in the distribution for the intercept point p in the cutting hyperplanes
+        """
+        self.eta=eta
 
     def fit(self,X):
         """
@@ -59,7 +107,7 @@ class ExtendedIF():
         if not self.max_depth:
             self.max_depth = np.inf
 
-        self.forest = [ExtendedTree(self.dims, self.min_sample, self.max_depth,self.plus) for i in range(self.n_trees)]
+        self.forest = [ExtendedTree(self.dims, self.min_sample, self.max_depth,self.plus,self.distribution,self.eta) for i in range(self.n_trees)]
         for x in self.forest:
             if not self.subsample_size:
                 x.make_tree(X,0,0)
@@ -97,7 +145,7 @@ class ExtendedIF():
 
         return 2**(-mean_path/c)
 
-    def _predict(self,X,p):
+    def predict(self,X):
         """
         Predict the anomalous or not anomalous nature of a set of input samples
         --------------------------------------------------------------------------------
@@ -114,15 +162,15 @@ class ExtendedIF():
                 Returns 0 for inliers and 1 for outliers          
         """
         An_score = self.Anomaly_Score(X)
-        y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
+        y_hat = An_score > sorted(An_score,reverse=True)[int(self.contamination*len(An_score))]
         return y_hat
 
     #??? 
-    def evaluate(self,X,y,p):
+    def evaluate(self,X,y):
         An_score = self.Anomaly_Score(X)
         m = np.c_[An_score,y]
         m = m[(-m[:,0]).argsort()]
-        return np.sum(m[:int(p*len(X)),1])/int(p*len(X))
+        return np.sum(m[:int(self.contamination*len(X)),1])/int(self.contamination*len(X))
 
     def print_score_map(self,X,resolution,plot=None,features=[0,1]):
         '''
@@ -179,7 +227,7 @@ class ExtendedIF():
     
 class ExtendedTree():
     
-    def __init__(self,dims,min_sample,max_depth,plus):
+    def __init__(self,dims,min_sample,max_depth,plus,distribution='normal_mean',eta=2):
         ''' 
         Implementation of Isolation Trees for the EIF/EIF_plus models 
         --------------------------------------------------------------------------------
@@ -195,6 +243,10 @@ class ExtendedTree():
         plus: int
                 This parameter is used to distinguish the EIF and the EIF_plus models. If plus=0 then the EIF model 
                 will be used, if plus=1 than the EIF_plus model will be considered.
+        distribution: str
+                Distribution used to sample the intercept point p of the cutting hyperplanes, by default normal_mean
+        eta: int
+                Scaling factor used in the distribution to sample the intercept point p, by default 2
         '''
         self.dims                   = dims
         self.min_sample             = min_sample
@@ -204,6 +256,8 @@ class ExtendedTree():
         self.left_son               = [0]
         self.nodes                  = {}
         self.plus                   = plus
+        self.distribution           = distribution 
+        self.eta                    = eta
     
     def make_tree(self,X,id,depth):
         ''' 
@@ -234,7 +288,15 @@ class ExtendedTree():
             val_min = np.min(val)
             val_max = np.max(val)
             if np.random.random() < self.plus:
-                s = np.random.normal(np.mean(val),np.std(val)*2)
+                #sample intercept EIF+ with normal_mean
+                if self.distribution == 'normal_mean':
+                        s = np.random.normal(np.mean(val),np.std(val)*self.eta)
+                #sample intercept EIF+ with normal_median
+                elif self.distribution == 'normal_median':
+                        s = np.random.normal(np.median(val),np.std(val)*self.eta)
+                #sample intercept EIF+ with scaled_uniform
+                elif self.distribution == 'scaled_uniform':
+                        s = np.random.uniform(val_min/self.eta,val_max*self.eta)
             else:
                 s = np.random.uniform(val_min,val_max)
             

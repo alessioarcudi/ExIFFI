@@ -132,9 +132,36 @@ class Extended_DIFFI_parallel(ExtendedIF):
         self.sum_importances_matrix = None
         self.sum_normal_vectors_matrix = None
         self.plus = kwarg.get("plus")
+        self.distribution = kwarg.get("distribution")
+        self.eta = kwarg.get("eta")
+        self.contamination = kwarg.get("contamination")
         self.num_processes_importances = 1
         self.num_processes_fit = 1
         self.num_processes_anomaly = 1
+        self.distribution="normal_mean"
+
+    def set_num_processes(
+        self, num_processes_fit, num_processes_importances, num_processes_anomaly
+    ):
+        """
+        Set the number of processes to be used in the parallel computation
+        of the Global and Local Feature Importance.
+        """
+        self.num_processes_fit = num_processes_fit
+        self.num_processes_importances = num_processes_importances
+        self.num_processes_anomaly = num_processes_anomaly
+
+    @property
+    def contamination_(self):
+        return self.contamination
+    
+    @property
+    def distribution_(self):
+        return self.distributionù
+    
+    @property
+    def eta_(self):
+        return self.eta
 
     @staticmethod
     def make_tree_worker(forest_segment: List[Extended_DIFFI_tree], X, subsample_size):
@@ -179,6 +206,8 @@ class Extended_DIFFI_parallel(ExtendedIF):
                 min_sample=self.min_sample,
                 max_depth=self.max_depth,
                 plus=self.plus,
+                distribution=self.distribution,
+                eta=self.eta
             )
             for i in range(self.n_trees)
         ]
@@ -215,17 +244,6 @@ class Extended_DIFFI_parallel(ExtendedIF):
                     X_sub = X[indx, :]
                     x.make_tree(X_sub, 0, 0)
                     self.subsets.append(indx)
-
-    def set_num_processes(
-        self, num_processes_fit, num_processes_importances, num_processes_anomaly
-    ):
-        """
-        Set the number of processes to be used in the parallel computation
-        of the Global and Local Feature Importance.
-        """
-        self.num_processes_fit = num_processes_fit
-        self.num_processes_importances = num_processes_importances
-        self.num_processes_anomaly = num_processes_anomaly
 
     @staticmethod
     def forest_worker(forest: List[Extended_DIFFI_tree], X, depth_based):
@@ -356,7 +374,7 @@ class Extended_DIFFI_parallel(ExtendedIF):
         """
 
         anomaly_scores = self.Anomaly_Score(X)
-        ind = np.argpartition(anomaly_scores, -int(0.1 * len(X)))[-int(0.1 * len(X)) :]
+        ind = np.argpartition(anomaly_scores, -int(self.contamination * len(X)))[-int(self.contamination * len(X)) :]
         importances_matrix, normal_vectors_matrix = self.Importances(
             X, calculate, overwrite, depth_based
         )
