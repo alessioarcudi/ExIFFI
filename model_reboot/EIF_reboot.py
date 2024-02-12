@@ -73,7 +73,7 @@ def get_leaf_ids(X, child_left, child_right, normals, intercepts):
         for x in X:
             node_id = 0
             while child_left[node_id] or child_right[node_id]:
-                d = np.dot(x,normals[node_id])
+                d = np.dot(np.ascontiguousarray(x),np.ascontiguousarray(normals[node_id]))
                 node_id = child_left[node_id] if d <= intercepts[node_id] else child_right[node_id]        
             res.append(int(node_id))
         return np.array(res)
@@ -86,19 +86,22 @@ tree_spec = [
     ("n", int64),
     ("d", int64),
     ("node_count", int64),
-    ("path_to", int64[:, :]),     
+    ("path_to", int64[:, :]),
+    ("path_to_Right_Left", int64[:, :]) ,    
     ("child_left", int64[:]),
     ("child_right", int64[:]),
     ("normals", float64[:, :]),
     ("intercepts", float64[:]),
     ("node_size", int64[:]),      
     ("depth", int64[:]),          
-    ("corrected_depth", float64[:])
+    ("corrected_depth", float64[:]),
+    ("importances_right", float64[:, :]),
+    ("importances_left", float64[:, :])
 ]
 
 @jitclass(tree_spec)
 class ExtendedTree:
-    def __init__(self, n, d, max_depth, locked_dims=0, min_sample=1, plus=True, max_nodes=10000):
+    def __init__(self, n, d, max_depth, locked_dims=0, min_sample=1, plus=True, max_nodes=100000):
         self.plus = plus
         self.locked_dims = locked_dims  
         self.max_depth = max_depth
@@ -108,6 +111,7 @@ class ExtendedTree:
         self.node_count = 1
 
         self.path_to = np.zeros((max_nodes, max_depth+1), dtype=np.int64)
+        self.path_to_Right_Left = np.zeros((max_nodes, max_depth+1), dtype=np.int64)
         self.child_left = np.zeros(max_nodes, dtype=np.int64)
         self.child_right = np.zeros(max_nodes, dtype=np.int64)
         self.normals = np.zeros((max_nodes, d), dtype=np.float64)
@@ -115,10 +119,11 @@ class ExtendedTree:
         self.node_size = np.zeros(max_nodes, dtype=np.int64)
         self.depth = np.zeros(max_nodes, dtype=np.int64)
         self.corrected_depth = np.zeros(max_nodes, dtype=np.float64)
-
+        self.importances_right = np.zeros((max_nodes, d), dtype=np.float64)
+        self.importances_left = np.zeros((max_nodes, d), dtype=np.float64)
+        
     def fit(self, X):
         self.path_to[0,0] = 0
-        
         self.extend_tree(node_id=0, X=X, depth=0)
         self.corrected_depth = np.array([
             (c_factor(k)+sum(path>0))/c_factor(self.n)
@@ -126,11 +131,13 @@ class ExtendedTree:
             if i<self.node_count
         ])
 
-    def create_new_node(self, parent_id: int) -> int:
+    def create_new_node(self, parent_id: int, direction:int) -> int:
         new_node_id = self.node_count
         self.node_count+=1
         self.path_to[new_node_id] = self.path_to[parent_id]
+        self.path_to_Right_Left[new_node_id] = self.path_to_Right_Left[parent_id]
         self.path_to[new_node_id, self.depth[parent_id]+1] = new_node_id
+        self.path_to_Right_Left[new_node_id, self.depth[parent_id]] = direction
         self.depth[new_node_id] = self.depth[parent_id]+1     
         return new_node_id
     
@@ -140,7 +147,8 @@ class ExtendedTree:
         while stack:
             node_id, data, depth = stack.pop()
             
-            if len(data) <= self.min_sample or depth >= self.max_depth:
+            self.node_size[node_id] = len(data)
+            if self.node_size[node_id] <= self.min_sample or depth >= self.max_depth:
                 continue
             
             self.normals[node_id] = make_rand_vector(self.d - self.locked_dims, self.d)            
@@ -156,8 +164,11 @@ class ExtendedTree:
             X_left = data[mask]
             X_right = data[~mask,:]
             
-            left_child = self.create_new_node(node_id)
-            right_child = self.create_new_node(node_id)
+            self.importances_left[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_left)+1))
+            self.importances_right[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_right)+1))
+            
+            left_child = self.create_new_node(node_id,-1)
+            right_child = self.create_new_node(node_id,1)
             
             self.child_left[node_id] = left_child
             self.child_right[node_id] = right_child
@@ -173,6 +184,31 @@ class ExtendedTree:
     
     def predict(self, X):
         return self.corrected_depth[self.leaf_ids(X)]
+    
+    def importances(self, X):
+        leaf_ids = self.leaf_ids(X)
+        paths = self.path_to[leaf_ids]
+        directions = self.path_to_Right_Left[leaf_ids]
+        
+        # Preallocate arrays for importances and normals based on the number of samples in X
+        num_samples = X.shape[0]
+        importances = np.zeros((num_samples, self.d))
+        normals = np.zeros((num_samples, self.d))
+        
+        for i in range(num_samples):
+            path = paths[i]
+            direction = directions[i]
+            for node_id in range(path.shape[0]):
+                node = path[node_id]
+                if direction[node_id] == 0:
+                    break
+                if direction[node_id] == -1:
+                    importances[i] += self.importances_left[node]
+                else:
+                    importances[i] += self.importances_right[node]
+                normals[i] += np.abs(self.normals[node])
+        
+        return importances, normals
 
 
 class ExtendedIsolationForest():
@@ -190,7 +226,6 @@ class ExtendedIsolationForest():
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
 
-        
     def predict(self, X):
         return np.power(2,-np.mean([tree.predict(X) for tree in self.trees], axis=0))
     
@@ -198,7 +233,27 @@ class ExtendedIsolationForest():
         An_score = self.predict(X)
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
-        
+
+    def _importances(self, X):
+        importances = np.zeros(X.shape)
+        normals = np.zeros(X.shape)
+        for T in self.trees:
+            importance, normal = T.importances(X)
+            importances += importance
+            normals += normal
+        return importances/self.n_estimators, normals/self.n_estimators
+    
+    def global_importances(self, X,p=0.1):
+        y_hat = self._predict(X,p)
+        importances, normals = self._importances(X)
+        outliers_importances,outliers_normals = np.mean(importances[y_hat],axis=0),np.mean(normals[y_hat],axis=0)
+        inliers_importances,inliers_normals = np.mean(importances[~y_hat],axis=0),np.mean(normals[~y_hat],axis=0)
+        return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
+    
+    def local_importances(self, X):
+        importances, normals = self._importances(X)
+        return importances/normals
+
 
 
     
