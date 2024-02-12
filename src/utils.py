@@ -179,7 +179,6 @@ def dataset(name, path = "../data/"):
     X,y = drop_duplicates(T.X,T.y)
     print(name, "\n")
     print_dataset_resume(X,y)
-    
     return X,y
 
 def csv_dataset(name, path = "../data/"):
