@@ -8,7 +8,7 @@ We need two Python Script for two different kind of experiments:
 	- Importance Map 
 	- Complete Importance Map 
 	- Metrics  $AUC\tilde{S}_{top}$ and $F1\tilde{S}$ to evaluate the interpretation model ? 
-1. Model Comparison Experiment → Experiment to launch on each different benchmark dataset and on each different Anomaly Detection model to create a comparison in terms of performances. For each model we want to return the following metrics: 
+2. Model Comparison Experiment → Experiment to launch on each different benchmark dataset and on each different Anomaly Detection model to create a comparison in terms of performances. For each model we want to return the following metrics: 
 	- Average Precision 
 	- ROC AUC Score 
 	- Precision 
@@ -43,8 +43,13 @@ We can use these experiments to conduct the Ablation Studies on ExIFFI:
 
 - Compute the  $AUC\tilde{S}_{top}$ and $F1\tilde{S}$ metrics for different experiment configurations and produce a plot to see how they vary with the respect to:
 	- Contamination factor
-	- Number of trees
-	- `depth_based` parameter
+
+> [!note] 
+> In order to perform experiments changing the contamination factor I added the parameter `contamination` to classes `ExtendedIF` and `Extended_DIFFI_parallel`. This addition is helpful also because it let us remove the parameter `p` from the methods `predict`  and  `evaluate` of `ExtendedIF`. I also substituted the factor `0.1` in method `Global_importance` of `Extended_DIFFI_parallel` with `self.contamination`. So when we change the contamination factor we also change the percentage of samples considered as outliers in the computation of the GFI Score. 
+
+- Number of trees 
+- `depth_based` parameter 
+
 - Do a subplot putting together the Bar Plot/Score Map/Importance Scoremap obtained with different configurations to see what changes in the interpretation 
 - Plot `sample_size` vs `execution_time`
 - Plot `n_features` vs `execution_time`
@@ -65,6 +70,11 @@ Anomaly Detection models to compare:
 We can also perform an Ablation Study on EIF+: 
 
 - Change the contamination factor in the training set
+
+> [!note] 
+> Also here I added the `contamination` parameter to class `ExtendedIsolationForest` and, as a consequence, `IsolationForest`. In this way it is possible to remove parameter `p` from the `predict` method. 
+> The default value for `contamination` is `auto` that corresponds to a contamination factor of `0.1`. The contamination value can also be set by the user passing a `float` but it cannot be higher than `0.5`. 
+
 - Different number of trees
 - Use different Scalers to pre-process the data:
 	- `StandardScaler`
@@ -74,10 +84,44 @@ We can also perform an Ablation Study on EIF+:
 - Use different distributions to sample the intercept point `p` of the EIF+ separating hyperplanes:
 	- $N(mean(X),\eta \ std(X)$ changing the value of $\eta$ 
 	- $N(median(X),\eta \ std(X)$ changing the value of $\eta$ 
-	- $U(\frac{min(X)}{\lambda},\lambda \ max(X))$ with $\lambda > 1$
+	- $U(\frac{min(X)}{\eta},\eta \ max(X))$ with $\eta > 1$
+- Use different values of $\eta$
 
 > [!note] Sampling `p` from  $U(\frac{min(X)}{\lambda},\lambda \ max(X))$ with $\lambda > 1$
 >  This is a modified version of the distribution used in EIF but dividing by $\lambda$ the lower bound and multiplying by $\lambda$ the upper bound we are enlarging the interval of possible values so that there is also the possibility to create cuts surrounding the training set distribution. However since the distribution is uniform there is also the possibility of sampling values of `p` inside $(min(X),max(X))$ like the cuts done by EIF. 
 
+^dbaab1
 
+## Parameters `distribution` and `eta`
+
+The `distribution` and `eta` parameters were added in classes `ExtendedIsolationForest` and `Extended_DIFFI_parallel` so that it is possible to do experiments on the EIF+ and ExIFFI models **changing the distribution from which the intercept point `p` is sampled** and **changing the scaling factor $\eta$ of this distribution**.
+
+### `distribution`
+
+The `distribution` parameter is passed as a string and can take the following three values: 
+
+- `normal_mean`: This is the default value and the distribution we have used up to now for the EIF+ model: 
+
+$$
+	N(mean(X),\eta \ std(X)
+$$
+where $X$ represents the set of points projected on the normal vector representing the slope of the hyperplane
+
+- `normal_median`: This distribution is essentially the same as `normal_mean` but we use `median(X)` instead of `mean(X)`:
+
+$$
+	N(median(X),\eta \ std(X)
+$$
+- `scaled_uniform`: This is a [[EXPERIMENT SCRIPTS#^dbaab1|scaled version of the uniform distribution that is used in the EIF model]]:
+
+$$
+	U(\frac{min(X)}{\eta},\eta \ max(X))
+$$
+The `distribution` parameter can be set directly when creating a new instance of classes `ExtendedIsolationForest` or `Extended_DIFFI_parallel` or using the `set_distribution` method. This second solution is used so that it is easier to set this parameter getting its value as a command line argument. 
+
+### `eta`
+
+The `eta` parameter is simply the factor used in the definition of the distributions described [[EXPERIMENT SCRIPTS#`distribution`|above]]. Its default value, the one we used up to now in EIF+, is 2. 
+
+Similarly to `distribution`, `eta` can be set directly when creating a new instance of `ExtendedIsolationForest` or `Extended_DIFFI_parallel` or using the `set_eta` method in case we are getting the `eta` value from the command line. 
 
