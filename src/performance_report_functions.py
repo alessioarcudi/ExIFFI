@@ -12,6 +12,9 @@ from sklearn.metrics import precision_score,recall_score,accuracy_score,balanced
 from sklearn.ensemble import IsolationForest
 import matplotlib.patches as mpatches
 
+sys.path.append("../experiments")
+from experiments.test_model import get_model 
+
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
@@ -221,3 +224,23 @@ def collect_performance(metrics_dict,name,X_train,X_test,y):
      
     
     return metrics_dict
+
+# Evaluate the model performances 
+
+def evaluate_model(model_name, X_train, X_test, y, name, save_dir, filename=None):
+
+    # Fit the model
+    print(f"Fitting {name} model")
+    model=get_model(model_name)
+    model.fit(X_train)
+
+    # Compute the performance metrics
+    print(f"Computing performance metrics for {name} model")
+    if model_name=='IF':
+        score=model.predict(X_test)
+        perf=performance_if(y,score)
+    elif model_name=='EIF' or model_name=='EIF+':
+        score=model.predict(X_test)
+        perf=performance_eif(y,score,X_test,model)
+
+    return perf

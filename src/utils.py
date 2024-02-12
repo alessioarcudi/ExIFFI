@@ -4,19 +4,16 @@ import scipy
 import os
 from scipy.io import loadmat
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
 from numba import jit
-
-import sys;
-#sys.path.append("..//models")
-from models.interpretability_module import diffi_ib
-#from utils.simulation_setup import MatFileDataset
-#from simulation_setup import MatFileDataset
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
 
+"""
+Utility Functions for models 
+"""
 
 def make_rand_vector(df,dimensions):
     """
@@ -66,73 +63,37 @@ def c_factor(n):
     """
     return 2.0*(np.log(n-1)+0.5772156649) - (2.0*(n-1.)/(n*1.0))
 
-#Remove?
+"""
+Utility Functions for experiments 
+"""
 
-def mean_confidence_interval_importances(l, confidence=0.95):
-    """
-    Mean value and confidence interval of a list of lists of results
-    --------------------------------------------------------------------------------
+def get_scaler(scaler_name="StandardScaler"):
+    if scaler_name == "StandardScaler":
+        return StandardScaler()
+    elif scaler_name == "MinMaxScaler":
+        return MinMaxScaler()
+    elif scaler_name == "MaxAbsScaler":
+        return MaxAbsScaler()
+    elif scaler_name == "RobustScaler":
+        return RobustScaler()
+    else:
+        raise ValueError(f"Scaler {scaler_name} not supported")
     
-    Parameters
-    ----------
-    l :         list
-        list of lists of scores.
+def set_p_distribution(model,distribution_name='normal_mean'):
+        model.set_distribution(distribution_name)
 
-    Returns
-    -------
-    M:      list of tuples (m,m-h,m+h) where h is confidence interval
-        
-    """
-    M=[]
-    for i in range(l.shape[0]):
-        a = 1.0 * np.array(l[i,:])
-        n = len(a)
-        m, se = np.mean(a), scipy.stats.sem(a)
-        h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
-        M.append((m, m-h, m+h))
-    return M
+def set_p_eta(model,eta=2):
+        model.set_eta(eta)
 
-#Remove?
-
-def extract_order(X):
-    X=X.sort_values(by=[0])
-    X.reset_index(inplace=True)
-    X.rename(columns={"index":"feature"},inplace=True)
-    X.drop(labels=0,axis=1,inplace=True)
-    X=X.squeeze()
-    X.index=(X.index+1)*np.linspace(0,1,len(X))
-    X=X.sort_values()
-    return X.index
-
-class MatFileDataset:
-
-    def __init__(self):
-        self.X = None
-        self.y = None
-        self.shape = None
-        self.datasets = data
-
-    def load(self, name: str):
-        self.name = name
-        try:
-            mat = loadmat(self.name)
-        except NotImplementedError:
-            mat = mat73.loadmat(self.name)
-
-        self.X = mat['X']
-        self.y = mat['y'].reshape(-1, 1)
-        self.shape = self.X.shape
-        self.perc_anomalies = float(sum(self.y) / len(self.y))
-        self.n_outliers = sum(self.y)
-
-
-def pre_process(X_train,X_test):
+def pre_process(scaler_name,X_train,X_test):
     """
     Pre processing function on the training and test set applying data normalization
     --------------------------------------------------------------------------------
 
     Parameters
     ----------
+    scaler_name: str
+        Name of the Scaler to use 
     X_train: pd.DataFrame
         Training Set
     X_test: pd.DataFrame
@@ -145,14 +106,14 @@ def pre_process(X_train,X_test):
     """
 
     X=np.r_[X_train,X_test]
-    scaler=StandardScaler()
+    scaler=get_scaler(scaler_name)
     X_train=scaler.fit_transform(X_train)
     X_test=scaler.fit_transform(X_test)
     y_train=np.zeros(X_train.shape[0])
     y_test=np.ones(X_test.shape[0])
     y=np.concatenate([y_train,y_test])
     X_test=np.r_[X_train,X_test]
-    scaler2=StandardScaler()
+    scaler2=get_scaler(scaler_name)
 
     """
     This X here will have the same shape as X_test but it is obtained scaling X_train and X_test 
@@ -162,7 +123,6 @@ def pre_process(X_train,X_test):
     X=scaler2.fit_transform(X)
     return X_train,X_test,X,y
 
-# Load and pre process data 
 
 def load_preprocess(name:str,path:str):
     """
@@ -218,43 +178,6 @@ def drop_duplicates(X,y):
     X,y = S[:,:-1], S[:,-1]
     return X,y
 
-def dataset(name, path = "../data/"):
-    """
-    Upload a dataset from a .mat file 
-    --------------------------------------------------------------------------------
-    
-    Parameters
-    ----------
-    name :         string
-        Dataset's name
-    path:          string
-        Path of the .mat file containing the dataset
-
-    Returns
-    -------
-    X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
-        
-    """
-    try: 
-        datapath = path + name + ".mat"
-    except FileNotFoundError:
-        datapath = path + name + ".csv"
-
-    if datapath[-3:]=="mat":
-        T=MatFileDataset() 
-        T.load(datapath)
-    elif datapath[-3:]=="csv":
-        T=pd.DataFrame()
-        T["X"]=pd.read_csv(datapath)
-    else:
-        raise Exception("Sorry, the path is not valid")
-    
-    X,y = drop_duplicates(T.X,T.y)
-    print(name, "\n")
-    print_dataset_resume(X,y)
-    
-    return X,y
-
 def mat_dataset(name,path):
     """
     Upload a dataset from a .mat file 
@@ -304,7 +227,7 @@ def csv_dataset(name,path):
     X,y:      X contains the dataset input features as a pd.DataFrame while y contains the dataset's labels as a np.array
         
     """
-    #datapath = path + name + ".csv"
+
     data=pd.read_csv(path,index_col=0)
     if 'Unnamed: 0' in data.columns:
         data=data.drop(columns=['Unnamed: 0'])
@@ -386,32 +309,4 @@ def partition_data(X,y):
     inliers=X[y==0,:]
     outliers=X[y==1,:]
     return inliers,outliers
-
-
-''' 
-def get_extended_test(n_pts,n_anomalies,cluster_distance,n_dim,anomalous_dim = [0]):
-    #not_anomalous_dim     = np.setdiff1d(np.arange(n_dim),anomalous_dim)
-    X1 = np.random.randn(n_pts,n_dim) + cluster_distance
-    y1 = np.zeros(n_pts)
-    #The first half of the additional anomalies are obtained subtracting 2*cluster_distance from the original points (X1)
-    y1[:n_anomalies-int(n_anomalies/2)] = 1
-    X1[:n_anomalies-int(n_anomalies/2),anomalous_dim] -= 2*cluster_distance
-    #The second half of the additional anomalies are obtained adding 2*cluster_distance from the original points (X2)
-    X2 = np.random.randn(n_pts,n_dim) - cluster_distance
-    y2 = np.zeros(n_pts)
-    y2[:int(n_anomalies/2)] = 1
-    X2[:int(n_anomalies/2),anomalous_dim] += 2*cluster_distance
-    #Concatenate together X1,X2 and y1,y2
-    X = np.vstack([X1,X2])
-    y = np.hstack([y1,y2])
-    return X,y
-'''
-
-''' 
-def cosine_ordered_similarity(v,u):
-    v=np.exp((np.array(v)/np.array(v).max()))-1/(np.exp(1)-1)
-    u=np.exp((np.array(u)/np.array(u).max()))-1/(np.exp(1)-1)
-    S=1-(v).dot(u)/(np.sqrt(v.dot(v)*u.dot(u)))
-    return S
-'''
         
