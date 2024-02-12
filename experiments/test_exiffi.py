@@ -162,6 +162,7 @@ n_cores_fit,
 n_cores_importance,
 n_cores_anomaly,
 distribution,
+eta,
 n_runs=10,
 depth_based=False,
 seed=None,
@@ -203,6 +204,7 @@ filename=None,
     )
     EDIFFI.set_num_processes(n_cores_fit, n_cores_importance, n_cores_anomaly)
     set_p_distribution(EDIFFI,distribution)
+    set_p_eta(EDIFFI,eta)
 
     start=time.time()
     # Compute the global importances
@@ -314,6 +316,7 @@ def main(args):
             n_cores_importance=n_cores_importance,
             n_cores_anomaly=n_cores_anomaly,
             distribution=args.distribution,
+            eta=args.eta,
             n_runs=args.n_runs,
             depth_based=args.depth_based,
             seed=args.seed,

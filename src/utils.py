@@ -67,6 +67,13 @@ def c_factor(n):
 Utility Functions for experiments 
 """
 
+def get_filename_suffix(dataset_names):
+    suffix=''
+    for data in dataset_names:
+        suffix+=data[0]+'_'
+
+    return suffix
+
 def get_scaler(scaler_name="StandardScaler"):
     if scaler_name == "StandardScaler":
         return StandardScaler()
@@ -124,13 +131,15 @@ def pre_process(scaler_name,X_train,X_test):
     return X_train,X_test,X,y
 
 
-def load_preprocess(name:str,path:str):
+def load_preprocess(scaler,name:str,path:str):
     """
     Function loading the data from a file and pre processing it with the pre_process function 
     --------------------------------------------------------------------------------
 
     Parameters
     ----------
+    scaler: str
+        Name of the type of scaler to use to pre_process the data 
     name: str
         Dataset name
     path: str
@@ -152,7 +161,7 @@ def load_preprocess(name:str,path:str):
         raise ValueError("Extension not supported")
     
     X_train,X_test=partition_data(X,y)
-    X_train,X_test,X,y=pre_process(X_train,X_test)
+    X_train,X_test,X,y=pre_process(scaler,X_train,X_test)
 
     return X_train,X_test,X,y
 
@@ -232,9 +241,13 @@ def csv_dataset(name,path):
     if 'Unnamed: 0' in data.columns:
         data=data.drop(columns=['Unnamed: 0'])
     
-    X=data[data.columns[data.columns!='Target']]
-    y=data['Target']
-    
+    if 'Target' in data.columns:
+        X=data[data.columns[data.columns!='Target']]
+        y=data['Target']
+    elif 'Outcome' in data.columns:
+        X=data[data.columns[data.columns!='Outcome']]
+        y=data['Outcome']
+
     X,y = drop_duplicates(X,y)
     print(name, "\n")
     print_dataset_resume(X,y)

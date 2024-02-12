@@ -176,6 +176,10 @@ class ExtendedIsolationForest():
     @property
     def eta_(self):
         return self.eta
+
+    @property
+    def plus_(self):
+        return self.plus
         
     def fit(self, X, locked_dims=None):
         subsample_size = np.min((self.max_samples,len(X)))
@@ -194,12 +198,26 @@ class ExtendedIsolationForest():
         return y_hat
     
     
-class IsolationForest(ExtendedIsolationForest):       
+class IsolationForest(ExtendedIsolationForest):    
+    def __init__(self,
+                 plus=0,
+                 n_estimators=100,
+                 max_samples="auto",
+                 contamination="auto",
+                 distribution="normal_mean",
+                 eta=2):
+        super().__init__(plus=0,
+                         n_estimators=n_estimators,
+                         max_samples=max_samples,
+                         contamination=contamination,
+                         distribution=distribution,
+                         eta=eta)
+
     def fit(self, X):
         subsample_size = np.min((self.max_samples,len(X)))
         locked_dims = np.arange(X.shape[1],dtype=int)
         self.trees = [
-            ExtendedTree(X[np.random.randint(len(X), size=subsample_size)],locked_dims=locked_dims) 
+            ExtendedTree(X[np.random.randint(len(X), size=subsample_size)],locked_dims=locked_dims,plus=0) 
             for _ in range(self.n_estimators)
         ]
     
