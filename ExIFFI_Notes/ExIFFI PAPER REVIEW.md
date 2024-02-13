@@ -155,6 +155,34 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 - *Stamps* → shape `(340,9)`
 - *Wilt* → shape `(4839,5)` → ok
 
+# Important Considerations
+
+> [!important] Efficiency of EIF+
+>  One thing we can say to support our new EIF+ approach is that it is also faster in training with the respect to EIF because doing the cuts using the distribution $N(mean(X),\eta \ std(X))$ it is more likely that we divide the cluster of points in two halves with the same/similar number of points on the two sides. On the other hand in EIF we use $U(min(X),max(X))$ so there are the same chances of dividing in two halves of the similar size but also the chance of dividing into two halves of very different sizes → in this case than the number of cuts needed to isolate all the points (or getting to the `max_depth`) is much higher. 
+>  We have noticed this thing seeing that the `fit` method in EIF takes much more time than the one in EIF+. 
+>  We have also computed the average number of nodes created in all the trees created during the `fit` of these two methods:
+>  - EIF, wine, 100 trees:
+> 	 - avg number of nodes: 13610
+> 	 - std number of nodes: 590
+> - DIFFI, wine, 100 trees  
+> 	- avg number of nodes: 517
+> 	- std number of nodes: 31
+
+> [!important] Execution time of `fit` on different datasets
+>  The execution time of the `fit` method in EIF strangely takes more time on `wine` (that is the smallest dataset we have) than in `moodify` (that is the biggest dataset we have). This is due to the fact that the trees that are built in the `fit` method for `wine` are much more complex than the ones built for `moodify` and this depends on the structure of the dataset. It means that is easier to isolate the data in `moodify` than in `wine`. 
+>  However if we try the `fit` method of EIF+ it takes more or less the same amount of time because thanks to the intelligent cuts performed by EIF+ the time difference in the training due to the different distribution of the data is reduced. 
+>  
+>  - EDIFFI fitting times (100 trees):  
+> 	 - `wine` = 0.7s
+> 	 - `moodify` = 1.68s
+> 	 - `difference` = 2.4x
+> - EIF fitting times (100 trees):
+> 	- `wine` = 62s
+> 	- `moodify` = 5.9s
+> 	- `difference` = 10.5x
+
+> [!todo] `normal_median` Distribution
+>  Sampling from the distribution $N(median(X),\eta \ std(X))$ maybe we can better even better cuts because the median is not influenced by the outliers and will provide cuts that will divide in exact halves the dataset with higher probabilities. 
 # Things TO DO
 
 - [x] [Possible solution to the Zoom Share Screen issue](https://technoracle.com/how-to-fix-zoom-screen-sharing-on-ubuntu-22-04-quickly/)

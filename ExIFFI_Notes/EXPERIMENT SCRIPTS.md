@@ -16,7 +16,6 @@ We need two Python Script for two different kind of experiments:
 	- `F1` Score 
 	- Accuracy 
 	- Balanced Accuracy 
-
 # ExIFFI Experiment 
 
 We can use these experiments to conduct the Ablation Studies on ExIFFI: 
@@ -124,4 +123,3 @@ The `distribution` parameter can be set directly when creating a new instance of
 The `eta` parameter is simply the factor used in the definition of the distributions described [[EXPERIMENT SCRIPTS#`distribution`|above]]. Its default value, the one we used up to now in EIF+, is 2. 
 
 Similarly to `distribution`, `eta` can be set directly when creating a new instance of `ExtendedIsolationForest` or `Extended_DIFFI_parallel` or using the `set_eta` method in case we are getting the `eta` value from the command line. 
-
