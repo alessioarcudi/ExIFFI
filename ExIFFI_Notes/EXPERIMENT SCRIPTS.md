@@ -37,7 +37,7 @@ We can use these experiments to conduct the Ablation Studies on ExIFFI:
 	- Keeping constant the dimensionality and increasing the sample size (e.g. `np.linspace(1000,256000,9)`) 
 
 > [!note] 
-> For problems related to the fact that`plt.show()` blocks the execution of the script it is not possible to plot the Complete Scoremap with one execution of `test_exiffi.py`. We are in any case able to produce the Bar Plot, Score Plot and Importance Map plots. The Complete Scoremap (which in any case are not essential for the paper) can be produced separately in another script. 
+> For problems related to the fact that `plt.show()` blocks the execution of the script it is not possible to plot the Complete Scoremap with one execution of `test_exiffi.py`. We are in any case able to produce the Bar Plot, Score Plot and Importance Map plots. The Complete Scoremap (which in any case are not essential for the paper) can be produced separately in another script. 
 ## Plots to produce 
 
 - Compute the  $AUC\tilde{S}_{top}$ and $F1\tilde{S}$ metrics for different experiment configurations and produce a plot to see how they vary with the respect to:
@@ -52,6 +52,13 @@ We can use these experiments to conduct the Ablation Studies on ExIFFI:
 - Do a subplot putting together the Bar Plot/Score Map/Importance Scoremap obtained with different configurations to see what changes in the interpretation 
 - Plot `sample_size` vs `execution_time`
 - Plot `n_features` vs `execution_time`
+
+### To do 
+
+- [ ] Integrate the changes done in the code into the code written in `numba` by Alessio 
+- [ ] Work with the `wrapper` and the `add_bash` commands to perform the experiments similarly to what was done for the HPC Project 
+	- [ ] The I can try to execute the experiments in the same way done in CAPRI (so using a `sh` script the launches successively the command to execute the script for each different dataset separately) locally on my PC (I do not think it will require so much time (also if I use the `numba`/C optimized))
+- [ ] Try to create a subplot with the plots produced by `bar_plot`, `score_plot` and `importance_map`
 
 # Model Comparison Experiment 
 
