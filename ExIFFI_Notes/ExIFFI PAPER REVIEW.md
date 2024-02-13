@@ -185,6 +185,12 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 >  Sampling from the distribution $N(median(X),\eta \ std(X))$ maybe we can better even better cuts because the median is not influenced by the outliers and will provide cuts that will divide in exact halves the dataset with higher probabilities. 
 # Things TO DO
 
+> [!note] Color Code
+> - <span style="color:red;"> Red  → Davide</span>
+> - <span style="color:green;"> Green  → Alessio</span>
+> - <span style="color:yellow;"> Yellow  → Davide and Alessio</span>
+>  
+
 - [x] [Possible solution to the Zoom Share Screen issue](https://technoracle.com/how-to-fix-zoom-screen-sharing-on-ubuntu-22-04-quickly/)
 
 - [x] Try to organize better the GitHub repository so that also Alessio can work on that 
@@ -234,24 +240,32 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 ## For 15 February  
 
 - [x] <span style="color:red;">Ask Gian for inclusion of Francesco optimized code in the paper</span>
-	- [ ] There is also Davide Sartor optimized code to take inspiration from
+	- [x] There is also Davide Sartor optimized code to take inspiration from
 
-- [ ] Organize better the code to optimize it.
+- [x] Organize better the code to optimize it.
 	- [x] Written `make_importance` function in C with `OpenMP` → up to 130 times faster  
 	- [x] <span style="color:red;">Add the new features inserted in the plot functions for inserting DIFFI in PyOD</span>
-	- [ ]  <span style="color:green;">Reboot and review old code</span> 
+	- [x]  <span style="color:green;">Reboot and review old code</span> 
 - [x] <span style="color:red;">Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD</span>
 
 - [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are </span>[[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]  
 
-- [ ] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> → See [[EXPERIMENT SCRIPTS]]. 
+- [x] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> → See [[EXPERIMENT SCRIPTS]]. 
 
 ## For 22 February
 
-- [ ] <span style="color:red">Reboot and review experiments code -> write on a Python script</span>
-	- [ ] <span style="color:red">Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)</span>
+- [x] <span style="color:red">Reboot and review experiments code -> write on a Python script</span>
+	- [x] <span style="color:red">Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)</span>
 - [x] Add a `contamination` parameter in `ExtendedIsolationForest` → all the PyOD models have one. Moreover it would also help in the `_predict` function instead of having to pass it as an input parameter. 
 
+- [ ] <span style="color:green;">Adapt experiments to the `numba` code </span> 
+	- [ ] <span style="color:green;">Add experiments on different versions of `X_train` and `X_test` (e.g start with no anomalies in `X_train` and anomalies in `X_test` and then add some anomalies in `X_train`)</span>
+- [ ] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+
+- [ ] <span style="color:red;">Check in DIF Paper if they apply a Data Normalization → maybe Data Normalization is not a good idea before applying all the non linear transformation they apply on the *deep network part* of the DIF model.</span>
+- [ ] <span style="color:red;">Try to work again on `Test_AD_Models` to get result that have sense on DIF and other models</span>
+- [ ] <span style="color:red;">Produce a summary of how the new version of the paper should look like so that we can have a clear idea of how to structure the experiments:</span>
+	- [ ] <span style="color:red;">create a new note with the paper structure and experiment structure → take inspiration from the old paper structure and from the review.</span>
 	
 
 

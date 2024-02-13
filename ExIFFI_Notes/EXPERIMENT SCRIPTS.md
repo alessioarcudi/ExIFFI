@@ -98,6 +98,10 @@ We can also perform an Ablation Study on EIF+:
 
 ^dbaab1
 
+### To do 
+
+- [ ] Find some other function to use instead of `std` to define the distributions because the `std` takes a lot to be computed. 
+
 ## Parameters `distribution` and `eta`
 
 The `distribution` and `eta` parameters were added in classes `ExtendedIsolationForest` and `Extended_DIFFI_parallel` so that it is possible to do experiments on the EIF+ and ExIFFI models **changing the distribution from which the intercept point `p` is sampled** and **changing the scaling factor $\eta$ of this distribution**.
