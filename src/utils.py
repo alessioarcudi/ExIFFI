@@ -5,7 +5,7 @@ import os
 from scipy.io import loadmat
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
 from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
-from numba import jit
+from numba import jit,njit
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -322,4 +322,25 @@ def partition_data(X,y):
     inliers=X[y==0,:]
     outliers=X[y==1,:]
     return inliers,outliers
-        
+
+@njit
+def compute_std(x):
+    return np.std(x)
+
+@njit
+def compute_std_for(x):
+    m=np.mean(x)
+    square_sum=0
+
+    for i in range(len(x)):
+        square_sum+=np.square(x[i]-m)
+    
+    return np.sqrt(square_sum/len(x))
+
+@njit
+def calculate_std_dev(arr):
+    mean = np.mean(arr)
+    squared_diff_sum = np.sum((arr - mean) ** 2)
+    variance = squared_diff_sum / len(arr)
+    std_dev = np.sqrt(variance)
+    return std_dev
