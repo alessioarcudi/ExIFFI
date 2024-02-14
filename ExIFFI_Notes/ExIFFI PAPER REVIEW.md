@@ -155,7 +155,41 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 - *Stamps* → shape `(340,9)`
 - *Wilt* → shape `(4839,5)` → ok
 
+# Important Considerations
+
+> [!important] Efficiency of EIF+
+>  One thing we can say to support our new EIF+ approach is that it is also faster in training with the respect to EIF because doing the cuts using the distribution $N(mean(X),\eta \ std(X))$ it is more likely that we divide the cluster of points in two halves with the same/similar number of points on the two sides. On the other hand in EIF we use $U(min(X),max(X))$ so there are the same chances of dividing in two halves of the similar size but also the chance of dividing into two halves of very different sizes → in this case than the number of cuts needed to isolate all the points (or getting to the `max_depth`) is much higher. 
+>  We have noticed this thing seeing that the `fit` method in EIF takes much more time than the one in EIF+. 
+>  We have also computed the average number of nodes created in all the trees created during the `fit` of these two methods:
+>  - EIF, wine, 100 trees:
+> 	 - avg number of nodes: 13610
+> 	 - std number of nodes: 590
+> - DIFFI, wine, 100 trees  
+> 	- avg number of nodes: 517
+> 	- std number of nodes: 31
+
+> [!important] Execution time of `fit` on different datasets
+>  The execution time of the `fit` method in EIF strangely takes more time on `wine` (that is the smallest dataset we have) than in `moodify` (that is the biggest dataset we have). This is due to the fact that the trees that are built in the `fit` method for `wine` are much more complex than the ones built for `moodify` and this depends on the structure of the dataset. It means that is easier to isolate the data in `moodify` than in `wine`. 
+>  However if we try the `fit` method of EIF+ it takes more or less the same amount of time because thanks to the intelligent cuts performed by EIF+ the time difference in the training due to the different distribution of the data is reduced. 
+>  
+>  - EDIFFI fitting times (100 trees):  
+> 	 - `wine` = 0.7s
+> 	 - `moodify` = 1.68s
+> 	 - `difference` = 2.4x
+> - EIF fitting times (100 trees):
+> 	- `wine` = 62s
+> 	- `moodify` = 5.9s
+> 	- `difference` = 10.5x
+
+> [!todo] `normal_median` Distribution
+>  Sampling from the distribution $N(median(X),\eta \ std(X))$ maybe we can better even better cuts because the median is not influenced by the outliers and will provide cuts that will divide in exact halves the dataset with higher probabilities. 
 # Things TO DO
+
+> [!note] Color Code
+> - <span style="color:red;"> Red  → Davide</span>
+> - <span style="color:green;"> Green  → Alessio</span>
+> - <span style="color:yellow;"> Yellow  → Davide and Alessio</span>
+>  
 
 - [x] [Possible solution to the Zoom Share Screen issue](https://technoracle.com/how-to-fix-zoom-screen-sharing-on-ubuntu-22-04-quickly/)
 
@@ -170,7 +204,7 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 - [ ] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
 	
-- [ ] Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD. See [here](https://pyod.readthedocs.io/en/latest/pyod.models.html) 
+- [x] Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD. See [here](https://pyod.readthedocs.io/en/latest/pyod.models.html) 
 
 	
 - [ ] Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]. 
@@ -206,23 +240,32 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 ## For 15 February  
 
 - [x] <span style="color:red;">Ask Gian for inclusion of Francesco optimized code in the paper</span>
-	- [ ] There is also Davide Sartor optimized code to take inspiration from
+	- [x] There is also Davide Sartor optimized code to take inspiration from
 
-- [ ] Organize better the code to optimize it.
+- [x] Organize better the code to optimize it.
 	- [x] Written `make_importance` function in C with `OpenMP` → up to 130 times faster  
 	- [x] <span style="color:red;">Add the new features inserted in the plot functions for inserting DIFFI in PyOD</span>
-	- [ ]  <span style="color:green;">Reboot and review old code</span> 
-- [ ] <span style="color:red;">Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD</span>
+	- [x]  <span style="color:green;">Reboot and review old code</span> 
+- [x] <span style="color:red;">Test the implementation of DIF,Autoencoder ,(INNE?) of PyOD</span>
 
-- [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]].</span> 
+- [ ] <span style="color:yellow;">Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are </span>[[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]  
 
-- [ ] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> 
+- [x] <span style="color:yellow">Draw a scheme for how to run the experiments (take inspiration also on the studies/experiments of other papers) → also for the Ablation Studies</span> → See [[EXPERIMENT SCRIPTS]]. 
 
 ## For 22 February
 
-- [ ] <span style="color:red">Reboot and review experiments code -> write on a Python script</span>
-	- [ ] <span style="color:red">Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)</span>
+- [x] <span style="color:red">Reboot and review experiments code -> write on a Python script</span>
+	- [x] <span style="color:red">Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)</span>
+- [x] Add a `contamination` parameter in `ExtendedIsolationForest` → all the PyOD models have one. Moreover it would also help in the `_predict` function instead of having to pass it as an input parameter. 
 
+- [ ] <span style="color:green;">Adapt experiments to the `numba` code </span> 
+	- [ ] <span style="color:green;">Add experiments on different versions of `X_train` and `X_test` (e.g start with no anomalies in `X_train` and anomalies in `X_test` and then add some anomalies in `X_train`)</span>
+- [ ] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+
+- [ ] <span style="color:red;">Check in DIF Paper if they apply a Data Normalization → maybe Data Normalization is not a good idea before applying all the non linear transformation they apply on the *deep network part* of the DIF model.</span>
+- [ ] <span style="color:red;">Try to work again on `Test_AD_Models` to get result that have sense on DIF and other models</span>
+- [ ] <span style="color:red;">Produce a summary of how the new version of the paper should look like so that we can have a clear idea of how to structure the experiments:</span>
+	- [ ] <span style="color:red;">create a new note with the paper structure and experiment structure → take inspiration from the old paper structure and from the review.</span>
 	
 
 
