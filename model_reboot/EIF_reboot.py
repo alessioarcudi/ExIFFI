@@ -15,6 +15,7 @@ from numba.typed import List
 import numpy as np
 import dask
 from dask.distributed import Client
+from tqdm import tqdm
 
 @njit
 def make_rand_vector(df,dimensions) -> npt.NDArray[np.float64]:
@@ -102,21 +103,14 @@ def calculate_importances(paths: np.ndarray, directions: np.ndarray, importances
     importances_sum_right = np.zeros((paths.shape[0],d), dtype=np.float64)
     
     normals_sum = np.zeros((paths.shape[0],d), dtype=np.float64)  # Initialize to match number of rows in paths
- 
-    for i in range(paths.shape[0]):
-        # Extract row-wise indices for left and right, skipping the default -1 values
-        left_indices = left_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]][left_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]] != -1]
-        right_indices = right_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]][right_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]] != -1]
-        if left_indices.size > 0:
-            importances_sum_left[i] = importances_left[left_indices].sum(axis=0)
-        if right_indices.size > 0:
-            importances_sum_right[i] = importances_right[right_indices].sum(axis=0)
-        normals_sum[i] = np.abs(normals[paths[i]]).sum(axis=0)   
+    
+    importances_sum_left = importances_left[left_paths_flat].reshape(paths.shape[0],paths.shape[1],d).sum(axis=1)
+    importances_sum_right = importances_right[right_paths_flat].reshape(paths.shape[0],paths.shape[1],d).sum(axis=1)
+    normals_sum = np.abs(normals[paths_flat]).reshape(paths.shape[0],paths.shape[1],d).sum(axis=1)
 
     importances_sum = importances_sum_left + importances_sum_right
     
     return importances_sum, normals_sum
-
 
 
 tree_spec = [
@@ -219,17 +213,18 @@ class ExtendedTree:
 
     def leaf_ids(self, X):
         return get_leaf_ids(X, self.child_left, self.child_right, self.normals, self.intercepts) 
+         
                 
     def apply(self, X):
         return self.path_to[self.leaf_ids(X)] 
     
-    def predict(self, X):
-        return self.corrected_depth[self.leaf_ids(X)]
+    def predict(self,X,ids):
+        return self.corrected_depth[ids],
     
-    def importances(self, X: np.ndarray):
+    def importances(self,ids):
         importances,normals = calculate_importances(
-            self.path_to[self.leaf_ids(X)], 
-            self.path_to_Right_Left[self.leaf_ids(X)], 
+            self.path_to[ids], 
+            self.path_to_Right_Left[ids], 
             self.importances_left, 
             self.importances_right, 
             self.normals, 
@@ -245,6 +240,8 @@ class ExtendedIsolationForest():
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.max_depth = max_depth
         self.plus=plus
+        self.ids=None
+        self.X=None
     
     @property
     def avg_number_of_nodes(self):
@@ -260,33 +257,43 @@ class ExtendedIsolationForest():
                       for _ in range(self.n_estimators)]
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
+            
+    def compute_ids(self, X):
+        if self.X is None or self.X.shape != X.shape:
+            self.X = X
+            self.ids = np.array([tree.leaf_ids(X) for tree in self.trees])
 
     def predict(self, X):
-        return np.power(2,-np.mean([tree.predict(X) for tree in self.trees], axis=0))
+        self.compute_ids(X)
+        predictions=[tree.predict(X,self.ids[i]) for i,tree in enumerate(self.trees)]
+        values = np.array([p[0] for p in predictions])
+        return np.power(2,-np.mean([value for value in values], axis=0))
     
     def _predict(self,X,p):
         An_score = self.predict(X)
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
 
-    def _importances(self, X):
+    def _importances(self, X, ids):
         importances = np.zeros(X.shape)
         normals = np.zeros(X.shape)
-        for T in self.trees:
-            importance, normal = T.importances(X)
+        for i,T in tqdm(enumerate(self.trees)):
+            importance, normal = T.importances(ids[i])
             importances += importance
             normals += normal
         return importances/self.n_estimators, normals/self.n_estimators
     
     def global_importances(self, X,p=0.1):
+        self.compute_ids(X)
         y_hat = self._predict(X,p)
-        importances, normals = self._importances(X)
+        importances, normals = self._importances(X, self.ids)
         outliers_importances,outliers_normals = np.sum(importances[y_hat],axis=0),np.sum(normals[y_hat],axis=0)
         inliers_importances,inliers_normals = np.sum(importances[~y_hat],axis=0),np.sum(normals[~y_hat],axis=0)
         return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
     
-    def local_importances(self, X):
-        importances, normals = self._importances(X)
+    def local_importances(self, X, new_dataset = False):
+        self.compute_ids(X)
+        importances, normals = self._importances(X, self.ids)
         return importances/normals
 
 
