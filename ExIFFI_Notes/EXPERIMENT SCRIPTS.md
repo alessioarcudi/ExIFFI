@@ -101,6 +101,67 @@ We can also perform an Ablation Study on EIF+:
 ### To do 
 
 - [ ] Find some other function to use instead of `std` to define the distributions because the `std` takes a lot to be computed. 
+	- [ ] Write a separate function that computes the `std` applying the definition (i.e. average of the squared differences of each point from the mean) and compile it with `numba`
+	- [ ] Do the same writing the `std` in C and use `ctypes` to invoke the function in Python
+
+> [!note] 
+> Scusa Alessio ma sei sicuro che il calcolo della std sia lento?. Perchè io ho provato a fare una funzione con numba e con C per velocizzare il calcolo della std ma:
+> 
+> - Con numba è veloce uguale
+> - Con C è addirittura più lenta
+> 
+> Numpy è scritto e ottimizzato in C quindi non credo si possa fare più veloce di `np.std`  
+
+#### Metrics similar to `std`
+
+- `variance` → It is slightly faster to compute → it's like the `std` but we do not have to do `sqrt` at the end
+- `range` → Difference between maximum and minimum values in a dataset → it's sensible to extreme values/outliers. This may create problems if we include some anomalies in the training set. It is just the difference between the max and the min → its complexity depends on how complex is to compute the max and the min. → It is slightly faster than `std`
+
+On `moodify`  normalized → 1 order of magnitude faster
+
+``` 
+std Time: 0.0010101795196533203 
+std: 1.0658973576087336 
+################################################## 
+range Time: 0.0003421306610107422 
+range: 19.634186249839274 
+################################################## 
+Time difference: 0.0006680488586425781
+```
+
+However the value is pretty different and much higher → we may end up doing cuts that are very far from our cluster of normal points. Maybe if we want to use `range` we can divide by the parameter $\eta$ instead of multiplying by it. 
+
+- `Interquartile Range(IQR)` → $IQR=Q1-Q3$ → less sensitive to outliers with the respect to `range`. It is similar to `range` so it may be a little faster to compute with the respect to `std`
+
+On `moodify` normalized 
+
+``` 
+std Time: 0.0012149810791015625 
+std: 1.3360755010639553 
+################################################## 
+IQR Time: 0.00673365592956543 
+IQR: 1.7766700729898175 
+################################################## 
+Time difference: -0.005518674850463867
+```
+
+The values are pretty similar but unfortunately the IQR is sligthly slower than `std`. 
+
+- `Mean Absolute Deviation (MAD)` → Average of the absolute differences between each data point and the mean.
+
+On `moodify` normalized → 1 order of magnitude better
+
+``` 
+std Time: 0.0011882781982421875 
+std: 1.2166114762203248 
+################################################## 
+MAD Time: 0.0007545948028564453 
+MAD: 0.8354337822996187 
+################################################## 
+Time difference: 0.0004336833953857422
+```
+
+The value of MAD here is also not so different from the `std` one so this metric may be a good choice. 
 
 ## Parameters `distribution` and `eta`
 
