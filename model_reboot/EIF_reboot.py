@@ -79,41 +79,44 @@ def get_leaf_ids(X, child_left, child_right, normals, intercepts):
         return np.array(res)
 
 @njit
-def calculate_importances(paths, directions, importances_left, importances_right, normals, d):
-    # paths is now an encoded matrix representation of all paths
-    # precomputed_contributions is a precomputed matrix of contributions for each nod
-    left_paths = -np.ones_like(paths)
-    left_mask = directions==-1
-    left_paths[left_mask] = paths[left_mask]
+def calculate_importances(paths: np.ndarray, directions: np.ndarray, importances_left: np.ndarray, importances_right: np.ndarray, normals: np.ndarray, d: int):
+    # Flatten the paths and directions for 1D boolean indexing
+    paths_flat = paths.flatten()
+    directions_flat = directions.flatten()
     
-    right_paths = -np.ones_like(paths)
-    right_mask = directions==1
-    right_paths[right_mask] = paths[right_mask]
+    # Create masks for left and right directions
+    left_mask_flat = directions_flat == -1
+    right_mask_flat = directions_flat == 1
     
-    importances_sum = (importances_left[left_paths] + importances_right[right_paths]).sum(axis=1)
-    normals_sum = np.abs(normals[paths]).sum(axis=1)
+    # Use masks to filter flattened paths; initialize with -1 (or suitable default)
+    left_paths_flat = np.full_like(paths_flat, -1)
+    right_paths_flat = np.full_like(paths_flat, -1)
+    
+    # Apply the masks
+    left_paths_flat[left_mask_flat] = paths_flat[left_mask_flat]
+    right_paths_flat[right_mask_flat] = paths_flat[right_mask_flat]
+    
+    # Since importances are mentioned to be arrays of arrays, let's assume we can index them directly with the flattened paths
+    # Note: This step might need adjustment based on the actual structure and intended calculations
+    importances_sum_left = np.zeros((paths.shape[0],d), dtype=np.float64)  # Initialize to match number of rows in paths
+    importances_sum_right = np.zeros((paths.shape[0],d), dtype=np.float64)
+    
+    normals_sum = np.zeros((paths.shape[0],d), dtype=np.float64)  # Initialize to match number of rows in paths
+ 
+    for i in range(paths.shape[0]):
+        # Extract row-wise indices for left and right, skipping the default -1 values
+        left_indices = left_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]][left_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]] != -1]
+        right_indices = right_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]][right_paths_flat[i*paths.shape[1]:(i+1)*paths.shape[1]] != -1]
+        if left_indices.size > 0:
+            importances_sum_left[i] = importances_left[left_indices].sum(axis=0)
+        if right_indices.size > 0:
+            importances_sum_right[i] = importances_right[right_indices].sum(axis=0)
+        normals_sum[i] = np.abs(normals[paths[i]]).sum(axis=0)   
+
+    importances_sum = importances_sum_left + importances_sum_right
+    
     return importances_sum, normals_sum
 
-# @njit
-# def calculate_importances(paths, directions, importances_left, importances_right, normals, d):
-#     num_samples = paths.shape[0]
-#     importances = np.zeros((num_samples, d))
-#     normals_sum = np.zeros((num_samples, d))
-    
-#     for i in range(num_samples):
-#         path = paths[i]
-#         direction = directions[i]
-#         for node_id in range(path.shape[0]):
-#             node = path[node_id]
-#             if direction[node_id] == 0:
-#                 break
-#             if direction[node_id] == -1:
-#                 importances[i] += importances_left[node]
-#             else:
-#                 importances[i] += importances_right[node]
-#             normals_sum[i] += np.abs(normals[node])
-    
-#     return importances, normals_sum
 
 
 tree_spec = [
@@ -164,7 +167,7 @@ class ExtendedTree:
         self.path_to[0,0] = 0
         self.extend_tree(node_id=0, X=X, depth=0)
         self.corrected_depth = np.array([
-            (c_factor(k)+sum(path>0))/c_factor(self.n)
+            (c_factor(k)+sum(path>-1))/c_factor(self.n)
             for i,(k,path) in enumerate(zip(self.node_size,self.path_to))
             if i<self.node_count
         ])
@@ -188,7 +191,7 @@ class ExtendedTree:
             self.node_size[node_id] = len(data)
             if self.node_size[node_id] <= self.min_sample or depth >= self.max_depth:
                 continue
-            
+
             self.normals[node_id] = make_rand_vector(self.d - self.locked_dims, self.d)            
             
             dist = np.dot(np.ascontiguousarray(data), np.ascontiguousarray(self.normals[node_id]))
@@ -201,7 +204,7 @@ class ExtendedTree:
             
             X_left = data[mask]
             X_right = data[~mask,:]
-            
+
             self.importances_left[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_left)+1))
             self.importances_right[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_right)+1))
             
@@ -210,7 +213,7 @@ class ExtendedTree:
             
             self.child_left[node_id] = left_child
             self.child_right[node_id] = right_child
-            
+
             stack.append((left_child, X_left, depth + 1))
             stack.append((right_child, X_right, depth + 1))
 
@@ -223,7 +226,7 @@ class ExtendedTree:
     def predict(self, X):
         return self.corrected_depth[self.leaf_ids(X)]
     
-    def importances(self, X):
+    def importances(self, X: np.ndarray):
         importances,normals = calculate_importances(
             self.path_to[self.leaf_ids(X)], 
             self.path_to_Right_Left[self.leaf_ids(X)], 
@@ -242,14 +245,18 @@ class ExtendedIsolationForest():
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.max_depth = max_depth
         self.plus=plus
+    
+    @property
+    def avg_number_of_nodes(self):
+        return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X, locked_dims=None):
         if not locked_dims:
             locked_dims = 0
         if self.max_depth == "auto":
-            self.max_depth = int(2*np.ceil(np.log2(self.max_samples)))
+            self.max_depth = int(np.ceil(np.log2(self.max_samples)))
         subsample_size = np.min((self.max_samples, len(X)))
-        self.trees = [ExtendedTree(subsample_size, X.shape[1], 100, self.plus, locked_dims)
+        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, self.plus, locked_dims)
                       for _ in range(self.n_estimators)]
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
@@ -274,8 +281,8 @@ class ExtendedIsolationForest():
     def global_importances(self, X,p=0.1):
         y_hat = self._predict(X,p)
         importances, normals = self._importances(X)
-        outliers_importances,outliers_normals = np.mean(importances[y_hat],axis=0),np.mean(normals[y_hat],axis=0)
-        inliers_importances,inliers_normals = np.mean(importances[~y_hat],axis=0),np.mean(normals[~y_hat],axis=0)
+        outliers_importances,outliers_normals = np.sum(importances[y_hat],axis=0),np.sum(normals[y_hat],axis=0)
+        inliers_importances,inliers_normals = np.sum(importances[~y_hat],axis=0),np.sum(normals[~y_hat],axis=0)
         return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
     
     def local_importances(self, X):
