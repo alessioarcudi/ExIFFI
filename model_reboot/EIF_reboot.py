@@ -248,6 +248,7 @@ class ExtendedIsolationForest():
         return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X, locked_dims=None):
+        self.ids = None
         if not locked_dims:
             locked_dims = 0
         if self.max_depth == "auto":
@@ -259,7 +260,7 @@ class ExtendedIsolationForest():
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
             
     def compute_ids(self, X):
-        if self.X is None or self.X.shape != X.shape:
+        if self.ids is None or self.X.shape != X.shape:
             self.X = X
             self.ids = np.array([tree.leaf_ids(X) for tree in self.trees])
 
