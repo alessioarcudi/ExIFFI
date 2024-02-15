@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import time
-from typing import Type, Optional
+from typing import Type, Optional, List
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -201,3 +201,39 @@ def score_plot(dataset: Type[Dataset],
         plt.show()
         
     return ax1,ax2
+
+def plot_feature_selection(precision_files: List[str], plot_path:str):
+    colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
+    #markers = ["P","s","o","v","*","+"]
+    c=0
+    for path in list(precision_files)[-1::-1]:
+        with open(path, 'rb') as f:
+            precisions = pickle.load(f)
+
+        median     = [np.percentile(x, 50) for x in precisions.direct]
+        five       = [np.percentile(x, 95) for x in precisions.values]
+        ninetyfive = [np.percentile(x, 5) for x in precisions.values]
+        dim = len(median)
+        
+        #i.replace("E-DIFFI","ExIFFI")
+        #i.replace('E-IFFI-plus','ExIFFI-plus')
+        #i.replace("random_forest","Random Forest")
+        plt.style.use('default')
+        plt.rcParams['axes.facecolor'] = '#F2F2F2'
+        plt.grid(alpha = 0.7)
+        plt.plot(median,label=precisions.model,c=colors[c],alpha=0.5,marker="o")#markers[c])
+        
+        plt.xlabel("Number of Features",fontsize = 20)
+        plt.ylabel("Average Precision",fontsize = 20)
+        #plt.title("Feature selection "+name, fontsize = 18)
+        plt.xticks(range(dim),range(dim,0,-1))
+        
+        
+        
+        plt.fill_between(np.arange(dim),five, ninetyfive,alpha=0.05, color=colors[c])
+        plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
+        plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+        namefile = precisions.name + "_feature_selection_.pdf"
+        plt.savefig(plot_path+namefile,bbox_inches = "tight")
+        c+=1
+    plt.show()
