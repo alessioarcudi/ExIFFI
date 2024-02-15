@@ -6,6 +6,8 @@ from typing import Type, Optional
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import colors
+from matplotlib.pyplot import cm
 import pandas as pd
 import pickle
 
@@ -21,12 +23,38 @@ Insert here the newest version of the plot functions used in the ExIFFI model an
 EIF_reboot.py. 
 """
 
+def get_filename(
+                file_type:str,
+                name:str,
+                file_ext:Optional[str]='pkl'
+                ):
+    """
+    Function to return the name of the file to be saved:
+
+    Parameters
+    ----------
+    file_type: Type of file to save. POssible values: imp_score, plt_data, bar_plor, score_plot, ... 
+    name: Dataset name 
+    file_ext: File extension, by default pkl 
+
+    Returns
+    ----------
+    filename: String containing the complete filename 
+    """
+    
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    filename = current_time + '_' + file_type + '_' + name + '.' + file_ext
+
+    return filename 
+     
+
 def compute_local_importances(X: np.array,
                               name: str,
-                              model=ExtendedIsolationForest(plus=True),
-                              depth_based: bool = False,
-                              pwd_imp_score: str = os.getcwd(), 
-                              pwd_plt_data: str = os.getcwd()) -> tuple[np.array,dict,str,str]:
+                              model: Optional[Type[ExtendedIsolationForest]] = ExtendedIsolationForest(plus=True),
+                              depth_based: Optional[bool] = False,
+                              pwd_imp_score: Optional[str] = os.getcwd(), 
+                              pwd_plt_data: Optional[str] = os.getcwd()) -> tuple[np.array,dict,str,str]:
         """
         Computhe the Local Feature Importance Scores for the input dataset X. Save them into a npz file and save the plt_data dictionary into a pkl file. 
         
@@ -49,7 +77,9 @@ def compute_local_importances(X: np.array,
         path_plt_data: Path of the pkl file containing the plt data.    
         """
 
-        name='LFI_'+name
+        name_type_fi='LFI_imp_scores'
+        name_type_plt_data='LFI_plt_data'
+
         fi=model.local_importances(X)
 
         # Handle the case in which there are some np.nan or np.inf values in the fi array
@@ -58,12 +88,10 @@ def compute_local_importances(X: np.array,
             fi=np.nan_to_num(fi,nan=0,posinf=np.nanmax(fi[np.isfinite(fi)])+1)
         
         # Save the Importance Scores in a npz file (more efficient than pkl files if we are using Python objects)
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        filename = current_time + '_imp_scores_reboot_' + name + '.npz'
+        filename=get_filename(name_type_fi,name,'npz')
         path_fi = pwd_imp_score  + '/' + filename
         np.savez(path_fi,fi=fi)
-        print(f'Importance scores save as {filename} in {path_fi}')
+        print(f'Local Importance scores saved as {filename} in {path_fi}')
 
         """ 
         Take the mean feature importance scores over the different runs for the Feature Importance Plot
@@ -83,7 +111,7 @@ def compute_local_importances(X: np.array,
                 'std': std_imp[mean_imp.argsort()]}
         
         # Save the plt_data dictionary in a pkl file
-        filename_plt = current_time + '_plt_data_reboot_' + name + '.pkl'
+        filename_plt=get_filename(name_type_plt_data,name)
         path_plt_data = pwd_plt_data + '/' + filename_plt
         with open(path_plt_data, 'wb') as fl:
             pickle.dump(plt_data,fl)
@@ -95,11 +123,11 @@ def compute_local_importances(X: np.array,
 def compute_global_importances(X: np.array, 
                                 n_runs: int, 
                                 name: str,
-                                model=ExtendedIsolationForest(plus=True),
-                                p:float=0.1,
-                                depth_based: bool = False,
-                                pwd_imp_score: str = os.getcwd(),
-                                pwd_plt_data: str = os.getcwd()) -> tuple[np.array,dict,str,str]:
+                                model: Optional[Type[ExtendedIsolationForest]] =ExtendedIsolationForest(plus=True),
+                                p:Optional[float]=0.1,
+                                depth_based: Optional[bool] = False,
+                                pwd_imp_score: Optional[str] = os.getcwd(),
+                                pwd_plt_data: Optional[str] = os.getcwd()) -> tuple[np.array,dict,str,str]:
         """
         Computhe the Global Feature Importance Scores for the input dataset X. Save them into a npz file and save the plt_data dictionary into a pkl file.
         
@@ -124,7 +152,8 @@ def compute_global_importances(X: np.array,
         path_plt_data: Path of the pkl file containing the plt data    
         """
 
-        name='GFI_'+name
+        name_type_fi='GFI_imp_scores'
+        name_type_plt_data='GFI_plt_data'
         fi=np.zeros(shape=(n_runs,X.shape[1]))
         for i in range(n_runs):
                 model.fit(X)
@@ -136,11 +165,10 @@ def compute_global_importances(X: np.array,
                 fi=np.nan_to_num(fi,nan=0,posinf=np.nanmax(fi[np.isfinite(fi)])+1)
 
         # Save the Importance Scores in a npz file (more efficient than pkl files if we are using Python objects)
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        filename = current_time + '_imp_scores_reboot_' + name + '.npz'
+        filename=get_filename(name_type_fi,name,'npz')
         path_fi = pwd_imp_score  + '/' + filename
         np.savez(path_fi,fi=fi)
+        print(f'Global Importance scores saved as {filename} in {path_fi}')
                 
 
         fi[fi==np.inf]=np.nan
@@ -154,7 +182,7 @@ def compute_global_importances(X: np.array,
                         'std': std_imp[mean_imp.argsort()]}
         
         # Save the plt_data dictionary in a pkl file
-        filename_plt = current_time + '_plt_data_reboot_' + name + '.pkl'
+        filename_plt=get_filename(name_type_plt_data,name)
         path_plt_data = pwd_plt_data + '/' + filename_plt
         with open(path_plt_data, 'wb') as fl:
                 pickle.dump(plt_data,fl)
@@ -165,12 +193,12 @@ def compute_global_importances(X: np.array,
 def bar_plot(
           imps_path: str,
           name: str,
-          pwd: str =os.getcwd(),
-          f: int = 6,
-          col_names = None,
-          is_local: bool=False,
-          save: bool =True,
-          show_plot: bool =True):
+          pwd: Optional[str] =os.getcwd(),
+          f: Optional[int] = 6,
+          col_names: Optional[str] = None,
+          is_local: Optional[bool]=False,
+          save: Optional[bool] =True
+          ):
         """
         Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
         
@@ -186,7 +214,6 @@ def bar_plot(
         If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
         Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False.  
         save: Boolean variable used to decide weather to save the Bar Plot locally as a PDF or not. BY default save is set to True. 
-        show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
 
         Returns
         ----------
@@ -194,12 +221,11 @@ def bar_plot(
         bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
         """
 
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        name_file = current_time + '_GFI_Bar_plot_reboot_' + name 
-
+        name_type='GFI_Bar_plot'
         if is_local:
-            name_file = current_time + '_LFI_Bar_plot_reboot_' + name
+            name_type='LFI_Bar_plot'
+
+        filename=get_filename(name_type,name,'pdf')
         
         #Load the imps array from the pkl file contained in imps_path -> the imps_path is returned from the 
         #compute_local_importances or compute_global_importances functions so we have it for free 
@@ -255,21 +281,20 @@ def bar_plot(
         ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
 
         if save:
-            plt.savefig(pwd + '/{}.pdf'.format(name_file), bbox_inches='tight')
+            plt.savefig(pwd + '/{}'.format(filename), bbox_inches='tight')
 
-        if show_plot:
-            plt.show()
+        plt.show()
 
         return fig, ax, bars
 
 def score_plot(
                plt_data_path: str,
                name: str,
-               pwd: str =os.getcwd(),
-               col_names=None,
-               is_local: bool =False,
-               save: bool =True,
-               show_plot: bool =True):
+               pwd: Optional[str] =os.getcwd(),
+               col_names: Optional[str]=None,
+               is_local: Optional[bool] =False,
+               save: Optional[bool] =True
+               ):
         """
         Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
         
@@ -284,7 +309,6 @@ def score_plot(
         If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
         Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False. 
         save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-        show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
                     
         Returns
         ----------
@@ -295,12 +319,11 @@ def score_plot(
         with open(plt_data_path, 'rb') as f:
             plt_data = pickle.load(f)
 
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        name_file = current_time + '_GFI_Score_plot_parallel_' + name 
-
+        name_type='GFI_Score_plot'
         if is_local:
-            name_file = current_time + '_LFI_Score_plot_parallel_' + name
+            name_type='LFI_Score_plot'
+
+        filename=get_filename(name_type,name,'pdf')
 
         patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
         '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
@@ -350,10 +373,9 @@ def score_plot(
             ax1.set_yticklabels(yticks)
 
         if save:
-            plt.savefig(pwd+'/{}.pdf'.format(name_file),bbox_inches='tight')
+            plt.savefig(pwd+'/{}'.format(filename),bbox_inches='tight')
 
-        if show_plot:
-            plt.show()
+        plt.show()
             
         return ax1,ax2
 
@@ -361,19 +383,19 @@ def importance_map(
                    name: str, 
                    X_train: np.array,
                    y_train: np.array,
-                   model=ExtendedIsolationForest(plus=True),
-                   iforest=IsolationForest(),
-                   resolution: int = 30,
-                   pwd: str = os.getcwd(),
-                   save: bool = True,
-                   m: bool = None,
-                   factor: int = 3, 
-                   feats_plot: tuple = (0,1),
+                   model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
+                   iforest:Type[IsolationForest]=IsolationForest(),
+                   resolution: Optional[int] = 30,
+                   pwd: Optional[str] = os.getcwd(),
+                   save: Optional[bool] = True,
+                   m: Optional[bool] = None,
+                   factor: Optional[int] = 3, 
+                   feats_plot: Optional[tuple] = (0,1),
                    col_names: List[str] = None,
-                   ax=None,
-                   isdiffi: bool = False,
-                   labels: bool = True,
-                   show_plot: bool = True):
+                   ax:Optional[plt.axes]=None,
+                   isdiffi: Optional[bool] = False,
+                   labels: Optional[bool] = True
+                   ):
         """
         Produce the Local Feature Importance Scoremap.   
         
@@ -397,7 +419,6 @@ def importance_map(
         isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
         labels: Boolean variable used to decide weather to include the x and y label name in the plot.
         When calling the plot_importance_map function inside plot_complete_scoremap this parameter will be set to False 
-        show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
                     
         Returns
         ----------
@@ -457,12 +478,12 @@ def importance_map(
         
         ax.legend()
 
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        filename = current_time + '_Local_Importance_Scoremap_parallel_' + name
+        name_type='Importance_map'
+
+        filename=get_filename(name_type,name,'pdf')
 
         if save:
-            plt.savefig(pwd + '/{}.pdf'.format(filename), bbox_inches='tight')
+            plt.savefig(pwd + '/{}'.format(filename), bbox_inches='tight')
         else: 
             fig,ax=None,None
 
@@ -473,20 +494,20 @@ def importance_map_col_names(
                             X:pd.DataFrame,
                             X_train: np.array,
                             y_train: np.array,
-                            model=ExtendedIsolationForest(plus=True),
-                            iforest=IsolationForest(),
-                            resolution: int = 30,
-                            pwd: str =os.getcwd(),
-                            save: bool =True,
-                            m: bool =None,
-                            factor: int =3, 
-                            col_names=None,
-                            ax=None,
-                            isdiffi: bool = False,
-                            labels: bool=True,
-                            show_plot: bool =True):
+                            model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
+                            iforest:Type[IsolationForest]=IsolationForest(),
+                            resolution: Optional[int] = 30,
+                            pwd: Optional[str] =os.getcwd(),
+                            save: Optional[bool] =True,
+                            m: Optional[bool] =None,
+                            factor: Optional[int] =3, 
+                            col_names:Optional[List[str]]=None,
+                            ax:Optional[Type[plt.axes]]=None,
+                            isdiffi: Optional[bool] = False,
+                            labels: Optional[bool]=True
+                            ):
           
-            """Stub method of plot_importance_map used to give the user the possibility of specifying the names of the features to compare in the Scoremap.
+            """Stub method of plot_importance_map used to give the user the possibility of specifying in input the names of the features to compare in the Scoremap.
             
             Parameters
             ----------
@@ -517,13 +538,13 @@ def complete_scoremap(
                      dim:int,
                      X: pd.DataFrame,
                      y: np.array,
-                     model=ExtendedIsolationForest(plus=True),
-                     iforest=IsolationForest(),
-                     pwd:str =os.getcwd(),
-                     isdiffi: bool = False,
-                     half: bool = False,
-                     save: bool =True,
-                     show_plot: bool =True):
+                     model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
+                     iforest:Type[IsolationForest]=IsolationForest(),
+                     pwd:Optional[str] =os.getcwd(),
+                     isdiffi: Optional[bool] = False,
+                     half: Optional[bool] = False,
+                     save: Optional[bool] =True
+                     ):
 
         """Produce the Complete Local Feature Importance Scoremap: a Scoremap for each pair of features in the input dataset.   
         
@@ -539,7 +560,6 @@ def complete_scoremap(
         isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
         half: Boolean parameter to decide weather to plot all the possible scoremaps or only half of them, by default False
         save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-        show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
         
         Returns
         ----------
@@ -555,12 +575,12 @@ def complete_scoremap(
                         continue
                     _,_=importance_map(name,X,y,model,iforest,50,pwd,feats_plot=(features[1],features[0]),ax=ax[j,i],isdiffi=isdiffi,save=False,labels=False)
 
-        t = time.localtime()
-        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-        filename = current_time + '_Local_Importance_Scoremap_parallel_' + name + '_complete'
+        name_type='Complete_Importance_map'
+
+        filename=get_filename(name_type,name,'pdf')
 
         if save:
-            plt.savefig(pwd+'/{}.pdf'.format(filename),bbox_inches='tight')
+            plt.savefig(pwd+'/{}'.format(filename),bbox_inches='tight')
 
         plt.show()
     
