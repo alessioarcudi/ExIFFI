@@ -64,5 +64,25 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                     runs[run] = np.nan
             precisions[number_of_features_dropped] = runs
         return precisions
+    
+
+def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationForest],
+                                                   dataset: Type[Dataset],
+                                                   n_runs: int = 10,
+                                                   train_size = 0.8,
+                                                   contamination_values: npt.NDArray = np.linspace(0.0,0.1,10)
+                                                   ) -> tuple[np.array,dict,str,str]:
+    precisions = np.zeros(shape=(len(contamination_values),n_runs))
+    for i,contamination in tqdm(enumerate(contamination_values)):
+        for run in range(n_runs):
+            dataset.split_dataset(train_size,contamination)
+            try:
+                I.fit(dataset.X_train)
+                score = I.predict(dataset.X)
+                avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
+                precisions[i,run] = avg_prec
+            except:
+                precisions[i,run] = np.nan
+    return precisions
 
 
