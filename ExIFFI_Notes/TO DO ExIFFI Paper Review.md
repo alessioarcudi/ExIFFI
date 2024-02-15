@@ -152,3 +152,22 @@
 > [!warning]
 > Write the code so that it works on the `EIF_reboot` model  
 
+Put on `datasets.py` on the new branch 
+
+"""
+
+THINGS TO ADD
+
+  
+
+- Modify the partition_data method to return also the labels (all zeros for inliers
+
+and all ones for outliers)
+
+- Add a method to normalize the data
+
+- Add a method that returns the names of the features (if available) → add a property self.feature_names that is
+
+a list of feature names if they are available otherwise it is range(dataset.X.shape[1])
+
+"""
