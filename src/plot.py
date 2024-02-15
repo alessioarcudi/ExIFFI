@@ -5,7 +5,8 @@ from matplotlib import colors
 from matplotlib.pyplot import cm
 from matplotlib.pyplot import *
 import pickle
-from tqdm import tqdm
+#from tqdm import tqdm
+import os
 import sys;sys.path.append('../')
 
 from models.interpretability_module import local_diffi
@@ -20,7 +21,7 @@ EIF_reboot.py.
 
 def compute_local_importances(X: np.array,
                               name: str,
-                              model=ExtendedIsolationForest(),
+                              model=ExtendedIsolationForest(plus=True),
                               depth_based: bool = False,
                               pwd_imp_score: str = os.getcwd(), 
                               pwd_plt_data: str = os.getcwd()) -> tuple[np.array,dict,str,str]:
@@ -60,6 +61,7 @@ def compute_local_importances(X: np.array,
         filename = current_time + '_imp_scores_reboot_' + name + '.npz'
         path_fi = pwd_imp_score  + '/' + filename
         np.savez(path_fi,fi=fi)
+        print(f'Importance scores save as {filename} in {path_fi}')
 
         """ 
         Take the mean feature importance scores over the different runs for the Feature Importance Plot
@@ -83,6 +85,7 @@ def compute_local_importances(X: np.array,
         path_plt_data = pwd_plt_data + '/' + filename_plt
         with open(path_plt_data, 'wb') as fl:
             pickle.dump(plt_data,fl)
+        print(f'Plot data save as {filename_plt} in {path_plt_data}')
         
 
         return fi,plt_data,path_fi,path_plt_data
@@ -90,7 +93,7 @@ def compute_local_importances(X: np.array,
 def compute_global_importances(X: np.array, 
                                 n_runs: int, 
                                 name: str,
-                                model=ExtendedIsolationForest(),
+                                model=ExtendedIsolationForest(plus=True),
                                 p:float=0.1,
                                 depth_based: bool = False,
                                 pwd_imp_score: str = os.getcwd(),
@@ -356,7 +359,7 @@ def importance_map(
                    name: str, 
                    X_train: np.array,
                    y_train: np.array,
-                   model=ExtendedIsolationForest(),
+                   model=ExtendedIsolationForest(plus=True),
                    iforest=IsolationForest(),
                    resolution: int = 30,
                    pwd: str = os.getcwd(),
@@ -461,8 +464,9 @@ def importance_map(
         else: 
             fig,ax=None,None
 
-        if show_plot:
-            plt.show()
+        # if show_plot:
+        #     plt.show()
+        #plt.show()
 
         return fig, ax
 
@@ -471,7 +475,7 @@ def importance_map_col_names(
                             X:pd.DataFrame,
                             X_train: np.array,
                             y_train: np.array,
-                            model=ExtendedIsolationForest(),
+                            model=ExtendedIsolationForest(plus=True),
                             iforest=IsolationForest(),
                             resolution: int = 30,
                             pwd: str =os.getcwd(),
@@ -515,7 +519,7 @@ def complete_scoremap(
                      dim:int,
                      X: pd.DataFrame,
                      y: np.array,
-                     model=ExtendedIsolationForest(),
+                     model=ExtendedIsolationForest(plus=True),
                      iforest=IsolationForest(),
                      pwd:str =os.getcwd(),
                      isdiffi: bool = False,
@@ -560,8 +564,9 @@ def complete_scoremap(
         if save:
             plt.savefig(pwd+'/{}.pdf'.format(filename),bbox_inches='tight')
 
-        if show_plot:
-            plt.show()
+        # if show_plot:
+        #     plt.show()
+        plt.show()
     
         return fig,ax
 
