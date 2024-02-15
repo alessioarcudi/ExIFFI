@@ -18,366 +18,198 @@ from models.forests import IsolationForest
 from models.interpretability_module import local_diffi
 from utils_reboot.datasets import Dataset
 
-"""
-Insert here the newest version of the plot functions used in the ExIFFI model and adapted to work with the ExIFFI implementation contained in 
-EIF_reboot.py. 
-"""
 
-def get_filename(
-                file_type:str,
-                name:str,
-                file_ext:Optional[str]='pkl'
-                ):
+
+def bar_plot(dataset: Type[Dataset], 
+            global_importances_file: str, 
+            plot_path: str = os.getcwd(), 
+            f: int = 6, 
+            col_names: Optional[list] = None,
+            save = True, 
+            show_plot = True) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
     """
-    Function to return the name of the file to be saved:
-
+    Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
+    
     Parameters
     ----------
-    file_type: Type of file to save. POssible values: imp_score, plt_data, bar_plor, score_plot, ... 
-    name: Dataset name 
-    file_ext: File extension, by default pkl 
+    imps_path: Path of the pkl file containing the array of shape (n_samples,n_features) with the LFI/GFI Scores for the input dataset.
+    Obtained from the compute_local_importance or compute_global_importance functions.   
+    name: Dataset's name 
+    pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.    
+    f: Number of vertical bars to include in the Bar Plot. By default f is set to 6.
+    col_names: List with the names of the features of the input dataset, by default None. 
+    is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
+    If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
+    Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False.  
+    save: Boolean variable used to decide weather to save the Bar Plot locally as a PDF or not. BY default save is set to True. 
+    show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
 
     Returns
     ----------
-    filename: String containing the complete filename 
+    fig,ax : plt.figure  and plt.axes objects used to create the plot 
+    bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
     """
-    
+
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    filename = current_time + '_' + file_type + '_' + name + '.' + file_ext
-
-    return filename 
-     
-
-def compute_local_importances(X: np.array,
-                              name: str,
-                              model: Optional[Type[ExtendedIsolationForest]] = ExtendedIsolationForest(plus=True),
-                              depth_based: Optional[bool] = False,
-                              pwd_imp_score: Optional[str] = os.getcwd(), 
-                              pwd_plt_data: Optional[str] = os.getcwd()) -> tuple[np.array,dict,str,str]:
-        """
-        Computhe the Local Feature Importance Scores for the input dataset X. Save them into a npz file and save the plt_data dictionary into a pkl file. 
-        
-        Parameters
-        ----------
-        X: Input dataset,np.array of shape (n_samples,n_features)
-        name: Dataset's name  
-        model: Instance of the model on which we want to compute the Local Feature Importance Scores,  by default the default version of ExtendedIsolationForest
-        depth_based: Boolean variable used to decide weather to used the Depth Based or the Not Depth Based Importance in Local_importances, by default False
-        pwd_imp_score: Directory where the Importance Scores results will be saved as pkl files, by default the current working directory
-        pwd_plt_data: Directory where the plot data results will be saved as pkl files, by default the current working directory        
+    name_file = current_time + '_GFI_Bar_plot_parallel_' + dataset.name 
     
-        Returns
-        ----------
-        imps: array of shape (n_samples,n_features) containing the local Feature Importance values for the samples of the input dataset X. 
-        The array is also locally saved in a pkl file for the sake of reproducibility.
-        plt_data: Dictionary containig the average Importance Scores values, the feature order and the standard deviations on the Importance Scores. 
-        The dictionary is also locally saved in a pkl file for the sake of reproducibility.
-        path_fi: Path of the pkl file containing the Importance Scores.
-        path_plt_data: Path of the pkl file containing the plt data.    
-        """
+    #Load the imps array from the pkl file contained in imps_path -> the imps_path is returned from the 
+    #compute_local_importances or compute_global_importances functions so we have it for free 
+    try:
+        importances=np.load(global_importances_file)['fi']
+    except:
+        raise Exception("The file path is not valid")
 
-        name_type_fi='LFI_imp_scores'
-        name_type_plt_data='LFI_plt_data'
+    number_colours = 20
+    color = plt.cm.get_cmap('tab20',number_colours).colors
+    patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
+    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    importances_matrix = np.array([np.array(pd.Series(x).sort_values(ascending = False).index).T for x in importances])
+    dim=int(importances.shape[1])
 
-        fi=model.local_importances(X)
+    bars = [[(list(importances_matrix[:,j]).count(i)/len(importances_matrix))*100 for i in range(dim)] for j in range(dim)]
+    bars = pd.DataFrame(bars)
 
-        # Handle the case in which there are some np.nan or np.inf values in the fi array
-        if np.isnan(fi).any() or np.isinf(fi).any():
-            #Substitute the np.nan values with 0 and the np.inf values with the maximum value of the fi array plus 1. 
-            fi=np.nan_to_num(fi,nan=0,posinf=np.nanmax(fi[np.isfinite(fi)])+1)
-        
-        # Save the Importance Scores in a npz file (more efficient than pkl files if we are using Python objects)
-        filename=get_filename(name_type_fi,name,'npz')
-        path_fi = pwd_imp_score  + '/' + filename
-        np.savez(path_fi,fi=fi)
-        print(f'Local Importance scores saved as {filename} in {path_fi}')
+    tick_names=[]
+    for i in range(1,f+1):
+        if int(str(i)[-1])==1 and (len(str(i))==1 or int(str(i)[-2])!=1):
+            tick_names.append(r'${}'.format(i) + r'^{st}$')
+        elif int(str(i)[-1])==2 and (len(str(i))==1 or int(str(i)[-2])!=1):
+            tick_names.append(r'${}'.format(i) + r'^{nd}$')
+        elif int(str(i)[-1])==3 and (len(str(i))==1 or int(str(i)[-2])!=1):
+            tick_names.append(r'${}'.format(i) + r'^{rd}$')
+        else:
+            tick_names.append(r'${}'.format(i) + r'^{th}$')
 
-        """ 
-        Take the mean feature importance scores over the different runs for the Feature Importance Plot
-        and put it in decreasing order of importance.
-        To remove the possible np.nan or np.inf values from the mean computation use assign np.nan to the np.inf values 
-        and then ignore the np.nan values using np.nanmean
-        """
+    barWidth = 0.85
+    r = range(dim)
+    ncols=1
+    if importances.shape[1]>15:
+        ncols=2
+    elif importances.shape[1]>30:
+        ncols=3
+    elif importances.shape[1]>45:
+        ncols=4
+    elif importances.shape[1]>60:
+        ncols=5
+    elif importances.shape[1]>75:
+        ncols=6
 
-        fi[fi==np.inf]=np.nan
-        mean_imp=np.nanmean(fi,axis=0)
-        std_imp=np.nanstd(fi,axis=0)
-        mean_imp_val=np.sort(mean_imp)
-        feat_order=mean_imp.argsort()
+    fig, ax = plt.subplots()
 
-        plt_data={'Importances': mean_imp_val,
-                'feat_order': feat_order,
-                'std': std_imp[mean_imp.argsort()]}
-        
-        # Save the plt_data dictionary in a pkl file
-        filename_plt=get_filename(name_type_plt_data,name)
-        path_plt_data = pwd_plt_data + '/' + filename_plt
-        with open(path_plt_data, 'wb') as fl:
-            pickle.dump(plt_data,fl)
-        print(f'Plot data save as {filename_plt} in {path_plt_data}')
-        
+    for i in range(dim):
+        if col_names is not None: 
+            ax.bar(r[:f], bars.T.iloc[i, :f].values, bottom=bars.T.iloc[:i, :f].sum().values, color=color[i % number_colours], edgecolor='white', width=barWidth, label=col_names[i], hatch=patterns[i // number_colours])
+        else:
+            ax.bar(r[:f], bars.T.iloc[i, :f].values, bottom=bars.T.iloc[:i, :f].sum().values, color=color[i % number_colours], edgecolor='white', width=barWidth, label=str(i), hatch=patterns[i // number_colours])
 
-        return fi,plt_data,path_fi,path_plt_data
+    ax.set_xlabel("Rank", fontsize=20)
+    ax.set_xticks(range(f), tick_names[:f])
+    ax.set_ylabel("Percentage count", fontsize=20)
+    ax.set_yticks(range(10, 101, 10), [str(x) + "%" for x in range(10, 101, 10)])
+    ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
+
+    if save:
+        plt.savefig(plot_path + '/{}.pdf'.format(name_file), bbox_inches='tight')
+
+    if show_plot:
+        plt.show()
+
+    return fig, ax, bars
     
-def compute_global_importances(X: np.array, 
-                                n_runs: int, 
-                                name: str,
-                                model: Optional[Type[ExtendedIsolationForest]] =ExtendedIsolationForest(plus=True),
-                                p:Optional[float]=0.1,
-                                depth_based: Optional[bool] = False,
-                                pwd_imp_score: Optional[str] = os.getcwd(),
-                                pwd_plt_data: Optional[str] = os.getcwd()) -> tuple[np.array,dict,str,str]:
-        """
-        Computhe the Global Feature Importance Scores for the input dataset X. Save them into a npz file and save the plt_data dictionary into a pkl file.
-        
-        Parameters
-        ----------
-        X: Input Dataset,np.array of shape (n_samples,n_features)
-        n_runs: Number of runs to perform in order to compute the Global Feature Importance Scores.
-        name: Dataset's name   
-        model: Instance of the model on which we want to compute the Local Feature Importance Scores,  by default the default version of ExtendedIsolationForest
-        p: Contamination factor of the dataset, by default 0.1
-        depth_based: Boolean variable used to decide weather to used the Depth Based or the Not Depth Based Importance in Global_importance, by default False
-        pwd_imp_score: Directory where the Importance Scores results will be saved as pkl files, by default the current working directory
-        pwd_plt_data: Directory where the plot data results will be saved as pkl files, by default the current working directory        
-                                
-        Returns
-        ----------
-        imps: array of shape (n_samples,n_features) containing the local Feature Importance values for the samples of the input dataset X. 
-        The array is also locally saved in a pkl file for the sake of reproducibility.
-        plt_data: Dictionary containing the average Importance Scores values, the feature order and the standard deviations on the Importance Scores. 
-        The dictionary is also locally saved in a pkl file for the sake of reproducibility.
-        path_fi: Path of the pkl file containing the Importance Scores
-        path_plt_data: Path of the pkl file containing the plt data    
-        """
+    
 
-        name_type_fi='GFI_imp_scores'
-        name_type_plt_data='GFI_plt_data'
-        fi=np.zeros(shape=(n_runs,X.shape[1]))
-        for i in range(n_runs):
-                model.fit(X)
-                fi[i,:]=model.global_importances(X,p)
-
-        # Handle the case in which there are some np.nan or np.inf values in the fi array
-        if np.isnan(fi).any() or np.isinf(fi).any():
-                #Substitute the np.nan values with 0 and the np.inf values with the maximum value of the fi array plus 1. 
-                fi=np.nan_to_num(fi,nan=0,posinf=np.nanmax(fi[np.isfinite(fi)])+1)
-
-        # Save the Importance Scores in a npz file (more efficient than pkl files if we are using Python objects)
-        filename=get_filename(name_type_fi,name,'npz')
-        path_fi = pwd_imp_score  + '/' + filename
-        np.savez(path_fi,fi=fi)
-        print(f'Global Importance scores saved as {filename} in {path_fi}')
+def score_plot(dataset: Type[Dataset],
+               global_importances_file: str,
+               plot_path: str = os.getcwd(),
+               col_names=None,
+               save: bool =True,
+               show_plot: bool =True):
+    """
+    Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
+    
+    Parameters
+    ----------
+    plt_data_path: Dictionary generated from the compute_local_importance or compute_global_importance functions 
+    with the necessary information to create the Score Plot.
+    name: Dataset's name
+    pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory. 
+    col_names: List with the names of the features of the input dataset, by default None.  
+    is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
+    If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
+    Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False. 
+    save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
+    show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
                 
+    Returns
+    ----------
+    ax1,ax2: The two plt.axes objects used to create the plot.  
+    """
+    #Load the plt_data dictionary from the pkl file contained in plt_data_path -> the plt_data_path is returned from the 
+    #compute_local_importances or compute_global_importances functions so we have it for free 
+    with open(global_importances_file, 'rb') as f:
+        plt_data = pickle.load(f)
 
-        fi[fi==np.inf]=np.nan
-        mean_imp=np.nanmean(fi,axis=0)
-        std_imp=np.nanstd(fi,axis=0)
-        mean_imp_val=np.sort(mean_imp)
-        feat_order=mean_imp.argsort()
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    name_file = current_time + '_GFI_Score_plot_' + dataset.name 
 
-        plt_data={'Importances': mean_imp_val,
-                        'feat_order': feat_order,
-                        'std': std_imp[mean_imp.argsort()]}
-        
-        # Save the plt_data dictionary in a pkl file
-        filename_plt=get_filename(name_type_plt_data,name)
-        path_plt_data = pwd_plt_data + '/' + filename_plt
-        with open(path_plt_data, 'wb') as fl:
-                pickle.dump(plt_data,fl)
-        
+    patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
+    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    imp_vals=plt_data['Importances']
+    feat_imp=pd.DataFrame({'Global Importance': np.round(imp_vals,3),
+                        'Feature': plt_data['feat_order'],
+                        'std': plt_data['std']
+                        })
+    
+    if len(feat_imp)>15:
+        feat_imp=feat_imp.iloc[-15:].reset_index(drop=True)
+    
+    dim=feat_imp.shape[0]
 
-        return fi,plt_data,path_fi,path_plt_data
+    number_colours = 20
 
-def bar_plot(
-          imps_path: str,
-          name: str,
-          pwd: Optional[str] =os.getcwd(),
-          f: Optional[int] = 6,
-          col_names: Optional[str] = None,
-          is_local: Optional[bool]=False,
-          save: Optional[bool] =True
-          ):
-        """
-        Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
-        
-        Parameters
-        ----------
-        imps_path: Path of the pkl file containing the array of shape (n_samples,n_features) with the LFI/GFI Scores for the input dataset.
-        Obtained from the compute_local_importance or compute_global_importance functions.   
-        name: Dataset's name 
-        pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.    
-        f: Number of vertical bars to include in the Bar Plot. By default f is set to 6.
-        col_names: List with the names of the features of the input dataset, by default None. 
-        is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
-        If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
-        Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False.  
-        save: Boolean variable used to decide weather to save the Bar Plot locally as a PDF or not. BY default save is set to True. 
+    plt.style.use('default')
+    plt.rcParams['axes.facecolor'] = '#F2F2F2'
+    plt.rcParams['axes.axisbelow'] = True
+    color = plt.cm.get_cmap('tab20',number_colours).colors
+    ax1=feat_imp.plot(y='Global Importance',x='Feature',kind="barh",color=color[feat_imp['Feature']%number_colours],xerr='std',
+                    capsize=5, alpha=1,legend=False,
+                    hatch=[patterns[i//number_colours] for i in feat_imp['Feature']])
+    xlim=np.min(imp_vals)-0.05*np.min(imp_vals)
 
-        Returns
-        ----------
-        fig,ax : plt.figure and plt.axes objects used to create the plot 
-        bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
-        """
+    ax1.grid(alpha=0.7)
+    ax2 = ax1.twinx()
+    # Add labels on the right side of the bars
+    values=[]
+    for i, v in enumerate(feat_imp['Global Importance']):
+        values.append(str(v) + ' +- ' + str(np.round(feat_imp['std'][i],2)))
+    
+    ax2.set_ylim(ax1.get_ylim())
+    ax2.set_yticks(range(dim))
+    ax2.set_yticklabels(values)
+    ax2.grid(alpha=0)
+    plt.axvline(x=0, color=".5")
+    ax1.set_xlabel('Importance Score',fontsize=20)
+    ax1.set_ylabel('Features',fontsize=20)
+    plt.xlim(xlim)
+    plt.subplots_adjust(left=0.3)
 
-        name_type='GFI_Bar_plot'
-        if is_local:
-            name_type='LFI_Bar_plot'
+    if col_names is not None:
+        ax1.set_yticks(range(dim))
+        idx=list(feat_imp['Feature'])
+        yticks=[col_names[i] for i in idx]
+        ax1.set_yticklabels(yticks)
 
-        filename=get_filename(name_type,name,'pdf')
-        
-        #Load the imps array from the pkl file contained in imps_path -> the imps_path is returned from the 
-        #compute_local_importances or compute_global_importances functions so we have it for free 
-        importances=np.load(imps_path)['fi']
+    if save:
+        plt.savefig(plot_path+'/{}.pdf'.format(name_file),bbox_inches='tight')
 
-        number_colours = 20
-        color = plt.cm.get_cmap('tab20',number_colours).colors
-        patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
-        '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
-        importances_matrix = np.array([np.array(pd.Series(x).sort_values(ascending = False).index).T for x in importances])
-        dim=importances.shape[1]
-        dim=int(dim)
-        bars = [[(list(importances_matrix[:,j]).count(i)/len(importances_matrix))*100 for i in range(dim)] for j in range(dim)]
-        bars = pd.DataFrame(bars)
-
-        tick_names=[]
-        for i in range(1,f+1):
-            if i==1:
-                tick_names.append(r'${}'.format(i) + r'^{st}$')
-            elif i==2:
-                tick_names.append(r'${}'.format(i) + r'^{nd}$')
-            elif i==3:
-                tick_names.append(r'${}'.format(i) + r'^{rd}$')
-            else:
-                tick_names.append(r'${}'.format(i) + r'^{th}$')
-
-        barWidth = 0.85
-        r = range(dim)
-        ncols=1
-        if importances.shape[1]>15:
-            ncols=2
-        elif importances.shape[1]>30:
-            ncols=3
-        elif importances.shape[1]>45:
-            ncols=4
-        elif importances.shape[1]>60:
-            ncols=5
-        elif importances.shape[1]>75:
-            ncols=6
-
-        fig, ax = plt.subplots()
-
-        for i in range(dim):
-            if col_names is not None: 
-                ax.bar(r[:f], bars.T.iloc[i, :f].values, bottom=bars.T.iloc[:i, :f].sum().values, color=color[i % number_colours], edgecolor='white', width=barWidth, label=col_names[i], hatch=patterns[i // number_colours])
-            else:
-                ax.bar(r[:f], bars.T.iloc[i, :f].values, bottom=bars.T.iloc[:i, :f].sum().values, color=color[i % number_colours], edgecolor='white', width=barWidth, label=str(i), hatch=patterns[i // number_colours])
-
-        ax.set_xlabel("Rank", fontsize=20)
-        ax.set_xticks(range(f), tick_names[:f])
-        ax.set_ylabel("Percentage count", fontsize=20)
-        ax.set_yticks(range(10, 101, 10), [str(x) + "%" for x in range(10, 101, 10)])
-        ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
-
-        if save:
-            plt.savefig(pwd + '/{}'.format(filename), bbox_inches='tight')
-
+    if show_plot:
         plt.show()
-
-        return fig, ax, bars
-
-def score_plot(
-               plt_data_path: str,
-               name: str,
-               pwd: Optional[str] =os.getcwd(),
-               col_names: Optional[str]=None,
-               is_local: Optional[bool] =False,
-               save: Optional[bool] =True
-               ):
-        """
-        Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
         
-        Parameters
-        ----------
-        plt_data_path: Dictionary generated from the compute_local_importance or compute_global_importance functions 
-        with the necessary information to create the Score Plot.
-        name: Dataset's name
-        pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory. 
-        col_names: List with the names of the features of the input dataset, by default None.  
-        is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
-        If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
-        Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False. 
-        save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-                    
-        Returns
-        ----------
-        ax1,ax2: The two plt.axes objects used to create the plot.  
-        """
-        #Load the plt_data dictionary from the pkl file contained in plt_data_path -> the plt_data_path is returned from the 
-        #compute_local_importances or compute_global_importances functions so we have it for free 
-        with open(plt_data_path, 'rb') as f:
-            plt_data = pickle.load(f)
+    return ax1,ax2
 
-        name_type='GFI_Score_plot'
-        if is_local:
-            name_type='LFI_Score_plot'
-
-        filename=get_filename(name_type,name,'pdf')
-
-        patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
-        '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
-        imp_vals=plt_data['Importances']
-        feat_imp=pd.DataFrame({'Global Importance': np.round(imp_vals,3),
-                            'Feature': plt_data['feat_order'],
-                            'std': plt_data['std']
-                            })
-        
-        if len(feat_imp)>15:
-            feat_imp=feat_imp.iloc[-15:].reset_index(drop=True)
-        
-        dim=feat_imp.shape[0]
-
-        number_colours = 20
-
-        plt.style.use('default')
-        plt.rcParams['axes.facecolor'] = '#F2F2F2'
-        plt.rcParams['axes.axisbelow'] = True
-        color = plt.cm.get_cmap('tab20',number_colours).colors
-        ax1=feat_imp.plot(y='Global Importance',x='Feature',kind="barh",color=color[feat_imp['Feature']%number_colours],xerr='std',
-                        capsize=5, alpha=1,legend=False,
-                        hatch=[patterns[i//number_colours] for i in feat_imp['Feature']])
-        xlim=np.min(imp_vals)-0.2*np.min(imp_vals)
-
-        ax1.grid(alpha=0.7)
-        ax2 = ax1.twinx()
-        # Add labels on the right side of the bars
-        values=[]
-        for i, v in enumerate(feat_imp['Global Importance']):
-            values.append(str(v) + ' +- ' + str(np.round(feat_imp['std'][i],2)))
-        
-        ax2.set_ylim(ax1.get_ylim())
-        ax2.set_yticks(range(dim))
-        ax2.set_yticklabels(values)
-        ax2.grid(alpha=0)
-        plt.axvline(x=0, color=".5")
-        ax1.set_xlabel('Importance Score',fontsize=20)
-        ax1.set_ylabel('Features',fontsize=20)
-        plt.xlim(xlim)
-        plt.subplots_adjust(left=0.3)
-
-        if col_names is not None:
-            ax1.set_yticks(range(dim))
-            idx=list(feat_imp['Feature'])
-            yticks=[col_names[i] for i in idx]
-            ax1.set_yticklabels(yticks)
-
-        if save:
-            plt.savefig(pwd+'/{}'.format(filename),bbox_inches='tight')
-
-        plt.show()
-            
-        return ax1,ax2
 
 def importance_map(
                    name: str, 
