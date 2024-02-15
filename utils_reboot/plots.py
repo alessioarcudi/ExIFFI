@@ -13,12 +13,12 @@ from utils_reboot.datasets import Dataset
 
 
 def bar_plot(dataset: Type[Dataset], 
-                    global_importances_file: str, 
-                    plot_path: str = os.getcwd(), 
-                    f: int = 6, 
-                    col_names: Optional[list] = None,
-                    save = True, 
-                    show_plot = True) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
+            global_importances_file: str, 
+            plot_path: str = os.getcwd(), 
+            f: int = 6, 
+            col_names: Optional[list] = None,
+            save = True, 
+            show_plot = True) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
     """
     Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
     
