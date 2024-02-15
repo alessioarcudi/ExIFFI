@@ -34,6 +34,8 @@
 >  - In the `datasets.py` class a method to apply the Data Normalization step (the `pre_process` method contained in `src/utils`) is missing 
 >  - As it was done in `forests.py` we can add the `IsolationForest` class as a sub class of `ExtendedIsolationForest` so that we can easily use also the IF model on our experiments. 
 
+^4d4de5
+
 
 - [x] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
@@ -63,9 +65,21 @@
 > [!attention] 
 >  In notebook `Test_AD_Models.ipynb` I am doing some tests using the new `collect_performance_df` method to compare the EIF, EIF+, DIF and AutoEncoder model. In particular these tests are used to test the PyOD implementation of the DIF and AutoEncoder models. For some reason the EIF and EIF+ models are getting lower Average Precision values with the respect to the ones we reported in the first version of the paper (the Average Precision experiments are collected in the notebook `Average_Precision.ipynb`). Moreover the DIF and AutoEncoder model seems very bad. 
 
+> [!important] Maybe I understand where the error is
+>  I found out that in `wine` the `y` variable obtained loading the data has 10 ones at the beginning and than all zeros. On the other hand in pre processing the data with the `preprocess` function I did:
+> 
+
+``` python 
+y_train=np.zeros(X_train.shape[0])
+y_test=np.ones(X_test.shape[0])
+y=np.concatenate([y_train,y_test])   
+```
+
+> [!important] 
+> So I put the 10 ones at the end of the `y` variable → so I changed the order !!!! Fix this thing and see if the performances get back to the correct values.  
+> So when I do the tests I have to use `partition_data()` to get the training set `X_train` (only inliers) but then for the test set I do not have to use `X_test=np.r_[X_train,X_test]` but I have to normalize `X` and then use `dataset.y` as the label variable. 
+
 ^b1eceb
-
-
 	
 - [ ] Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]. 
 
@@ -146,28 +160,13 @@
 
 - [ ] Modify the method `collect_performance_df` so that it does not only return a `pd.DataFrame` with just the Performance Report but also with all values of the parameters (so also the value of `n_trees`, `n_runs`, `distribution`, `eta`,...) → take inspiration from the method used in HPC Project (save result in `npz` file after having launched `test_model.py` and then use the `load_stats` method to create a `pd.DataFrame` with the stats of each experiment)
 
-- [ ] Create a new branch `plot` to update the `plot.py` script 
-	- [ ] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
+- [x] Create a new branch `plot` to update the `plot.py` script 
+	- [x] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
 	
-> [!warning]
-> Write the code so that it works on the `EIF_reboot` model  
+> [!done]
+> Inserted all the new plot functions inside `utils_reboot/plots.py`
 
-Put on `datasets.py` on the new branch 
+- [ ] Open a new branch `datasets` and add some new features on `datasets.py` as described in [[TO DO ExIFFI Paper Review#^4d4de5|here]]
 
-"""
+- [ ] Always on a new branch create a wrapper of class `ExtendedIsolationForest` to implement the `IsolationForest` model. 
 
-THINGS TO ADD
-
-  
-
-- Modify the partition_data method to return also the labels (all zeros for inliers
-
-and all ones for outliers)
-
-- Add a method to normalize the data
-
-- Add a method that returns the names of the features (if available) → add a property self.feature_names that is
-
-a list of feature names if they are available otherwise it is range(dataset.X.shape[1])
-
-"""
