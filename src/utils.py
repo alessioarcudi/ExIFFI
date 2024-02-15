@@ -115,7 +115,7 @@ def pre_process(scaler_name,X_train,X_test):
     X=np.r_[X_train,X_test]
     scaler=get_scaler(scaler_name)
     X_train=scaler.fit_transform(X_train)
-    X_test=scaler.fit_transform(X_test)
+    X_test=scaler.transform(X_test)
     y_train=np.zeros(X_train.shape[0])
     y_test=np.ones(X_test.shape[0])
     y=np.concatenate([y_train,y_test])
@@ -131,7 +131,7 @@ def pre_process(scaler_name,X_train,X_test):
     return X_train,X_test,X,y
 
 
-def load_preprocess(scaler,name:str,path:str):
+def load_preprocess(scaler,name:str,path:str,use_scaler=True,use_downsample=False):
     """
     Function loading the data from a file and pre processing it with the pre_process function 
     --------------------------------------------------------------------------------
@@ -144,6 +144,8 @@ def load_preprocess(scaler,name:str,path:str):
         Dataset name
     path: str
         Dataset path 
+    use_scaler: bool
+        Weather to normalize the data or not, by default True
 
     Returns:
     -------
@@ -160,8 +162,15 @@ def load_preprocess(scaler,name:str,path:str):
     else:
         raise ValueError("Extension not supported")
     
+    if use_downsample:
+        X,y=downsample(X,y)
+    
     X_train,X_test=partition_data(X,y)
-    X_train,X_test,X,y=pre_process(scaler,X_train,X_test)
+
+    if use_scaler:
+        X_train,X_test,X,y=pre_process(scaler,X_train,X_test)
+    else:
+        X_test=np.r_[X_train,X_test]
 
     return X_train,X_test,X,y
 
