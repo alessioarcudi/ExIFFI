@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
+import random
+
 
 @dataclass
 class Dataset:
@@ -34,6 +36,8 @@ class Dataset:
     path: str = "../data/"
     X: Optional[npt.NDArray] = field(default=None, init=False)
     y: Optional[npt.NDArray] = field(default=None, init=False)
+    X_train: Optional[npt.NDArray] = field(default=None, init=False)
+    y_train: Optional[npt.NDArray] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
         self.load()
@@ -125,6 +129,27 @@ class Dataset:
         print(f" Total Samples: {num_samples}, Features: {num_features}")
         print(f" Inliers: {num_inliers}, Outliers: {num_outliers}, Balance Ratio: {balance_ratio:.2f}")
         print(f" Feature Stats - Mean: {mean_val:.2f}, Std Dev: {std_dev_val:.2f}, Min: {min_val}, Max: {max_val}")
+    
+    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        
+        inexes_outliers = np.where(self.y==1)[0].tolist()
+        indexes_inliers = np.where(self.y==0)[0].tolist()
+        random.shuffle(inexes_outliers)
+        random.shuffle(indexes_inliers)
+        dim_train = int(len(self.X)*train_size)
+        self.X_train = np.zeros((dim_train,self.X.shape[1]))
+        self.y_train = np.zeros(dim_train)
+        for i in range(dim_train):
+            if i < dim_train*contamination and len(inexes_outliers) > 0:
+                index = inexes_outliers.pop()
+            else:
+                index = indexes_inliers.pop()
+            self.X_train[i] = self.X[index]
+            self.y_train[i] = self.y[index]
 
             
 
