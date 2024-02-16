@@ -34,6 +34,10 @@
 >  - In the `datasets.py` class a method to apply the Data Normalization step (the `pre_process` method contained in `src/utils`) is missing 
 >  - As it was done in `forests.py` we can add the `IsolationForest` class as a sub class of `ExtendedIsolationForest` so that we can easily use also the IF model on our experiments. 
 
+> [!success] Updated `dataset.py` class 
+>  - Added instance variable `feature_names`
+>  - Added `normalize` and `pre_process` methods
+>  - Added `split_dataset` method for the experiments 
 
 - [x] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
@@ -146,28 +150,10 @@
 
 - [ ] Modify the method `collect_performance_df` so that it does not only return a `pd.DataFrame` with just the Performance Report but also with all values of the parameters (so also the value of `n_trees`, `n_runs`, `distribution`, `eta`,...) → take inspiration from the method used in HPC Project (save result in `npz` file after having launched `test_model.py` and then use the `load_stats` method to create a `pd.DataFrame` with the stats of each experiment)
 
-- [ ] Create a new branch `plot` to update the `plot.py` script 
-	- [ ] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
+- [x] Create a new branch `plot` to update the `plot.py` script 
+	- [x] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
 	
 > [!warning]
 > Write the code so that it works on the `EIF_reboot` model  
 
-Put on `datasets.py` on the new branch 
 
-"""
-
-THINGS TO ADD
-
-  
-
-- Modify the partition_data method to return also the labels (all zeros for inliers
-
-and all ones for outliers)
-
-- Add a method to normalize the data
-
-- Add a method that returns the names of the features (if available) → add a property self.feature_names that is
-
-a list of feature names if they are available otherwise it is range(dataset.X.shape[1])
-
-"""
