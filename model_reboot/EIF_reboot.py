@@ -240,6 +240,7 @@ class ExtendedIsolationForest():
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.max_depth = max_depth
         self.plus=plus
+        self.name="EIF"+"+"*int(plus)
         self.ids=None
         self.X=None
     
