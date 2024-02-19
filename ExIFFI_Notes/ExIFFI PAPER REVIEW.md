@@ -19,13 +19,15 @@ Annotate here the main comments contained in the review of the [[DIFFI and EXIFF
 > [!todo] 
 > - Expand the related work section talking about interpretation methods used in unsupervised models (i.e. not only interpretation method in Anomaly Detection but also on other unsupervised learning tasks) → [[ExIFFI PAPER REVIEW#Papers for Related Work|papers to cite]]. 
 > - Ablation study on EIF+ and ExIFFI → Try to see what happens removing some of the design choices we made in the model 
-> - Comparison with state of the art baselines recently published -> We already have the comparison with DIFFI. Search other models to compare ExIFFI to → **Deep Isolation Forest (DIF).** 
+> - Comparison with state of the art baselines recently published -> We already have the comparison with DIFFI. Search other models to compare ExIFFI to → **Deep Isolation Forest (DIF),** **ECOD**. 
 
 3. Acknowledge concerns about the assumption that labeled anomalies truly deviate from the distribution in real datasets. Consider discussing the time complexity of EIF+ and its scalability to larger datasets. Introduce user studies to assess whether ExIFFI explanations align well with human interpretations, addressing concerns about evaluations limited to datasets without ground truth anomalies. 
 
 > [!todo] 
 > - Time analysis to see how ExIFFI scales (in terms of execution time) on larger datasets -> find these larger datasets. Here we can use the Parallelized version of ExIFFI I am working on with Francesco
 > - Introduce User Studies to see how ExIFFI aligns with human explanations -> so we need to find some datasets where there are ground truth anomalies 
+
+- Time comparison with Tree SHAP. 
 
 > [!info] Definition of User Studies from Chat GPT
 >  When we talk about user studies to assess whether an interpretation algorithm aligns well with human explanations, we are referring to a process of evaluating how well the output of the algorithm can be understood and accepted by human users. Interpretation algorithms are often used in machine learning models to provide insights into why a particular decision or prediction was made. These algorithms generate explanations or visualizations that aim to make the model's decision-making process more transparent and interpretable to users.
@@ -42,9 +44,10 @@ I have the following concerns,
 1. As iForest and EIF are not deep learning-based methods, it is possible to distill feature importance from iTrees by considering which features are used for partition. Could the authors please further explain the superiority of the proposed explanation method?  
 
 > [!todo] 
-> Same as point 1 of [[ExIFFI PAPER REVIEW#Editor Comments|Editor Comments]] 
+> Same as point 1 of [[ExIFFI PAPER REVIEW#Editor Comments|Editor Comments]]. 
+> Explain well that IF,EIF are not intrinsically explainable because the feature are chosen at random at every cut. Cite DIFFI in this explanation. 
 
-2. In the introduction section, the authors are encouraged to further explain the basic insights of the proposed method. Only contributions are listed (contributions are not very specific as well, it is better to further explain why the proposed EIF+ is better), and the readers may also need to know how the proposed method achieves these merits. Please refer to some papers published on top-tier venues; the writing logic of the introduction part could be improved.  papers to cite
+2. In the introduction section, the authors are encouraged to further explain the basic insights of the proposed method. Only contributions are listed (contributions are not very specific as well, it is better to further explain why the proposed EIF+ is better), and the readers may also need to know how the proposed method achieves these merits. Please refer to some papers published on top-tier venues; the writing logic of the introduction part could be improved.  
 
 > [!todo] 
 > Essentially he/she is saying that the Introduction can be written better. It is suggesting again to explain further why EIF+ is better.  
@@ -120,6 +123,7 @@ Recommendation: Major Revision
 ## Important Papers 
 
 - ***Deep Isolation Forest for Anomaly Detection*** (DIF)→ This is the paper suggested by the reviewers. We can use this model to compare its performances with the ExIFFI performances. This model may have better performances but, because it uses some NN to transform the inputs and put them into another representation, we this is probaax=sns.barplot(x='num_samples',y='real_time',data=df_100,width=0.5)
+- ***ECOD*** → Intrinsic interpretable method. Other possible model to compare. 
 
 > [!tip] 
 > After having created an ensemble of representations using the randomly initialized DNN in the paper they adopt the simple axis-parallel cuts used in IF. But what if we try to extend this model using the cuts used in EIF or EIF+ ? May it work better or the newly created representations are already optimally changing the points distribution so that the simple IF cuts are already enough? 

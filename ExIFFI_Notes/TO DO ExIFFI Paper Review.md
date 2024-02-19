@@ -39,6 +39,14 @@
 >  - Added `normalize` and `pre_process` methods
 >  - Added `split_dataset` method for the experiments 
 
+> [!done] Added `IsolationForest` class
+>  Added the `IsolationForest` class in `EIF_reboot.py`. This class is simply a subclass of `ExtendedIsolationForest` and it modifies two methods: 
+>  - In `__init__()` we set `plus` to `False` because the`IF+` model does not exist. 
+>  - In `fit()` the `locked_dims` parameter is set to `np.arange(X.shape[1],dtype=int)` because all the dimensions are locked for the computation of the normal hyperplane vectors. 
+
+> [!question] Add DIFFI Implementation to `IsolationForest` ?
+>  The newly created `IsolationForest` class inherits from `ExtendedIsolationForest` the methods `local_importances` and `global_importances`. Since ExIFFI is a generalization of DIFFI if I put in input to ExIFFI an `IsolationForest` model does it turn into DIFFI? Theoretically it should.   
+
 - [x] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
 
@@ -127,7 +135,16 @@
 
 - [ ] <span style="color:green;">Adapt experiments to the `numba` code </span> 
 	- [ ] <span style="color:green;">Add experiments on different versions of `X_train` and `X_test` (e.g start with no anomalies in `X_train` and anomalies in `X_test` and then add some anomalies in `X_train`)</span>
-- [ ] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+- [x] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+
+> [!done] 
+> In the Feature Selection Experiment we sligthly modify the design of the Feature Selection Proxy Task used in the first version of the paper:
+> - `direct` → As in the first version of the paper at every iteration the least important feature is removed from the dataset and we plot the behavior of the Average Precision metric as the number of feature decreases
+> - `inverse` → The features are removed in the inverse order: from the most to the least important. Also in this case we plot the Average Precision as the number of features decreases.
+> 
+> At the end two curves are produced, one for `direct` and one for `inverse`, and the higher is the AUC between the two curves the better is the interpretability power of the model. 
+> In fact we expect the `direct` curve to decrease slowly then the `inverse` curve, so it should always stay higher then the `inverse` one. 
+> 
 
 - [x] <span style="color:red;">Check in DIF Paper if they apply a Data Normalization → maybe Data Normalization is not a good idea before applying all the non linear transformation they apply on the *deep network part* of the DIF model.</span>
 
