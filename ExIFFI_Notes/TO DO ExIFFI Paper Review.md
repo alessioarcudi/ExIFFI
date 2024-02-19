@@ -174,4 +174,9 @@
 ## TO DO after call with Gian and Chiara 
 
 - [ ] Launch experiments for the [[PAPER ORGANIZATION#Ablation Study EIF+|Ablation Study EIF+]] and [[PAPER ORGANIZATION#Performance Report|Performance Report]]
+	- [ ] Merge `datasets` branch to `main` branch so that I can use the new methods I added to it in the new branches. 
+	- [ ] Performance Report (`perf_report` branch) → Use `performance_report_functions.py` → Add also information on model name, dataset name and parameters used
+	- [ ] Ablation Study EIF+ (`eif+_ablation` branch) → Use a similar setting as the one used in Performance Report but here the experiments are done on the same model so we have to include extra columns specifying the hyperparameter values used (`distribution`,`eta`,`contamination`)
+		- [ ] Here we may also add some plots 
+
 - [ ] Do experiments to check weather the $AUC_{FS}$ metric makes sense to evaluate the effectiveness of an interpretation method → to see if we can use it for the [[PAPER ORGANIZATION#Ablation Study of ExIFFIExIFFI Ablation Study]]
