@@ -99,22 +99,12 @@ We can also perform an Ablation Study on EIF+:
 
 - [ ] Find some other function to use instead of `std` to define the distributions because the `std` takes a lot to be computed. 
 	- [ ] Write a separate function that computes the `std` applying the definition (i.e. average of the squared differences of each point from the mean) and compile it with `numba`
-	- [ ] Do the same writing the `std` in C and use `ctypes` to invoke the function in Python
-
-> [!note] 
-> Scusa Alessio ma sei sicuro che il calcolo della std sia lento?. Perchè io ho provato a fare una funzione con numba e con C per velocizzare il calcolo della std ma:
-> 
-> - Con numba è veloce uguale
-> - Con C è addirittura più lenta
-> 
-> Numpy è scritto e ottimizzato in C quindi non credo si possa fare più veloce di `np.std`  
+	- [ ] Do the same writing the `std` in C and use `ctypes` to invoke the function in Python 
 
 #### Metrics similar to `std`
 
 - `variance` → It is slightly faster to compute → it's like the `std` but we do not have to do `sqrt` at the end
 - `range` → Difference between maximum and minimum values in a dataset → it's sensible to extreme values/outliers. This may create problems if we include some anomalies in the training set. It is just the difference between the max and the min → its complexity depends on how complex is to compute the max and the min. → It is slightly faster than `std`
-
-
 
 On `moodify`  normalized → 1 order of magnitude faster
 

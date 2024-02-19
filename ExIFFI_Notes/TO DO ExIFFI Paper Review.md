@@ -68,8 +68,6 @@
 >  In notebook `Test_AD_Models.ipynb` I am doing some tests using the new `collect_performance_df` method to compare the EIF, EIF+, DIF and AutoEncoder model. In particular these tests are used to test the PyOD implementation of the DIF and AutoEncoder models. For some reason the EIF and EIF+ models are getting lower Average Precision values with the respect to the ones we reported in the first version of the paper (the Average Precision experiments are collected in the notebook `Average_Precision.ipynb`). Moreover the DIF and AutoEncoder model seems very bad. 
 
 ^b1eceb
-
-
 	
 - [ ] Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]. 
 
@@ -143,7 +141,7 @@
 > [!attention] 
 > See [[TO DO ExIFFI Paper Review#^b1eceb|here]] 
 
-- [ ] <span style="color:red;">Produce a summary of how the new version of the paper should look like so that we can have a clear idea of how to structure the experiments:</span>
+- [x] <span style="color:red;">Produce a summary of how the new version of the paper should look like so that we can have a clear idea of how to structure the experiments:</span>
 	- [x] <span style="color:red;">create a new note with the paper structure and experiment structure → take inspiration from the old paper structure and from the review.</span>
 > [!note] 
 > See [[PAPER ORGANIZATION|here]] 
@@ -155,5 +153,4 @@
 	
 > [!warning]
 > Write the code so that it works on the `EIF_reboot` model  
-
 
