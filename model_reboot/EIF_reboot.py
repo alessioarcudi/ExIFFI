@@ -248,7 +248,7 @@ class ExtendedIsolationForest():
         return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X, locked_dims=None):
-        if not locked_dims:
+        if locked_dims is None:
             locked_dims = 0
         if self.max_depth == "auto":
             self.max_depth = int(np.ceil(np.log2(self.max_samples)))
@@ -297,5 +297,35 @@ class ExtendedIsolationForest():
         return importances/normals
 
 
+class IsolationForest(ExtendedIsolationForest):
+    def __init__(self,n_estimators=400, max_depth="auto", max_samples="auto"):
+        super().__init__(plus=False,n_estimators=n_estimators,max_depth=max_depth,max_samples=max_samples)
+
+    def fit(self, X):
+        return super().fit(X, locked_dims=np.arange(X.shape[1],dtype=int))
+    
+    def decision_function_single_tree(self,tree_idx,X,p=0.1):
+        self.compute_ids(X)
+        pred=self.trees[tree_idx].predict(X,self.ids[tree_idx])[0]
+        score=np.power(2,-pred)
+        y_hat = np.array(score > sorted(score,reverse=True)[int(p*len(score))],dtype=int)
+        return score,y_hat
+    
 
     
+
+"""
+Use local_diffi,diffi_ib and get_iic functions to implement DIFFI inside this class: 
+
+In local_diffi:
+- iforest.estimators_ corresponds to self.trees
+- iforest.estimator_samples_ coreesponds to self.ids 
+- iforest.max_samples corresponds to self.max_samples (but be careful because in the case of wine max_samples stays 256 but it should be 129,
+  so we should change its value aftert we do this subsample_size = np.min((self.max_samples, len(X)))
+- Modify:
+
+    X_outliers_ib = X_ib[np.where(as_ib < 0)]
+    X_inliers_ib = X_ib[np.where(as_ib > 0)]
+
+using the y_hat returned by decision_function_single_tree
+"""
