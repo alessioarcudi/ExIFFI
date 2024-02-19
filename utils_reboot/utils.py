@@ -4,6 +4,10 @@ import time
 import pickle
 import numpy as np
 import os
+from collections import namedtuple
+
+Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"

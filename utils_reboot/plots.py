@@ -8,9 +8,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
+from collections import namedtuple
 
 from utils_reboot.datasets import Dataset
 from utils_reboot.utils import open_element
+from model_reboot.EIF_reboot import ExtendedIsolationForest
+from matplotlib import colors, cm
 
 
 def bar_plot(dataset: Type[Dataset], 
@@ -208,7 +211,12 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
     if model is None:
         model = ""
-    precision = open_element(precision_file)
+    Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    precision = open_element(precision_file)[0]
+    model = precision.model
 
     median_direct     = [np.percentile(x, 50) for x in precision.direct]
     five_direct       = [np.percentile(x, 95) for x in precision.direct]
@@ -221,7 +229,7 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     plt.style.use('default')
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
-    plt.plot(median_direct,label="direct",c=colors[color],alpha=0.5,marker="o")#markers[c])
+    plt.plot(median_direct,label="direct",c=colors[4],alpha=0.5,marker="o")#markers[c])
     plt.plot(median_inverse,label="inverse",c=colors[color],alpha=0.5,marker="o")
     
     plt.xlabel("Number of Features",fontsize = 20)
@@ -236,7 +244,7 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     plt.fill_between(np.arange(dim),median_direct, median_inverse,alpha=0.7, color=colors[color])
     plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
-    namefile = precision.name + "/"+model+"_feature_selection_.pdf"
+    namefile = "/"+ current_time+ "_"+ precision.dataset +"_" +model+"_feature_selection_.pdf"
     if save_image:
         plt.savefig(plot_path+namefile,bbox_inches = "tight")
     if plot_image:
@@ -258,115 +266,105 @@ def plot_precision_over_contamination(precisions, plot_path, model, contaminatio
         plt.show()
     
 
-# def importance_map(
-#                    name: str, 
-#                    X_train: np.array,
-#                    y_train: np.array,
-#                    model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
-#                    iforest:Type[IsolationForest]=IsolationForest(),
-#                    resolution: Optional[int] = 30,
-#                    pwd: Optional[str] = os.getcwd(),
-#                    save: Optional[bool] = True,
-#                    m: Optional[bool] = None,
-#                    factor: Optional[int] = 3, 
-#                    feats_plot: Optional[tuple] = (0,1),
-#                    col_names: List[str] = None,
-#                    ax:Optional[plt.axes]=None,
-#                    isdiffi: Optional[bool] = False,
-#                    labels: Optional[bool] = True
-#                    ):
-#         """
-#         Produce the Local Feature Importance Scoremap.   
+def importance_map(dataset: Type[Dataset],
+                   model: Type[ExtendedIsolationForest],
+                   resolution: Optional[int] = 30,
+                   path_plot: Optional[str] = os.getcwd(),
+                   save_plot: Optional[bool] = True,
+                   show_plot: Optional[bool] = False,
+                   factor: Optional[int] = 3, 
+                   feats_plot: Optional[tuple] = (0,1),
+                   col_names: List[str] = None,
+                   labels: Optional[bool] = True
+                   ):
+        """
+        Produce the Local Feature Importance Scoremap.   
         
-#         Parameters
-#         ----------
-#         name: Dataset's name
-#         X_train: Training Set 
-#         y_train: Dataset training labels
-#         model: Instance of the model on which we want to compute the Local Feature Importance Scores, by default the default version of ExtendedIsolationForest
-#         iforest: Isolation Forest model to use in case isdiffi is set to True, by default the default version of IsolationForest
-#         resolution: Scoremap resolution, by default 30
-#         pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.
-#         save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-#         m: Boolean variable regulating the plt.pcolor advanced settings. By defualt the value of m is set to None.
-#         factor: Integer factor used to define the minimum and maximum value of the points used to create the scoremap. By default the value of f is set to 3.
-#         feats_plot: This tuple contains the indexes of the pair of features to compare in the Scoremap. By default the value of feats_plot
-#         is set to (0,1). Do not use in case we pass the col_names parameter.
-#         col_names: List with the names of the features of the input dataset, by default None.
-#         two features will be compared. 
-#         ax: plt.axes object used to create the plot. By default ax is set to None.
-#         isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
-#         labels: Boolean variable used to decide weather to include the x and y label name in the plot.
-#         When calling the plot_importance_map function inside plot_complete_scoremap this parameter will be set to False 
+        Parameters
+        ----------
+        name: Dataset's name
+        X_train: Training Set 
+        y_train: Dataset training labels
+        model: Instance of the model on which we want to compute the Local Feature Importance Scores, by default the default version of ExtendedIsolationForest
+        iforest: Isolation Forest model to use in case isdiffi is set to True, by default the default version of IsolationForest
+        resolution: Scoremap resolution, by default 30
+        pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.
+        save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
+        m: Boolean variable regulating the plt.pcolor advanced settings. By defualt the value of m is set to None.
+        factor: Integer factor used to define the minimum and maximum value of the points used to create the scoremap. By default the value of f is set to 3.
+        feats_plot: This tuple contains the indexes of the pair of features to compare in the Scoremap. By default the value of feats_plot
+        is set to (0,1). Do not use in case we pass the col_names parameter.
+        col_names: List with the names of the features of the input dataset, by default None.
+        two features will be compared. 
+        ax: plt.axes object used to create the plot. By default ax is set to None.
+        isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
+        labels: Boolean variable used to decide weather to include the x and y label name in the plot.
+        When calling the plot_importance_map function inside plot_complete_scoremap this parameter will be set to False 
                     
-#         Returns
-#         ----------
-#         fig,ax : plt.figure  and plt.axes objects used to create the plot 
-#         """
-
-#         mins = X_train.min(axis=0)[list(feats_plot)]
-#         maxs = X_train.max(axis=0)[list(feats_plot)]  
-#         mean = X_train.mean(axis = 0)
-#         mins = list(mins-(maxs-mins)*factor/10)
-#         maxs = list(maxs+(maxs-mins)*factor/10)
-#         xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[1], maxs[1], resolution))
-#         mean = np.repeat(np.expand_dims(mean,0),len(xx)**2,axis = 0)
-#         mean[:,feats_plot[0]]=xx.reshape(len(xx)**2)
-#         mean[:,feats_plot[1]]=yy.reshape(len(yy)**2)
-
-#         importance_matrix = np.zeros_like(mean)
-#         if isdiffi:
-#                 iforest.max_samples = len(X_train)
-#                 for i in range(importance_matrix.shape[0]):
-#                         importance_matrix[i] = local_diffi(iforest, mean[i])[0]
-#         else:
-#                 importance_matrix = model.local_importances(mean)
+        Returns
+        ----------
+        fig,ax : plt.figure  and plt.axes objects used to create the plot 
+        """
         
-#         sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
-#         Score = sign*((sign>0)*importance_matrix[:,feats_plot[0]]+(sign<0)*importance_matrix[:,feats_plot[1]])
-#         x = X_train[:,feats_plot[0]].squeeze()
-#         y = X_train[:,feats_plot[1]].squeeze()
+        mins = dataset.X.min(axis=0)[list(feats_plot)]
+        maxs = dataset.X.max(axis=0)[list(feats_plot)]  
+        mean = dataset.X.mean(axis = 0)
+        mins = list(mins-(maxs-mins)*factor/10)
+        maxs = list(maxs+(maxs-mins)*factor/10)
+        xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[1], maxs[1], resolution))
+        mean = np.repeat(np.expand_dims(mean,0),len(xx)**2,axis = 0)
+        mean[:,feats_plot[0]]=xx.reshape(len(xx)**2)
+        mean[:,feats_plot[1]]=yy.reshape(len(yy)**2)
+
+        importance_matrix = np.zeros_like(mean)
+        # if isdiffi:
+        #         iforest.max_samples = len(X_train)
+        #         for i in range(importance_matrix.shape[0]):
+        #                 importance_matrix[i] = local_diffi(iforest, mean[i])[0]
+        importance_matrix = model.local_importances(mean)
         
-#         Score = Score.reshape(xx.shape)
-
-#         # Create a new pyplot object if plt is not provided
-#         if ax is None:
-#             fig, ax = plt.subplots()
+        sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
+        Score = sign*((sign>0)*importance_matrix[:,feats_plot[0]]+(sign<0)*importance_matrix[:,feats_plot[1]])
+        x = dataset.X[:,feats_plot[0]].squeeze()
+        y = dataset.X[:,feats_plot[1]].squeeze()
         
-#         if m is not None:
-#             cp = ax.pcolor(xx, yy, Score, cmap=cm.RdBu, vmin=-m, vmax=m, shading='nearest')
-#         else:
-#             cp = ax.pcolor(xx, yy, Score, cmap=cm.RdBu, shading='nearest', norm=colors.CenteredNorm())
+        Score = Score.reshape(xx.shape)
+
+        # Create a new pyplot object if plt is not provided
+        fig, ax = plt.subplots()
         
-#         ax.contour(xx, yy, (importance_matrix[:, feats_plot[0]] + importance_matrix[:, feats_plot[1]]).reshape(xx.shape), levels=7, cmap=cm.Greys, alpha=0.7)
 
-#         try:
-#             ax.scatter(x[y_train == 0], y[y_train == 0], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
-#             ax.scatter(x[y_train == 1], y[y_train == 1], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
-#         except IndexError:
-#             print('Handling the IndexError Exception...')
-#             ax.scatter(x[(y_train == 0)[:, 0]], y[(y_train == 0)[:, 0]], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
-#             ax.scatter(x[(y_train == 1)[:, 0]], y[(y_train == 1)[:, 0]], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
+        cp = ax.pcolor(xx, yy, Score, cmap=cm.RdBu, shading='nearest', norm=colors.CenteredNorm())
         
-#         if (labels) and (col_names is not None):
-#             ax.set_xlabel(col_names[feats_plot[0]],fontsize=20)
-#             ax.set_ylabel(col_names[feats_plot[1]],fontsize=20)
-#         elif (labels) and (col_names is None):
-#             ax.set_xlabel(f'Feature {feats_plot[0]}',fontsize=20)
-#             ax.set_ylabel(f'Feature {feats_plot[1]}',fontsize=20)
+        ax.contour(xx, yy, (importance_matrix[:, feats_plot[0]] + importance_matrix[:, feats_plot[1]]).reshape(xx.shape), levels=7, cmap=cm.Greys, alpha=0.7)
+
+        try:
+            ax.scatter(x[dataset.y == 0], y[dataset.y == 0], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
+            ax.scatter(x[dataset.y == 1], y[dataset.y == 1], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
+        except IndexError:
+            print('Handling the IndexError Exception...')
+            ax.scatter(x[(dataset.y == 0)[:, 0]], y[(dataset.y == 0)[:, 0]], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
+            ax.scatter(x[(dataset.y == 1)[:, 0]], y[(dataset.y == 1)[:, 0]], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
         
-#         ax.legend()
+        if (labels) and (col_names is not None):
+            ax.set_xlabel(col_names[feats_plot[0]],fontsize=20)
+            ax.set_ylabel(col_names[feats_plot[1]],fontsize=20)
+        elif (labels) and (col_names is None):
+            ax.set_xlabel(f'Feature {feats_plot[0]}',fontsize=20)
+            ax.set_ylabel(f'Feature {feats_plot[1]}',fontsize=20)
+        
+        ax.legend()
 
-#         name_type='Importance_map'
+        
+        t = time.localtime()
+        current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
 
-#         filename=get_filename(name_type,name,'pdf')
+        filename = current_time+"_importance_map_"+model.name+"_"+dataset.name+".pdf"
 
-#         if save:
-#             plt.savefig(pwd + '/{}'.format(filename), bbox_inches='tight')
-#         else: 
-#             fig,ax=None,None
-
-#         return fig, ax
+        if show_plot:
+            plt.show()
+        if save_plot:
+            plt.savefig(path_plot + '/{}'.format(filename), bbox_inches='tight')
 
 # def importance_map_col_names(
 #                             name: str,

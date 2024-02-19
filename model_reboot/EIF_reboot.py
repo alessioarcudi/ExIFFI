@@ -191,7 +191,7 @@ class ExtendedTree:
             dist = np.dot(np.ascontiguousarray(data), np.ascontiguousarray(self.normals[node_id]))
         
             if self.plus:
-                self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*2)
+                self.intercepts[node_id] = np.random.normal(np.median(dist),np.std(dist)*1.5)
             else:
                 self.intercepts[node_id] = np.random.uniform(np.min(dist),np.max(dist))
             mask = dist <= self.intercepts[node_id]  
@@ -293,7 +293,7 @@ class ExtendedIsolationForest():
         inliers_importances,inliers_normals = np.sum(importances[~y_hat],axis=0),np.sum(normals[~y_hat],axis=0)
         return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
     
-    def local_importances(self, X, new_dataset = False):
+    def local_importances(self, X):
         self.compute_ids(X)
         importances, normals = self._importances(X, self.ids)
         return importances/normals
