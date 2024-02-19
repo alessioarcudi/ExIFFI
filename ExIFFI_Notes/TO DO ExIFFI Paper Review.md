@@ -171,3 +171,7 @@
 > [!warning]
 > Write the code so that it works on the `EIF_reboot` model  
 
+## TO DO after call with Gian and Chiara 
+
+- [ ] Launch experiments for the [[PAPER ORGANIZATION#Ablation Study EIF+|Ablation Study EIF+]] and [[PAPER ORGANIZATION#Performance Report|Performance Report]]
+- [ ] Do experiments to check weather the $AUC_{FS}$ metric makes sense to evaluate the effectiveness of an interpretation method → to see if we can use it for the [[PAPER ORGANIZATION#Ablation Study of ExIFFIExIFFI Ablation Study]]
