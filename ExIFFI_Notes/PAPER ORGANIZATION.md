@@ -47,7 +47,7 @@ We will start from the structure of the first version of the paper and re adapt 
 Values to try for the parameters: 
 
 - ~~Number of trees `n_trees = [100,300,600,800]` → default: `300`~~ 
-- ~~Data Normalization Scalers `scaler = [StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler]` → default: `StandardScaler` ~~
+- ~~Data Normalization Scalers `scaler = [StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler]` → default: `StandardScaler`~~
 - Distribution → default: `normal_mean` (or `normal_median` if it is better)
 	- [[EXPERIMENT SCRIPTS#^8b86bf|`normal_mean`]]
 	- [[EXPERIMENT SCRIPTS#^8b9c7b|`normal_median`]]
@@ -55,7 +55,7 @@ Values to try for the parameters:
 	- [[EXPERIMENT SCRIPTS#`normal_range`|`normal_range`]] 
 	- [[EXPERIMENT SCRIPTS#`normal_MAD`|`normal_MAD`]]   
 - Values of the scaling parameter $\eta$ → `eta = [2,2.5,3,3.5,4]` → default: `2`
-- Contamination level used to compute the Anomaly Score → `contamination = np.linspace(0.01,0.1,10)` → default: `0.1`
+- Contamination level used in `X_train` → `contamination = np.linspace(0.01,0.1,10)` → default: `0.1`
 
 #### Ablation Study EIF+ Plots 
 
@@ -158,3 +158,4 @@ Use synthetic datasets, as done in the DIF paper, to see how the model scales to
 
 - Find an implementation of TreeSHAP for Anomaly Detection 
 - Compare the execution times of ExIFFI and TreeSHAP with different datasets with increasing complexity 
+

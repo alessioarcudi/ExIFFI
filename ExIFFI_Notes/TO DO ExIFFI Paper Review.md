@@ -180,3 +180,27 @@
 		- [ ] Here we may also add some plots 
 
 - [ ] Do experiments to check weather the $AUC_{FS}$ metric makes sense to evaluate the effectiveness of an interpretation method → to see if we can use it for the [[PAPER ORGANIZATION#Ablation Study of ExIFFIExIFFI Ablation Study]]
+
+- [ ] Alessio → Experiment Ablation Study EIF+
+- [ ] Compute $AUC_{FS}$ in the Feature Selection experiments 
+- [ ] Experiment train set contamination for all models 
+
+- [ ] Davide → Experiment Global and Local Feature Importance DIFFI 
+- [ ] Davide → `performance` function 
+
+## Function `performance` in `utils`
+
+Pass
+
+- `y_pred`
+- y
+- model
+- model name 
+- dataset 
+- dataset name 
+- Contamination 
+- Train Fraction 
+- Return Dataframe with all the columns specified above 
+- Column with TimeStamp 
+- Results will go in →  `/experiments/results/wine/experiments/metrics/EIF+/filename `  
+- `filename` just with the timestamp. 
