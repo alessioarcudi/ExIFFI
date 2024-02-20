@@ -138,7 +138,7 @@ tree_spec = [
 class ExtendedTree:
     def __init__(self, n, d, max_depth, locked_dims=0, min_sample=1, plus=True, max_nodes=10000):
         self.plus = plus
-        self.locked_dims = locked_dims  
+        self.locked_dims = locked_dims 
         self.max_depth = max_depth
         self.min_sample = min_sample
         self.n = n
@@ -185,8 +185,8 @@ class ExtendedTree:
             self.node_size[node_id] = len(data)
             if self.node_size[node_id] <= self.min_sample or depth >= self.max_depth:
                 continue
-
-            self.normals[node_id] = make_rand_vector(self.d - self.locked_dims, self.d)            
+            
+            self.normals[node_id] = make_rand_vector(self.d - self.locked_dims, self.d)         
             
             dist = np.dot(np.ascontiguousarray(data), np.ascontiguousarray(self.normals[node_id]))
         
@@ -248,12 +248,14 @@ class ExtendedIsolationForest():
         return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X, locked_dims=None):
+
         if locked_dims is None:
             locked_dims = 0
+
         if self.max_depth == "auto":
             self.max_depth = int(np.ceil(np.log2(self.max_samples)))
         subsample_size = np.min((self.max_samples, len(X)))
-        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, self.plus, locked_dims)
+        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims, plus=self.plus)
                       for _ in range(self.n_estimators)]
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
@@ -302,7 +304,7 @@ class IsolationForest(ExtendedIsolationForest):
         super().__init__(plus=False,n_estimators=n_estimators,max_depth=max_depth,max_samples=max_samples)
 
     def fit(self, X):
-        return super().fit(X, locked_dims=np.arange(X.shape[1],dtype=int))
+        return super().fit(X, locked_dims=12)
     
     def decision_function_single_tree(self,tree_idx,X,p=0.1):
         self.compute_ids(X)
