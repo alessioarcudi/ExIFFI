@@ -34,7 +34,7 @@ plot_feature_selection(most_recent_file, path_plots, show_plot=False)
 
 
 #----------------- EVALUATE PRECISIONS OVER CONTAMINATION -----------------#
-# initialize contamiination paths
+# initialize contamination paths
 path_experiment = path_experiments + "/contamination"
 if not os.path.exists(path_experiment):
     os.makedirs(path_experiment)
