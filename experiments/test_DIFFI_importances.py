@@ -22,6 +22,8 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
+parser.add_argument('--split',type=bool,default=False,help='If True, Split the dataset in train and test set, If False train and test on the entire dataset')
+parser.add_argument('--train_size',type=float,default=0.8,help='Portion of the training set to contaminate')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -34,12 +36,21 @@ max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
 
+# Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
+# Normalize the data
+if args.split:
+    dataset.split_dataset(train_size=args.train_size,contamination=args.contamination)
+    dataset.normalize(split=True)
+else:
+    dataset.normalize(split=False)
+
+# Initalize the Isolation Forest model 
 I=IsolationForest(n_estimators=n_estimators,max_samples=max_samples,contamination=args.contamination)
 
-cwd='/home/davidefrizzo/PHD/ExIFFI/experiments'
+cwd='/home/davidefrizzo/PHD/ExIFFI'
 #cwd = '/Users/alessio/Documents/ExIFFI'
 
 path = cwd +"/experiments/results/"+dataset.name
