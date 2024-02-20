@@ -1,4 +1,5 @@
 import sys
+import ast
 import os
 #os.chdir('/home/davidefrizzo/PHD/ExIFFI/experiments')
 #os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
@@ -24,7 +25,7 @@ parser.add_argument('--contamination', type=float, default=0.1, help='Global fea
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
 parser.add_argument('--split',type=bool,default=False,help='If True, Split the dataset in train and test set, If False train and test on the entire dataset')
 parser.add_argument('--train_size',type=float,default=0.8,help='Portion of the training set to contaminate')
-parser.add_argument('--feats_plot',type=tuple,default=(0,1),help='Pair of features to plot in the importance map')
+parser.add_argument('--feats_plot',type=str,default=(0,1),help='Pair of features to plot in the importance map')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -36,10 +37,8 @@ n_estimators = args.n_estimators
 max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
-feats_plot = args.feats_plot
-
-print(feats_plot)
-quit()
+feats_plot_str = args.feats_plot
+feats_plot=ast.literal_eval(feats_plot_str)
 
 # Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -86,7 +85,7 @@ if not os.path.exists(path_experiments):
 #     os.makedirs(path_experiment_plots)
 
 #Compute global importances
-full_importances = compute_global_importances(I, dataset,isdiffi=True,n_runs=n_runs,p=contamination)    
+full_importances = experiment_global_importances(I, dataset,isdiffi=True,n_runs=n_runs,p=contamination)    
 save_element(full_importances, path_experiments, filename='imp_mat', filetype="npz")
 
 # plot global importances
@@ -108,5 +107,5 @@ print("Score Plot produced and saved in: ", path_plots)
 print('Fit the model for the importance map')
 I.fit(dataset.X)
 print('Start computing Importance Map')
-importance_map(dataset,I,feats_plot=(12,4),path_plot=path_plots,isdiffi=True,iforest=I,show_plot=False)
+importance_map(dataset,I,feats_plot=feats_plot,path_plot=path_plots,isdiffi=True,iforest=I,show_plot=False)
 print('Importance Map produced and saved in: ', path_plots)
