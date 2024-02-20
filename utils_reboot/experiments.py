@@ -10,20 +10,24 @@ from tqdm import tqdm
 import copy
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
+from models.interpretability_module import *
 from utils_reboot.datasets import Dataset
 import sklearn
-
-
+from sklearn.ensemble import IsolationForest
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
                                dataset: Type[Dataset],
+                               isdiffi:bool=False,
                                n_runs:int = 10, 
                                p = 0.1) -> tuple[np.array,dict,str,str]:
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
         I.fit(dataset.X)
-        fi[i,:]=I.global_importances(dataset.X,p)
+        if isdiffi:
+            fi[i,:],_=diffi_ib(I,dataset.X)
+        else:
+            fi[i,:]=I.global_importances(dataset.X,p)
             
     mean_imp = np.mean(fi,axis=0)
     std_imp = np.std(fi,axis=0)
