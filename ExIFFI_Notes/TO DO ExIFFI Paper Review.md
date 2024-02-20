@@ -75,6 +75,20 @@
 > [!attention] 
 >  In notebook `Test_AD_Models.ipynb` I am doing some tests using the new `collect_performance_df` method to compare the EIF, EIF+, DIF and AutoEncoder model. In particular these tests are used to test the PyOD implementation of the DIF and AutoEncoder models. For some reason the EIF and EIF+ models are getting lower Average Precision values with the respect to the ones we reported in the first version of the paper (the Average Precision experiments are collected in the notebook `Average_Precision.ipynb`). Moreover the DIF and AutoEncoder model seems very bad. 
 
+> [!important] Maybe I understand where the error is
+>  I found out that in `wine` the `y` variable obtained loading the data has 10 ones at the beginning and than all zeros. On the other hand in pre processing the data with the `preprocess` function I did:
+> 
+
+``` python 
+y_train=np.zeros(X_train.shape[0])
+y_test=np.ones(X_test.shape[0])
+y=np.concatenate([y_train,y_test])   
+```
+
+> [!important] 
+> So I put the 10 ones at the end of the `y` variable → so I changed the order !!!! Fix this thing and see if the performances get back to the correct values.  
+> So when I do the tests I have to use `partition_data()` to get the training set `X_train` (only inliers) but then for the test set I do not have to use `X_test=np.r_[X_train,X_test]` but I have to normalize `X` and then use `dataset.y` as the label variable. 
+
 ^b1eceb
 	
 - [ ] Search a good dataset for discussing the results (think about what kind of experiments to do) with ground truth labels where there is some domain knowledge. We want anomalies to be truly isolated points and not just minority classes in a Multi Class Classification problem. → Some possible examples are [[ExIFFI PAPER REVIEW#Benchmark Datasets|here]]. 
@@ -168,39 +182,10 @@
 - [x] Create a new branch `plot` to update the `plot.py` script 
 	- [x] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
 	
-> [!warning]
-> Write the code so that it works on the `EIF_reboot` model  
+> [!done]
+> Inserted all the new plot functions inside `utils_reboot/plots.py`
 
-## TO DO after call with Gian and Chiara 
+- [ ] Open a new branch `datasets` and add some new features on `datasets.py` as described in [[TO DO ExIFFI Paper Review#^4d4de5|here]]
 
-- [ ] Launch experiments for the [[PAPER ORGANIZATION#Ablation Study EIF+|Ablation Study EIF+]] and [[PAPER ORGANIZATION#Performance Report|Performance Report]]
-	- [ ] Merge `datasets` branch to `main` branch so that I can use the new methods I added to it in the new branches. 
-	- [ ] Performance Report (`perf_report` branch) → Use `performance_report_functions.py` → Add also information on model name, dataset name and parameters used
-	- [ ] Ablation Study EIF+ (`eif+_ablation` branch) → Use a similar setting as the one used in Performance Report but here the experiments are done on the same model so we have to include extra columns specifying the hyperparameter values used (`distribution`,`eta`,`contamination`)
-		- [ ] Here we may also add some plots 
+- [ ] Always on a new branch create a wrapper of class `ExtendedIsolationForest` to implement the `IsolationForest` model. 
 
-- [ ] Do experiments to check weather the $AUC_{FS}$ metric makes sense to evaluate the effectiveness of an interpretation method → to see if we can use it for the [[PAPER ORGANIZATION#Ablation Study of ExIFFIExIFFI Ablation Study]]
-
-- [ ] Alessio → Experiment Ablation Study EIF+
-- [ ] Compute $AUC_{FS}$ in the Feature Selection experiments 
-- [ ] Experiment train set contamination for all models 
-
-- [ ] Davide → Experiment Global and Local Feature Importance DIFFI 
-- [ ] Davide → `performance` function 
-
-## Function `performance` in `utils`
-
-Pass
-
-- `y_pred`
-- y
-- model
-- model name 
-- dataset 
-- dataset name 
-- Contamination 
-- Train Fraction 
-- Return Dataframe with all the columns specified above 
-- Column with TimeStamp 
-- Results will go in →  `/experiments/results/wine/experiments/metrics/EIF+/filename `  
-- `filename` just with the timestamp. 
