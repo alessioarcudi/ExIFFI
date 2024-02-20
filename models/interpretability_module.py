@@ -1,14 +1,16 @@
 import numpy as np
+from typing import Type
 import time
 from math import ceil 
 import sys
 sys.path.append("../models")
 from models.sklearn_mod_functions import *
+from sklearn.ensemble import IsolationForest
 
 
 def diffi_ib(iforest, X, adjust_iic=True): # "ib" stands for "in-bag"
     """
-    Compute the feature importances with the DIFFI model 
+    Compute the Global feature importances with the DIFFI model 
     --------------------------------------------------------------------------------
     
     Parameters
@@ -177,6 +179,34 @@ def local_diffi(iforest, x):
     end = time.time()
     exec_time = end - start
     return fi, exec_time
+
+def local_diffi_batch(X: np.array, model:Type[IsolationForest]=IsolationForest()):
+    """Computes the Local Feature Importance scores for a set of input samples according to the DIFFI algorithm.
+
+    Parameters
+    ----------
+    X : numpy array of shape (n_samples, n_features) representing the input samples.
+
+    Returns
+    -------
+    fi : numpy array of shape (n_samples, n_features) representing the Local Feature Importance scores.
+    ord_idx : numpy array of shape (n_samples, n_features) representing the order of the features according to their Local Feature Importance scores.
+    The samples are sorted in decreasing order of Feature Importance. 
+    exec_time : float representing the execution time of the algorithm.
+    """
+    fi = []
+    ord_idx = []
+    exec_time = []
+    for i in range(X.shape[0]):
+        x_curr = X[i, :]
+        fi_curr, exec_time_curr = model.local_diffi(x_curr)
+        fi.append(fi_curr)
+        ord_idx_curr = np.argsort(fi_curr)[::-1]
+        ord_idx.append(ord_idx_curr)
+        exec_time.append(exec_time_curr)
+    fi = np.vstack(fi)
+    ord_idx = np.vstack(ord_idx)
+    return fi, ord_idx, exec_time
 
 def _get_iic(estimator, predictions, is_leaves, adjust_iic):
     """
