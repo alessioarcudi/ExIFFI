@@ -188,7 +188,8 @@ class Dataset:
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
 
-    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
+    def pre_process(self,
+                split:bool=True):
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -197,7 +198,7 @@ class Dataset:
             print("X_train not loaded. Load it running split_dataset() first")
             return
         scaler=StandardScaler()
-        # davide non so che cosa fare qua se puoi sistemare
+
         if split:
             self.X_train=scaler.fit_transform(self.X_train)
             self.X_test=scaler.transform(self.X)
@@ -209,46 +210,6 @@ class Dataset:
             self.X_train=X_train
             self.X_test=X_test
             self.y=np.concatenate([y_train,y_test])
-            
-    
-            
-"""
-if self.X_train is None:
-                print("X_train not loaded. Load it running split_dataset() first")
-                return
-"""
-
-"""    
-
-Old Version of pre_process
-
-def pre_process(self,
-                    X_train: np.array,
-                    X_test: np.array,
-                    scaler:Optional[Type[StandardScaler]]=StandardScaler()
-                    ) -> tuple:
-    
-        # Ensure that X and y are not None
-        if self.X is None or self.y is None:
-            print("Dataset not loaded.")
-            return
-
-        
-        if split:
-            X_train=scaler.fit_transform(X_train)
-            X_test=scaler.transform(X_test)
-            X=np.r_[X_train,X_test]
-            y_train=np.zeros(X_train.shape[0])
-            y_test=np.ones(X_test.shape[0])
-            y=np.concatenate([y_train,y_test])
-            return X_train,X_test,X,y
-        elif split==False:
-            #Ensure X_train is not None
-            if self.X_train is None:
-                print("X_train not loaded. Load it running split_dataset() first")
-                return
-            self.X = scaler.fit_transform(self.X)
-            self.X_train = scaler.fit_transform(self.X_train)
 
             
 
