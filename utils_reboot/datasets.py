@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, Optional, Type
+from typing import Type, Optional, List
 import numpy.typing as npt
 from dataclasses import dataclass, field
 
@@ -8,12 +8,32 @@ from scipy.io import loadmat
 import mat73
 
 import numpy as np
+import random 
 import pandas as pd
 
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
 from sklearn.preprocessing import StandardScaler
 import random
 
+
+from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
+
+
+def Dataset_feature_names(name:str):
+
+    data_feature_names={
+        'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'BMI', 'DiabetesPedigreeFunction', 'Age'],
+        'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
+       'speechiness', 'acousticness', 'instrumentalness', 'liveness',
+       'valence', 'tempo', 'spec_rate'],
+       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level']
+    }
+
+    if name in data_feature_names:    
+        return data_feature_names[name]
+    else:
+        return None 
 
 @dataclass
 class Dataset:
@@ -40,9 +60,13 @@ class Dataset:
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
     X_test: Optional[npt.NDArray] = field(default=None, init=False)
     y_train: Optional[npt.NDArray] = field(default=None, init=False)
+    feature_names: Optional[List[str]] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
         self.load()
+        self.feature_names=Dataset_feature_names(self.name)
+        if self.feature_names is None:
+            self.feature_names=np.arange(self.shape[1])
         
     @property
     def shape(self) -> tuple:
@@ -164,8 +188,7 @@ class Dataset:
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
 
-    def pre_process(self,
-                  split:bool=True):
+    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -174,7 +197,7 @@ class Dataset:
             print("X_train not loaded. Load it running split_dataset() first")
             return
         scaler=StandardScaler()
-
+        # davide non so che cosa fare qua se puoi sistemare
         if split:
             self.X_train=scaler.fit_transform(self.X_train)
             self.X_test=scaler.transform(self.X)
@@ -210,10 +233,22 @@ def pre_process(self,
             print("Dataset not loaded.")
             return
 
-        X_train=scaler.fit_transform(X_train)
-        X_test=scaler.transform(X_test)
         
-        self.X_train=X_train
-        self.X_test=X_test"""
+        if split:
+            X_train=scaler.fit_transform(X_train)
+            X_test=scaler.transform(X_test)
+            X=np.r_[X_train,X_test]
+            y_train=np.zeros(X_train.shape[0])
+            y_test=np.ones(X_test.shape[0])
+            y=np.concatenate([y_train,y_test])
+            return X_train,X_test,X,y
+        elif split==False:
+            #Ensure X_train is not None
+            if self.X_train is None:
+                print("X_train not loaded. Load it running split_dataset() first")
+                return
+            self.X = scaler.fit_transform(self.X)
+            self.X_train = scaler.fit_transform(self.X_train)
+
             
 
