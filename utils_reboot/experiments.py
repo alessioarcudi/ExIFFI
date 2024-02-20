@@ -29,6 +29,11 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
         else:
             fi[i,:]=I.global_importances(dataset.X,p)
             
+    return fi
+
+def compute_plt_data(imp_path):
+    
+    fi = np.load(imp_path)['element']
     mean_imp = np.mean(fi,axis=0)
     std_imp = np.std(fi,axis=0)
     feat_ordered = mean_imp.argsort()
@@ -38,7 +43,7 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     plt_data={'Importances': mean_ordered,
                 'feat_order': feat_ordered,
                 'std': std_ordered}
-    return fi,plt_data
+    return plt_data
     
 
 def feature_selection(I: Type[ExtendedIsolationForest],
