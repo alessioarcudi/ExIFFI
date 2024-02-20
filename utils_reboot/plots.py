@@ -12,6 +12,7 @@ from collections import namedtuple
 
 from utils_reboot.datasets import Dataset
 from utils_reboot.utils import open_element
+from utils_reboot.experiments import compute_plt_data
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from matplotlib import colors, cm
 from sklearn.ensemble import IsolationForest
@@ -25,7 +26,8 @@ def bar_plot(dataset: Type[Dataset],
             f: int = 6, 
             col_names: Optional[list] = None,
             save = True, 
-            show_plot = True) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
+            show_plot = True,
+            model_name:str='EIF+') -> tuple[plt.figure, plt.axes, pd.DataFrame]:
     """
     Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
     
@@ -110,7 +112,7 @@ def bar_plot(dataset: Type[Dataset],
     ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
 
     if save:
-        plt.savefig(plot_path + '/{}.pdf'.format(name_file), bbox_inches='tight')
+        plt.savefig(plot_path + f'/{name_file}_{model_name}.pdf', bbox_inches='tight')
 
     if show_plot:
         plt.show()
@@ -124,7 +126,8 @@ def score_plot(dataset: Type[Dataset],
                plot_path: str = os.getcwd(),
                col_names=None,
                save: bool =True,
-               show_plot: bool =True):
+               show_plot: bool =True,
+               model_name:str='EIF+') -> tuple[plt.axes, plt.axes]:
     """
     Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
     
@@ -145,10 +148,9 @@ def score_plot(dataset: Type[Dataset],
     ----------
     ax1,ax2: The two plt.axes objects used to create the plot.  
     """
-    #Load the plt_data dictionary from the pkl file contained in plt_data_path -> the plt_data_path is returned from the 
-    #compute_local_importances or compute_global_importances functions so we have it for free 
-    with open(global_importances_file, 'rb') as f:
-        plt_data = pickle.load(f)
+   # Compute the plt_data with the compute_plt_data function
+    
+    plt_data = compute_plt_data(global_importances_file)
 
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
@@ -202,7 +204,7 @@ def score_plot(dataset: Type[Dataset],
         ax1.set_yticklabels(yticks)
 
     if save:
-        plt.savefig(plot_path+'/{}.pdf'.format(name_file),bbox_inches='tight')
+        plt.savefig(plot_path + f'/{name_file}_{model_name}.pdf', bbox_inches='tight')
 
     if show_plot:
         plt.show()
@@ -273,7 +275,7 @@ def importance_map(dataset: Type[Dataset],
                    resolution: Optional[int] = 30,
                    path_plot: Optional[str] = os.getcwd(),
                    save_plot: Optional[bool] = True,
-                   show_plot: Optional[bool] = False,
+                   show_plot: Optional[bool] = True,
                    factor: Optional[int] = 3, 
                    feats_plot: Optional[tuple] = (0,1),
                    col_names: List[str] = None,
@@ -325,7 +327,8 @@ def importance_map(dataset: Type[Dataset],
                 iforest.max_samples = len(dataset.X)
                 for i in range(importance_matrix.shape[0]):
                         importance_matrix[i] = local_diffi(iforest, mean[i])[0]
-        importance_matrix = model.local_importances(mean)
+        else:
+            importance_matrix = model.local_importances(mean)
         
         sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
         Score = sign*((sign>0)*importance_matrix[:,feats_plot[0]]+(sign<0)*importance_matrix[:,feats_plot[1]])
@@ -362,8 +365,11 @@ def importance_map(dataset: Type[Dataset],
         
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-
-        filename = current_time+"_importance_map_"+model.name+"_"+dataset.name+".pdf"
+        if isdiffi:
+            model_name='DIFFI'
+            filename = current_time+"_importance_map_"+model_name+"_"+dataset.name+".pdf"
+        else:
+            filename = current_time+"_importance_map_"+model.name+"_"+dataset.name+".pdf"
 
         if show_plot:
             plt.show()
