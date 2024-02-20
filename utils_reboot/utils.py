@@ -44,7 +44,12 @@ def performance(y_pred:np.array,
                 contamination:float=0.1,
                 train_size:float=0.8,
                 filename:str="",
+                path:str="/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments"
                 ) -> pd.DataFrame: 
+    
+    # In path insert the local put up to the experiments folder:
+    # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
+    # For Alessio → 
     
     df=pd.DataFrame({
         "Model": model_name,
