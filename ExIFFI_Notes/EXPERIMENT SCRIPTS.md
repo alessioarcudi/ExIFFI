@@ -23,9 +23,6 @@ We can use these experiments to conduct the Ablation Studies on ExIFFI:
 - Change the contamination factor in the training set → In the DIF paper they used 11 contamination factors between 0 and 10%. So we can do something like `np.linspace(0,10,11)` → so $[0,1,2,3,\dots,10]$
 	- Use a different percentage to divide into inliers and outliers to compute GFI in the `Global_Importance` function → use the same set of contamination values reported above 
 
-> [!note] 
-> These two points can be considered together → if we use a contamination factor of 0.01 we will divide inliers and outliers using a percentage of 0.01  
-
 - Use a different number of trees in the definition of the ExIFFI model: 
 	- 100 
 	- 300
@@ -90,7 +87,7 @@ We can also perform an Ablation Study on EIF+:
 - Use different distributions to sample the intercept point `p` of the EIF+ separating hyperplanes:
 	- $N(mean(X),\eta \ std(X)$ changing the value of $\eta$ 
 	- $N(median(X),\eta \ std(X)$ changing the value of $\eta$ 
-	- $U(\frac{min(X)}{\eta},\eta \ max(X))$ with $\eta > 1$
+	- $U(\frac{min(X)}{\eta},\eta \ max(X))$ with $\eta > 1$ ^418327
 - Use different values of $\eta$
 
 > [!note] Sampling `p` from  $U(\frac{min(X)}{\lambda},\lambda \ max(X))$ with $\lambda > 1$
@@ -102,15 +99,7 @@ We can also perform an Ablation Study on EIF+:
 
 - [ ] Find some other function to use instead of `std` to define the distributions because the `std` takes a lot to be computed. 
 	- [ ] Write a separate function that computes the `std` applying the definition (i.e. average of the squared differences of each point from the mean) and compile it with `numba`
-	- [ ] Do the same writing the `std` in C and use `ctypes` to invoke the function in Python
-
-> [!note] 
-> Scusa Alessio ma sei sicuro che il calcolo della std sia lento?. Perchè io ho provato a fare una funzione con numba e con C per velocizzare il calcolo della std ma:
-> 
-> - Con numba è veloce uguale
-> - Con C è addirittura più lenta
-> 
-> Numpy è scritto e ottimizzato in C quindi non credo si possa fare più veloce di `np.std`  
+	- [ ] Do the same writing the `std` in C and use `ctypes` to invoke the function in Python 
 
 #### Metrics similar to `std`
 
@@ -163,6 +152,54 @@ Time difference: 0.0004336833953857422
 
 The value of MAD here is also not so different from the `std` one so this metric may be a good choice. 
 
+##### `normal_range`
+
+- `normal_mean_range`
+
+$$
+	N(mean(X),range(X))
+$$
+- `normal_mean_range_eta`
+
+$$
+	N(mean(X),\frac{range(X)}{\eta})
+$$
+
+- `normal_median_range`
+
+$$
+	N(median(X),range(X))
+$$
+- `normal_median_range_eta`
+
+$$
+	N(median(X),\frac{range(X)}{\eta})
+$$
+
+##### `normal_MAD`
+
+- `normal_mean_MAD`
+
+$$
+	N(mean(X),MAD(X))
+$$
+- `normal_mean_MAD_eta`
+
+$$
+	N(mean(X),\frac{MAD(X)}{\eta})
+$$
+
+- `normal_median_MAD`
+
+$$
+	N(median(X),MAD(X))
+$$
+- `normal_median_MAD_eta`
+
+$$
+	N(median(X),\frac{MAD(X)}{\eta})
+$$
+
 ## Parameters `distribution` and `eta`
 
 The `distribution` and `eta` parameters were added in classes `ExtendedIsolationForest` and `Extended_DIFFI_parallel` so that it is possible to do experiments on the EIF+ and ExIFFI models **changing the distribution from which the intercept point `p` is sampled** and **changing the scaling factor $\eta$ of this distribution**.
@@ -176,6 +213,9 @@ The `distribution` parameter is passed as a string and can take the following th
 $$
 	N(mean(X),\eta \ std(X)
 $$
+
+^8b86bf
+
 where $X$ represents the set of points projected on the normal vector representing the slope of the hyperplane
 
 - `normal_median`: This distribution is essentially the same as `normal_mean` but we use `median(X)` instead of `mean(X)`:
@@ -183,6 +223,9 @@ where $X$ represents the set of points projected on the normal vector representi
 $$
 	N(median(X),\eta \ std(X)
 $$
+
+^8b9c7b
+
 - `scaled_uniform`: This is a [[EXPERIMENT SCRIPTS#^dbaab1|scaled version of the uniform distribution that is used in the EIF model]]:
 
 $$

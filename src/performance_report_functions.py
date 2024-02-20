@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os 
 import pickle
-from tqdm import tqdm
+from tqdm import trange
 import sys;
 sys.path.append("../models")
 from models.Extended_IF import *
@@ -86,17 +86,30 @@ def performance(X,y,model=IsolationForest()):
 
 def collect_performance_df(dataset_names,
                         dataset_paths,
-                        scaler,
+                        n_runs,
                         model,
+                        split=True,
+                        scaler='StandardScaler',
+                        use_scaler=True,
+                        use_downsample=False,
                         metric_names=['Precision', 'Recall', 'f1 score', 'Accuracy', 'Balanced Accuracy', 'Average Precision', 'ROC AUC Score']):
     
+    dataset_perf_runs=[]
     dataset_perf=[]
     for name,path in zip(dataset_names,dataset_paths):
-        X_train,X_test,X,y=load_preprocess(scaler,name,path)
-        model.fit(X_train)
-        dataset_perf.append(performance(X,y,model)[0])
+        X_train,X_test,X,y=load_preprocess(scaler,name,path,use_scaler=use_scaler,use_downsample=use_downsample)
+        for i in trange(n_runs,desc=f'Computing metrics'):
+            if split:
+                model.fit(X_train)
+                dataset_perf.append(performance(X_test,y,model)[0])
+            else:
+                model.fit(X_test)
+                dataset_perf.append(performance(X_test,y,model)[0]) 
 
-    df_dataset_perf=pd.DataFrame(np.array(dataset_perf),columns=metric_names)
+        
+        dataset_perf_runs.append(np.mean(np.array(dataset_perf),axis=0))
+
+    df_dataset_perf=pd.DataFrame(np.array(dataset_perf_runs),columns=metric_names)
     df_dataset_perf.insert(0,'Dataset',dataset_names)
 
     return df_dataset_perf
