@@ -43,7 +43,7 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
     return fi
 
 def compute_plt_data(imp_path):
-    
+
     fi = np.load(imp_path)['element']
     mean_imp = np.mean(fi,axis=0)
     std_imp = np.std(fi,axis=0)

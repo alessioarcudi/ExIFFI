@@ -6,7 +6,7 @@ printf "Executing DIFFI Experiments:\n"
 SCRIPT_PATH="test_DIFFI_importances.py"
 
 #DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="wine"
+DATASETS="glass"
 
 DATASET_PATHS="../data/real/"
 
@@ -14,7 +14,8 @@ python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --n_runs 10 \
     --split True \
-    --n_estimators 300 
+    --n_estimators 300 \
+    --feats_plot 12 4
 
 
 # Possible parameters to add (for now they are at the default value)

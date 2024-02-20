@@ -24,6 +24,7 @@ parser.add_argument('--contamination', type=float, default=0.1, help='Global fea
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
 parser.add_argument('--split',type=bool,default=False,help='If True, Split the dataset in train and test set, If False train and test on the entire dataset')
 parser.add_argument('--train_size',type=float,default=0.8,help='Portion of the training set to contaminate')
+parser.add_argument('--feats_plot',type=tuple,default=(0,1),help='Pair of features to plot in the importance map')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -35,6 +36,10 @@ n_estimators = args.n_estimators
 max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
+feats_plot = args.feats_plot
+
+print(feats_plot)
+quit()
 
 # Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -82,7 +87,7 @@ if not os.path.exists(path_experiments):
 
 #Compute global importances
 full_importances = compute_global_importances(I, dataset,isdiffi=True,n_runs=n_runs,p=contamination)    
-save_element(full_importances, path_experiments, filename=f'{dataset.name}_imp_mat', filetype="npz")
+save_element(full_importances, path_experiments, filename='imp_mat', filetype="npz")
 
 # plot global importances
 most_recent_file = get_most_recent_file(path_experiments)
