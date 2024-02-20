@@ -25,14 +25,14 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     for i in tqdm(range(n_runs)):
         I.fit(dataset.X)
         if isdiffi:
-            fi[i,:],_=diffi_ib(I,dataset.X)
+            fi[i,:],_=diffi_ib(I,dataset.X_train)
         else:
             fi[i,:]=I.global_importances(dataset.X,p)
             
     return fi
 
 def compute_plt_data(imp_path):
-    
+
     fi = np.load(imp_path)['element']
     mean_imp = np.mean(fi,axis=0)
     std_imp = np.std(fi,axis=0)
