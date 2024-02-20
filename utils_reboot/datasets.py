@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Type
 import numpy.typing as npt
 from dataclasses import dataclass, field
 
@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
+from sklearn.preprocessing import StandardScaler
 import random
 
 
@@ -37,6 +38,7 @@ class Dataset:
     X: Optional[npt.NDArray] = field(default=None, init=False)
     y: Optional[npt.NDArray] = field(default=None, init=False)
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
+    X_test: Optional[npt.NDArray] = field(default=None, init=False)
     y_train: Optional[npt.NDArray] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
@@ -94,10 +96,21 @@ class Dataset:
             index = list(sss.split(self.X, self.y))[0][0]
             self.X, self.y = self.X[index, :], self.y[index]
     
-    def partition_data(self) -> tuple:
-        inliers = self.X[self.y == 0, :]
-        outliers = self.X[self.y == 1, :]
-        return inliers, outliers
+    def partition_data(self,X,y) -> tuple:
+
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        try:
+            inliers = X[y == 0, :]
+            outliers = X[y == 1, :]
+            y_inliers= y[y == 0]
+            y_outliers= y[y == 1]
+        except TypeError:
+            print('X_train and y_train not loaded yet. Run split_dataset() first')
+            return 
+        return inliers, outliers,y_inliers,y_outliers
     
     def print_dataset_resume(self) -> None:
         # Ensure that X and y are not None
@@ -151,5 +164,56 @@ class Dataset:
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
 
+    def pre_process(self,
+                  split:bool=True):
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        if self.X_train is None:
+            print("X_train not loaded. Load it running split_dataset() first")
+            return
+        scaler=StandardScaler()
+
+        if split:
+            self.X_train=scaler.fit_transform(self.X_train)
+            self.X_test=scaler.transform(self.X)
+        else:
+            X_train,X_test,y_train,y_test=self.partition_data(self.X,self.y)
+            X_train=scaler.fit_transform(X_train)
+            X_test=scaler.transform(X_test)
+            X_test=np.r_[X_train,X_test]
+            self.X_train=X_train
+            self.X_test=X_test
+            self.y=np.concatenate([y_train,y_test])
+            
+    
+            
+"""
+if self.X_train is None:
+                print("X_train not loaded. Load it running split_dataset() first")
+                return
+"""
+
+"""    
+
+Old Version of pre_process
+
+def pre_process(self,
+                    X_train: np.array,
+                    X_test: np.array,
+                    scaler:Optional[Type[StandardScaler]]=StandardScaler()
+                    ) -> tuple:
+    
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+
+        X_train=scaler.fit_transform(X_train)
+        X_test=scaler.transform(X_test)
+        
+        self.X_train=X_train
+        self.X_test=X_test"""
             
 
