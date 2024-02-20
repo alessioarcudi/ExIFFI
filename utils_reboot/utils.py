@@ -1,10 +1,13 @@
 
 
 import time
+from typing import Type
 import pickle
 import numpy as np
+import pandas as pd
 import os
 from collections import namedtuple
+from model_reboot.EIF_reboot import ExtendedIsolationForest
 
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
 
