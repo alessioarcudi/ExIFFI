@@ -49,7 +49,8 @@ def performance(y_pred:np.array,
     
     # In path insert the local put up to the experiments folder:
     # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
-    # For Alessio → 
+    # For Alessio → /Users/alessio/Documents/ExIFFI
+
     
     df=pd.DataFrame({
         "Model": model_name,
@@ -64,6 +65,11 @@ def performance(y_pred:np.array,
         "Average Precision": average_precision_score(y_true, y_pred),
         "ROC AUC Score": roc_auc_score(y_true, y_pred)
     }, index=[pd.Timestamp.now()])
+
+    path=path + f"/results/{dataset_name}/experiments/metrics/{model_name}/"
+
+    if not os.path.exists(path):
+        os.makedirs(path)
     
     save_element(df, path, filename)
     
