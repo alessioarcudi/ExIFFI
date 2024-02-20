@@ -39,6 +39,14 @@
 >  - Added `normalize` and `pre_process` methods
 >  - Added `split_dataset` method for the experiments 
 
+> [!done] Added `IsolationForest` class
+>  Added the `IsolationForest` class in `EIF_reboot.py`. This class is simply a subclass of `ExtendedIsolationForest` and it modifies two methods: 
+>  - In `__init__()` we set `plus` to `False` because the`IF+` model does not exist. 
+>  - In `fit()` the `locked_dims` parameter is set to `np.arange(X.shape[1],dtype=int)` because all the dimensions are locked for the computation of the normal hyperplane vectors. 
+
+> [!question] Add DIFFI Implementation to `IsolationForest` ?
+>  The newly created `IsolationForest` class inherits from `ExtendedIsolationForest` the methods `local_importances` and `global_importances`. Since ExIFFI is a generalization of DIFFI if I put in input to ExIFFI an `IsolationForest` model does it turn into DIFFI? Theoretically it should.   
+
 - [x] Reboot and review experiments code -> write on a Python script 
 	- [ ] Create a result table with all the time execution details to see how the model scales with the dataset size. Compare Isolation Forest with EIF and EIF+ and other AD models (e.g. a state of the art AD AutoEncoder and Deep Isolation Forest). Metrics to use for the comparison: AUC ROC Score, Average Precision, Precision, Recall, F1 Score, ... and the time values,`real_time`,and `user_time`)
 
@@ -66,6 +74,20 @@
 
 > [!attention] 
 >  In notebook `Test_AD_Models.ipynb` I am doing some tests using the new `collect_performance_df` method to compare the EIF, EIF+, DIF and AutoEncoder model. In particular these tests are used to test the PyOD implementation of the DIF and AutoEncoder models. For some reason the EIF and EIF+ models are getting lower Average Precision values with the respect to the ones we reported in the first version of the paper (the Average Precision experiments are collected in the notebook `Average_Precision.ipynb`). Moreover the DIF and AutoEncoder model seems very bad. 
+
+> [!important] Maybe I understand where the error is
+>  I found out that in `wine` the `y` variable obtained loading the data has 10 ones at the beginning and than all zeros. On the other hand in pre processing the data with the `preprocess` function I did:
+> 
+
+``` python 
+y_train=np.zeros(X_train.shape[0])
+y_test=np.ones(X_test.shape[0])
+y=np.concatenate([y_train,y_test])   
+```
+
+> [!important] 
+> So I put the 10 ones at the end of the `y` variable → so I changed the order !!!! Fix this thing and see if the performances get back to the correct values.  
+> So when I do the tests I have to use `partition_data()` to get the training set `X_train` (only inliers) but then for the test set I do not have to use `X_test=np.r_[X_train,X_test]` but I have to normalize `X` and then use `dataset.y` as the label variable. 
 
 ^b1eceb
 	
@@ -127,7 +149,16 @@
 
 - [ ] <span style="color:green;">Adapt experiments to the `numba` code </span> 
 	- [ ] <span style="color:green;">Add experiments on different versions of `X_train` and `X_test` (e.g start with no anomalies in `X_train` and anomalies in `X_test` and then add some anomalies in `X_train`)</span>
-- [ ] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+- [x] <span style="color:green;">Implement new version of Feature Selection experiment</span>
+
+> [!done] 
+> In the Feature Selection Experiment we sligthly modify the design of the Feature Selection Proxy Task used in the first version of the paper:
+> - `direct` → As in the first version of the paper at every iteration the least important feature is removed from the dataset and we plot the behavior of the Average Precision metric as the number of feature decreases
+> - `inverse` → The features are removed in the inverse order: from the most to the least important. Also in this case we plot the Average Precision as the number of features decreases.
+> 
+> At the end two curves are produced, one for `direct` and one for `inverse`, and the higher is the AUC between the two curves the better is the interpretability power of the model. 
+> In fact we expect the `direct` curve to decrease slowly then the `inverse` curve, so it should always stay higher then the `inverse` one. 
+> 
 
 - [x] <span style="color:red;">Check in DIF Paper if they apply a Data Normalization → maybe Data Normalization is not a good idea before applying all the non linear transformation they apply on the *deep network part* of the DIF model.</span>
 
@@ -151,6 +182,10 @@
 - [x] Create a new branch `plot` to update the `plot.py` script 
 	- [x] Essentially move here all the methods I inserted inside the class `Extended_DIFFI_parallel` to produce the plot (i.e. from `compute_local_importances` onward)
 	
-> [!warning]
-> Write the code so that it works on the `EIF_reboot` model  
+> [!done]
+> Inserted all the new plot functions inside `utils_reboot/plots.py`
+
+- [ ] Open a new branch `datasets` and add some new features on `datasets.py` as described in [[TO DO ExIFFI Paper Review#^4d4de5|here]]
+
+- [ ] Always on a new branch create a wrapper of class `ExtendedIsolationForest` to implement the `IsolationForest` model. 
 

@@ -46,8 +46,8 @@ We will start from the structure of the first version of the paper and re adapt 
 
 Values to try for the parameters: 
 
-- Number of trees `n_trees = [100,300,600,800]` → default: `300`
-- Data Normalization Scalers `scaler = [StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler]` → default: `StandardScaler`
+- ~~Number of trees `n_trees = [100,300,600,800]` → default: `300`~~ 
+- ~~Data Normalization Scalers `scaler = [StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler]` → default: `StandardScaler`~~
 - Distribution → default: `normal_mean` (or `normal_median` if it is better)
 	- [[EXPERIMENT SCRIPTS#^8b86bf|`normal_mean`]]
 	- [[EXPERIMENT SCRIPTS#^8b9c7b|`normal_median`]]
@@ -55,7 +55,7 @@ Values to try for the parameters:
 	- [[EXPERIMENT SCRIPTS#`normal_range`|`normal_range`]] 
 	- [[EXPERIMENT SCRIPTS#`normal_MAD`|`normal_MAD`]]   
 - Values of the scaling parameter $\eta$ → `eta = [2,2.5,3,3.5,4]` → default: `2`
-- Contamination level used to compute the Anomaly Score → `contamination = np.linspace(0.01,0.1,10)` → default: `0.1`
+- Contamination level used in `X_train` → `contamination = np.linspace(0.01,0.1,10)` → default: `0.1`
 
 #### Ablation Study EIF+ Plots 
 
@@ -81,6 +81,7 @@ For each one of these three scenarios we have to compute the Performance Report 
 - EIF+
 - DIF
 - AutoEncoder
+- ECOD ? 
 
 The Performance Report is composed of the following metrics:
 - Precision 
@@ -112,6 +113,10 @@ Values to try for the parameters:
 - Depth Based Score or not: `depth_based = [True,False]` default: `False`
 - Different number of runs for the GFI Computation in `compute_global_importance` method → `n_runs = [5,10,15]` default: `10`
 
+> [!note] 
+> Use $AUC_{FS}$ as the quantitative metric to evaluate the goodness of the interpratations. 
+> Probably we need to work only on synthetic datasets where there is a clear ground truth on what are the most important features. 
+> Metric → [Non Discounted Cumulative Gain](https://en.wikipedia.org/wiki/Discounted_cumulative_gain)
 #### Ablation Study ExIFFI Plots 
 
 To evaluate the goodness of different parameters configurations of ExIFFI we use a modified version of the Feature Selection Proxy Task: 
@@ -148,4 +153,9 @@ Use synthetic datasets, as done in the DIF paper, to see how the model scales to
 >  The plots will be plots of:
 >  - `n_samples` vs `execution_time`
 >  - `n_features` vs `execution_time`
+
+### ExIFFI vs TreeSHAP 
+
+- Find an implementation of TreeSHAP for Anomaly Detection 
+- Compare the execution times of ExIFFI and TreeSHAP with different datasets with increasing complexity 
 

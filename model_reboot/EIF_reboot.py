@@ -191,7 +191,7 @@ class ExtendedTree:
             dist = np.dot(np.ascontiguousarray(data), np.ascontiguousarray(self.normals[node_id]))
         
             if self.plus:
-                self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*2)
+                self.intercepts[node_id] = np.random.normal(np.median(dist),np.std(dist)*1.5)
             else:
                 self.intercepts[node_id] = np.random.uniform(np.min(dist),np.max(dist))
             mask = dist <= self.intercepts[node_id]  
@@ -240,6 +240,7 @@ class ExtendedIsolationForest():
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.max_depth = max_depth
         self.plus=plus
+        self.name="EIF"+"+"*int(plus)
         self.ids=None
         self.X=None
     
@@ -248,8 +249,8 @@ class ExtendedIsolationForest():
         return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X, locked_dims=None):
-
-        if locked_dims is None:
+        self.ids = None
+        if not locked_dims:
             locked_dims = 0
 
         if self.max_depth == "auto":
@@ -261,7 +262,7 @@ class ExtendedIsolationForest():
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
             
     def compute_ids(self, X):
-        if self.X is None or self.X.shape != X.shape:
+        if self.ids is None or self.X.shape != X.shape:
             self.X = X
             self.ids = np.array([tree.leaf_ids(X) for tree in self.trees])
 
@@ -293,7 +294,7 @@ class ExtendedIsolationForest():
         inliers_importances,inliers_normals = np.sum(importances[~y_hat],axis=0),np.sum(normals[~y_hat],axis=0)
         return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
     
-    def local_importances(self, X, new_dataset = False):
+    def local_importances(self, X):
         self.compute_ids(X)
         importances, normals = self._importances(X, self.ids)
         return importances/normals
@@ -314,20 +315,3 @@ class IsolationForest(ExtendedIsolationForest):
         return score,y_hat
     
 
-    
-
-"""
-Use local_diffi,diffi_ib and get_iic functions to implement DIFFI inside this class: 
-
-In local_diffi:
-- iforest.estimators_ corresponds to self.trees
-- iforest.estimator_samples_ coreesponds to self.ids 
-- iforest.max_samples corresponds to self.max_samples (but be careful because in the case of wine max_samples stays 256 but it should be 129,
-  so we should change its value aftert we do this subsample_size = np.min((self.max_samples, len(X)))
-- Modify:
-
-    X_outliers_ib = X_ib[np.where(as_ib < 0)]
-    X_inliers_ib = X_ib[np.where(as_ib > 0)]
-
-using the y_hat returned by decision_function_single_tree
-"""

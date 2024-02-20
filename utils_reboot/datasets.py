@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, Optional
+from typing import Type, Optional, List
 import numpy.typing as npt
 from dataclasses import dataclass, field
 
@@ -8,9 +8,31 @@ from scipy.io import loadmat
 import mat73
 
 import numpy as np
+import random 
 import pandas as pd
 
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
+import random
+
+
+from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
+
+
+def Dataset_feature_names(name:str):
+
+    data_feature_names={
+        'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'BMI', 'DiabetesPedigreeFunction', 'Age'],
+        'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
+       'speechiness', 'acousticness', 'instrumentalness', 'liveness',
+       'valence', 'tempo', 'spec_rate'],
+       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level']
+    }
+
+    if name in data_feature_names:    
+        return data_feature_names[name]
+    else:
+        return None 
 
 @dataclass
 class Dataset:
@@ -34,9 +56,15 @@ class Dataset:
     path: str = "../data/"
     X: Optional[npt.NDArray] = field(default=None, init=False)
     y: Optional[npt.NDArray] = field(default=None, init=False)
+    X_train: Optional[npt.NDArray] = field(default=None, init=False)
+    y_train: Optional[npt.NDArray] = field(default=None, init=False)
+    feature_names: Optional[List[str]] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
         self.load()
+        self.feature_names=Dataset_feature_names(self.name)
+        if self.feature_names is None:
+            self.feature_names=np.arange(self.shape[1])
         
     @property
     def shape(self) -> tuple:
@@ -90,10 +118,21 @@ class Dataset:
             index = list(sss.split(self.X, self.y))[0][0]
             self.X, self.y = self.X[index, :], self.y[index]
     
-    def partition_data(self) -> tuple:
-        inliers = self.X[self.y == 0, :]
-        outliers = self.X[self.y == 1, :]
-        return inliers, outliers
+    def partition_data(self,X,y) -> tuple:
+
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        try:
+            inliers = X[y == 0, :]
+            outliers = X[y == 1, :]
+            y_inliers= y[y == 0]
+            y_outliers= y[y == 1]
+        except TypeError:
+            print('X_train and y_train not loaded yet. Run split_dataset() first')
+            return 
+        return inliers, outliers,y_inliers,y_outliers
     
     def print_dataset_resume(self) -> None:
         # Ensure that X and y are not None
@@ -125,6 +164,76 @@ class Dataset:
         print(f" Total Samples: {num_samples}, Features: {num_features}")
         print(f" Inliers: {num_inliers}, Outliers: {num_outliers}, Balance Ratio: {balance_ratio:.2f}")
         print(f" Feature Stats - Mean: {mean_val:.2f}, Std Dev: {std_dev_val:.2f}, Min: {min_val}, Max: {max_val}")
+    
+    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        
+        inexes_outliers = np.where(self.y==1)[0].tolist()
+        indexes_inliers = np.where(self.y==0)[0].tolist()
+        random.shuffle(inexes_outliers)
+        random.shuffle(indexes_inliers)
+        dim_train = int(len(self.X)*train_size)
+        self.X_train = np.zeros((dim_train,self.X.shape[1]))
+        self.y_train = np.zeros(dim_train)
+        for i in range(dim_train):
+            if i < dim_train*contamination and len(inexes_outliers) > 0:
+                index = inexes_outliers.pop()
+            else:
+                index = indexes_inliers.pop()
+            self.X_train[i] = self.X[index]
+            self.y_train[i] = self.y[index]
+
+    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        
+        inexes_outliers = np.where(self.y==1)[0].tolist()
+        indexes_inliers = np.where(self.y==0)[0].tolist()
+        random.shuffle(inexes_outliers)
+        random.shuffle(indexes_inliers)
+        dim_train = int(len(self.X)*train_size)
+        self.X_train = np.zeros((dim_train,self.X.shape[1]))
+        self.y_train = np.zeros(dim_train)
+        for i in range(dim_train):
+            if i < dim_train*contamination and len(inexes_outliers) > 0:
+                index = inexes_outliers.pop()
+            else:
+                index = indexes_inliers.pop()
+            self.X_train[i] = self.X[index]
+            self.y_train[i] = self.y[index]
+    
+    def pre_process(self,
+                    X_train: np.array,
+                    X_test: np.array,
+                    scaler:Optional[Type[StandardScaler]]=StandardScaler(),
+                    split:bool=True) -> tuple:
+    
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+
+        
+        if split:
+            X_train=scaler.fit_transform(X_train)
+            X_test=scaler.transform(X_test)
+            X=np.r_[X_train,X_test]
+            y_train=np.zeros(X_train.shape[0])
+            y_test=np.ones(X_test.shape[0])
+            y=np.concatenate([y_train,y_test])
+            return X_train,X_test,X,y
+        elif split==False:
+            #Ensure X_train is not None
+            if self.X_train is None:
+                print("X_train not loaded. Load it running split_dataset() first")
+                return
+            self.X = scaler.fit_transform(self.X)
+            self.X_train = scaler.fit_transform(self.X_train)
 
             
 
