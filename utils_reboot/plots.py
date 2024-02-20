@@ -14,6 +14,8 @@ from utils_reboot.datasets import Dataset
 from utils_reboot.utils import open_element
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from matplotlib import colors, cm
+from sklearn.ensemble import IsolationForest
+from models.interpretability_module import local_diffi
 
 
 def bar_plot(dataset: Type[Dataset], 
@@ -275,7 +277,9 @@ def importance_map(dataset: Type[Dataset],
                    factor: Optional[int] = 3, 
                    feats_plot: Optional[tuple] = (0,1),
                    col_names: List[str] = None,
-                   labels: Optional[bool] = True
+                   labels: Optional[bool] = True,
+                   isdiffi: Optional[bool] = False,
+                   iforest: Type[IsolationForest] = IsolationForest()
                    ):
         """
         Produce the Local Feature Importance Scoremap.   
@@ -317,10 +321,10 @@ def importance_map(dataset: Type[Dataset],
         mean[:,feats_plot[1]]=yy.reshape(len(yy)**2)
 
         importance_matrix = np.zeros_like(mean)
-        # if isdiffi:
-        #         iforest.max_samples = len(X_train)
-        #         for i in range(importance_matrix.shape[0]):
-        #                 importance_matrix[i] = local_diffi(iforest, mean[i])[0]
+        if isdiffi:
+                iforest.max_samples = len(dataset.X)
+                for i in range(importance_matrix.shape[0]):
+                        importance_matrix[i] = local_diffi(iforest, mean[i])[0]
         importance_matrix = model.local_importances(mean)
         
         sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
