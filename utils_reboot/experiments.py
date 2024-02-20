@@ -74,15 +74,18 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    ) -> tuple[np.array,dict,str,str]:
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     for i,contamination in tqdm(enumerate(contamination_values)):
-        for run in range(n_runs):
-            dataset.split_dataset(train_size,contamination)
-            try:
-                I.fit(dataset.X_train)
-                score = I.predict(dataset.X)
-                avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
-                precisions[i,run] = avg_prec
-            except:
-                precisions[i,run] = np.nan
+        if contamination <= dataset.perc_outliers:
+            for run in range(n_runs):
+                dataset.split_dataset(train_size,contamination)
+                try:
+                    I.fit(dataset.X_train)
+                    score = I.predict(dataset.X)
+                    avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
+                    precisions[i,run] = avg_prec
+                except:
+                    precisions[i,run] = np.nan
+        else:
+            precisions[i] = np.nan
     return precisions
 
 

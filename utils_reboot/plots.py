@@ -251,17 +251,22 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
         plt.show()
         
 
-def plot_precision_over_contamination(precisions, plot_path, model, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
+def plot_precision_over_contamination(precisions, model, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    
     plt.style.use('default')
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
     plt.plot(contamination,precisions.mean(axis=1),marker="o",c="tab:blue",alpha=0.5)
+    plt.fill_between(contamination, [np.percentile(x, 10) for x in precisions], [np.percentile(x, 90) for x in precisions],alpha=0.1, color="tab:blue")
+    plt.ylim(0,1)
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
     #plt.title("Precision over Contamination "+model.name, fontsize = 18)
-    namefile = precisions.name + "/"+model+"_precision_over_contamination_.pdf"
+    namefile = current_time + "_" + model + "_precision_over_contamination_.pdf"
     if save_image:
-        plt.savefig(plot_path+namefile,bbox_inches = "tight")
+        plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")
     if plot_image:
         plt.show()
     
