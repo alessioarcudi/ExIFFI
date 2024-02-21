@@ -61,23 +61,29 @@ if not os.path.exists(path_plots):
 path_experiment = path_experiments + "/feature_selection"
 if not os.path.exists(path_experiment):
     os.makedirs(path_experiment)
+path_feat_sel_values = path_experiment + "/values"
+if not os.path.exists(path_feat_sel_values):
+    os.makedirs(path_feat_sel_values)
 path_experiment_matrices = path_experiment + "/matrices"
 if not os.path.exists(path_experiment_matrices):
     os.makedirs(path_experiment_matrices)
     
-path_experiment_plots = path_experiments + "/global_importances/data_for_plots"
-if not os.path.exists(path_experiment_plots):
-    os.makedirs(path_experiment_plots)
+path_experiment_feats = path_experiments + "/global_importances/EXIFFI/matrices"
+if not os.path.exists(path_experiment_feats):
+    os.makedirs(path_experiment_feats)
     
 
 # feature selection
-# most_recent_file = get_most_recent_file(path_experiment_plots)
-# data_for_plots = open_element(most_recent_file)
-# Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
-# direct = feature_selection(I, dataset, data_for_plots["feat_order"], 10, inverse=False, random=False)
-# inverse = feature_selection(I, dataset, data_for_plots["feat_order"], 10, inverse=True, random=False)
-# data = Precisions(direct, inverse, dataset.name, I.name)
-# save_element([data], path_experiment_matrices, filetype="pickle")
+most_recent_file = get_most_recent_file(path_experiment_feats)
+matrix = open_element(most_recent_file,filetype="npz")
+feat_order = np.argsort(matrix.mean(axis=0))
+Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
+inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
+data = Precisions(direct, inverse, dataset.name, I.name)
+value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+save_element([data], path_experiment_matrices, filetype="pickle")
+save_element(value, path_feat_sel_values, filetype="npz")
 
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_matrices)

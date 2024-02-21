@@ -121,6 +121,7 @@ tree_spec = [
     ("n", int64),
     ("d", int64),
     ("node_count", int64),
+    ("max_nodes", int64),
     ("path_to", int64[:, :]),
     ("path_to_Right_Left", int64[:, :]) ,    
     ("child_left", int64[:]),
@@ -144,6 +145,7 @@ class ExtendedTree:
         self.n = n
         self.d = d
         self.node_count = 1
+        self.max_nodes = max_nodes
 
         self.path_to = -np.ones((max_nodes, max_depth+1), dtype=np.int64)
         self.path_to_Right_Left = np.zeros((max_nodes, max_depth+1), dtype=np.int64)
@@ -191,7 +193,7 @@ class ExtendedTree:
             dist = np.dot(np.ascontiguousarray(data), np.ascontiguousarray(self.normals[node_id]))
         
             if self.plus:
-                self.intercepts[node_id] = np.random.normal(np.median(dist),np.std(dist)*1.5)
+                self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*2)
             else:
                 self.intercepts[node_id] = np.random.uniform(np.min(dist),np.max(dist))
             mask = dist <= self.intercepts[node_id]  
@@ -199,8 +201,8 @@ class ExtendedTree:
             X_left = data[mask]
             X_right = data[~mask,:]
 
-            self.importances_left[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_left)+1))
-            self.importances_right[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_right)+1))
+            self.importances_left[node_id] = np.abs(self.normals[node_id])*(self.node_size[node_id]/(len(X_left)+1))*1/(1+self.depth[node_id])
+            self.importances_right[node_id] = np.abs(self.normals[node_id])*self.node_size[node_id]/(len(X_right)+1)*1/(1+self.depth[node_id])
             
             left_child = self.create_new_node(node_id,-1)
             right_child = self.create_new_node(node_id,1)
@@ -210,6 +212,9 @@ class ExtendedTree:
 
             stack.append((left_child, X_left, depth + 1))
             stack.append((right_child, X_right, depth + 1))
+            
+            if self.node_count >= self.max_nodes:
+                raise ValueError("Max number of nodes reached")
 
     def leaf_ids(self, X):
         return get_leaf_ids(X, self.child_left, self.child_right, self.normals, self.intercepts) 
@@ -254,7 +259,7 @@ class ExtendedIsolationForest():
             locked_dims = 0
 
         if self.max_depth == "auto":
-            self.max_depth = int(np.ceil(np.log2(self.max_samples)))
+            self.max_depth = int(np.ceil(np.log2(self.max_samples))*2)
         subsample_size = np.min((self.max_samples, len(X)))
         self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims, plus=self.plus)
                       for _ in range(self.n_estimators)]
@@ -290,7 +295,7 @@ class ExtendedIsolationForest():
         self.compute_ids(X)
         y_hat = self._predict(X,p)
         importances, normals = self._importances(X, self.ids)
-        outliers_importances,outliers_normals = np.sum(importances[y_hat],axis=0),np.sum(normals[y_hat],axis=0)
+        outliers_importances,outliers_normals = np.sum(importances[y_hat],axis=0),np.sum(normals[y_hat],axis=0) 
         inliers_importances,inliers_normals = np.sum(importances[~y_hat],axis=0),np.sum(normals[~y_hat],axis=0)
         return (outliers_importances/outliers_normals)/(inliers_importances/inliers_normals)
     

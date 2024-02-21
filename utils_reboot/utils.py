@@ -19,7 +19,7 @@ def save_element(element, directory_path, filename="", filetype="pickle"):
     filename = current_time + '_' + filename
     path = directory_path + '/' + filename
     if filetype == "pickle":
-        with open(path, 'wb') as fl:
+        with open(path+".pickle", 'wb') as fl:
             pickle.dump(element, fl)
     elif filetype == "npz":
         np.savez(path, element=element)
