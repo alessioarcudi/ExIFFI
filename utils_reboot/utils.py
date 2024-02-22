@@ -11,7 +11,7 @@ from model_reboot.EIF_reboot import ExtendedIsolationForest
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
-Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","values"])
 
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
