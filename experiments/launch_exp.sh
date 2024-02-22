@@ -15,7 +15,7 @@ python $SCRIPT_PATH \
     --n_runs 10 \
     --split True \
     --n_estimators 300 \
-    --feats_plot 12 4
+    --feats_plot '(5, 4)'
 
 
 # Possible parameters to add (for now they are at the default value)

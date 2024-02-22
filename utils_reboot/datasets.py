@@ -198,10 +198,10 @@ class Dataset:
             self.X_train=self.X
 
         scaler = StandardScaler()
+        self.X_train=scaler.fit_transform(self.X_train)
+        self.X=scaler.transform(self.X)
         
-        if split:
-            self.X_train=scaler.fit_transform(self.X_train)
-            self.X_test=scaler.transform(self.X)
+        """
         else:
             X_train,X_test,y_train,y_test=self.partition_data(self.X,self.y)
             X_train=scaler.fit_transform(X_train)
@@ -210,6 +210,6 @@ class Dataset:
             self.X_train=X_train
             self.X_test=X_test
             self.y=np.concatenate([y_train,y_test])
-         
+        """
     
  
