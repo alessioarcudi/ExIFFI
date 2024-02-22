@@ -1,6 +1,7 @@
 import sys
 import os
-os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -48,7 +49,8 @@ dataset.drop_duplicates()
 
 I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-cwd = '/Users/alessio/Documents/ExIFFI'
+#cwd = '/Users/alessio/Documents/ExIFFI'
+cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
