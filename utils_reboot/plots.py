@@ -51,7 +51,7 @@ def bar_plot(dataset: Type[Dataset],
     fig,ax : plt.figure  and plt.axes objects used to create the plot 
     bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
     """
-    col_names = dataset.feature_names
+    col_names = dataset.feature_names.astype(str)
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     name_file = f"{current_time}_GFI_Bar_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
@@ -111,7 +111,7 @@ def bar_plot(dataset: Type[Dataset],
     ax.set_ylabel("Percentage count", fontsize=20)
     ax.set_yticks(range(10, 101, 10), [str(x) + "%" for x in range(10, 101, 10)])
     ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
-
+    
     if save_image:
         plt.savefig(plot_path + f'/{name_file}.pdf', bbox_inches='tight')
 
