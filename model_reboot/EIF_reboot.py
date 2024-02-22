@@ -17,7 +17,7 @@ import numpy as np
 # from dask.distributed import Client
 from tqdm import tqdm
 
-@njit
+@njit(cache=True)
 def make_rand_vector(df,dimensions) -> npt.NDArray[np.float64]:
     """
     Random unitary vector in the unit ball with max number of dimensions
@@ -48,7 +48,7 @@ def make_rand_vector(df,dimensions) -> npt.NDArray[np.float64]:
 
 
 
-@njit
+@njit(cache=True)
 def c_factor(n: int) :
     """
     Average path length of unsuccesful search in a binary search tree given n points
@@ -68,7 +68,7 @@ def c_factor(n: int) :
     return 2.0*(np.log(n-1)+0.5772156649) - (2.0*(n-1.)/(n*1.0))
 
 
-@njit    
+@njit(cache=True)
 def get_leaf_ids(X, child_left, child_right, normals, intercepts):
         res = []
         for x in X:
@@ -79,7 +79,7 @@ def get_leaf_ids(X, child_left, child_right, normals, intercepts):
             res.append(int(node_id))
         return np.array(res)
 
-@njit
+@njit(cache=True)
 def calculate_importances(paths: np.ndarray, directions: np.ndarray, importances_left: np.ndarray, importances_right: np.ndarray, normals: np.ndarray, d: int):
     # Flatten the paths and directions for 1D boolean indexing
     paths_flat = paths.flatten()

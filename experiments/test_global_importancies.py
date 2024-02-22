@@ -1,7 +1,7 @@
 import sys
 import os
-#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -26,11 +26,11 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
-parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
+parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
-parser.add_argument('--interpretation', type=str, default="RandomForest", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
-parser.add_argument("--scenario", type=int, default=1, help="Scenario to run")
+parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
+parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 # Parse the arguments
 args = parser.parse_args()
 
@@ -70,8 +70,8 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-#cwd = '/Users/alessio/Documents/ExIFFI'
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+cwd = '/Users/alessio/Documents/ExIFFI'
+#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
