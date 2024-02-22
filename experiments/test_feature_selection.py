@@ -55,9 +55,12 @@ scenario = args.scenario
 
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
+
 if scenario==2:
     dataset.split_dataset(train_size=0.8,contamination=0)
-dataset.pre_process()
+
+if pre_process:
+    dataset.pre_process()
 
 if model == "EIF+" or model == "EIF":
     I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)

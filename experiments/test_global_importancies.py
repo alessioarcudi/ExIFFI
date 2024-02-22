@@ -28,6 +28,7 @@ parser.add_argument('--max_samples', type=str, default='auto', help='EIF paramet
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 
+parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
 parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
@@ -49,16 +50,24 @@ max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
 
+pre_process = args.pre_process
 model = args.model
 interpretation = args.interpretation
 scenario = args.scenario
 
+# print(f"Dataset: {dataset_name}")
+# print(f"Path: {dataset_path}")
+# quit()
 
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
+
+
 if scenario==2:
     dataset.split_dataset(train_size=0.8,contamination=0)
-dataset.pre_process()
+
+if pre_process:
+    dataset.pre_process()
 
 if model == "IF":
     if interpretation == "EXIFFI":

@@ -7,13 +7,14 @@ printf "Executing Experiments:\n"
 SCRIPT_PATH="test_feature_selection.py"
 
 #DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="wine"
+DATASETS="cardio"
 
 DATASET_PATHS="../data/real/"
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
-    --scenario 1 \
+    --dataset_path $DATASET_PATHS \
+    --pre_process \
     --model "EIF+" 
 
 
