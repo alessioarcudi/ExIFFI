@@ -58,7 +58,6 @@ class Dataset:
     X: Optional[npt.NDArray] = field(default=None, init=False)
     y: Optional[npt.NDArray] = field(default=None, init=False)
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
-    X_test: Optional[npt.NDArray] = field(default=None, init=False)
     y_train: Optional[npt.NDArray] = field(default=None, init=False)
     feature_names: Optional[List[str]] = field(default=None, init=False)
 

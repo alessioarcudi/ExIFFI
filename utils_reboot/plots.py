@@ -24,10 +24,11 @@ def bar_plot(dataset: Type[Dataset],
             filetype: str = "pickle", 
             plot_path: str = os.getcwd(), 
             f: int = 6, 
-            col_names: Optional[list] = None,
-            save = True, 
+            save_image = True, 
             show_plot = True,
-            model_name:str='EIF+') -> tuple[plt.figure, plt.axes, pd.DataFrame]:
+            model:str='EIF+',
+            interpretation:str="EXIFFI",
+            scenario=1) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
     """
     Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
     
@@ -50,10 +51,10 @@ def bar_plot(dataset: Type[Dataset],
     fig,ax : plt.figure  and plt.axes objects used to create the plot 
     bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
     """
-
+    col_names = dataset.feature_names
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    name_file = current_time + '_GFI_Bar_plot_' + dataset.name 
+    name_file = f"{current_time}_GFI_Bar_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
     
     #Load the imps array from the pkl file contained in imps_path -> the imps_path is returned from the 
     #compute_local_importances or compute_global_importances functions so we have it for free 
@@ -111,8 +112,8 @@ def bar_plot(dataset: Type[Dataset],
     ax.set_yticks(range(10, 101, 10), [str(x) + "%" for x in range(10, 101, 10)])
     ax.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left",ncol=ncols)
 
-    if save:
-        plt.savefig(plot_path + f'/{name_file}_{model_name}.pdf', bbox_inches='tight')
+    if save_image:
+        plt.savefig(plot_path + f'/{name_file}.pdf', bbox_inches='tight')
 
     if show_plot:
         plt.show()
@@ -121,13 +122,14 @@ def bar_plot(dataset: Type[Dataset],
     
     
 
-def score_plot(dataset: Type[Dataset],
-               global_importances_file: str,
-               plot_path: str = os.getcwd(),
-               col_names=None,
-               save: bool =True,
-               show_plot: bool =True,
-               model_name:str='EIF+') -> tuple[plt.axes, plt.axes]:
+def score_plot(dataset: Type[Dataset], 
+            global_importances_file: str,
+            plot_path: str = os.getcwd(), 
+            save_image = True, 
+            show_plot = True,
+            model:str='EIF+',
+            interpretation:str="EXIFFI",
+            scenario=1) -> tuple[plt.axes, plt.axes]:
     """
     Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
     
@@ -149,12 +151,12 @@ def score_plot(dataset: Type[Dataset],
     ax1,ax2: The two plt.axes objects used to create the plot.  
     """
    # Compute the plt_data with the compute_plt_data function
-    
+    col_names = dataset.feature_names
     plt_data = compute_plt_data(global_importances_file)
 
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    name_file = current_time + '_GFI_Score_plot_' + dataset.name 
+    name_file = f"{current_time}_GFI_Score_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
 
     patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
     '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
@@ -203,8 +205,8 @@ def score_plot(dataset: Type[Dataset],
         yticks=[col_names[i] for i in idx]
         ax1.set_yticklabels(yticks)
 
-    if save:
-        plt.savefig(plot_path + f'/{name_file}_{model_name}.pdf', bbox_inches='tight')
+    if save_image:
+        plt.savefig(plot_path + f'/{name_file}.pdf', bbox_inches='tight')
 
     if show_plot:
         plt.show()

@@ -14,32 +14,38 @@ from models.interpretability_module import *
 from utils_reboot.datasets import Dataset
 import sklearn
 from sklearn.ensemble import IsolationForest
+from sklearn.ensemble import RandomForestRegressor
+
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
                         dataset: Type[Dataset],
-                        isdiffi:bool=False,
                         p = 0.1,
+                        interpretation="EXIFFI",
                         fit_model = True) -> np.array: 
     if fit_model:
-        I.fit(dataset.X)             
-    if isdiffi:
+        I.fit(dataset.X_train)             
+    if interpretation=="DIFFI":
         fi,_=diffi_ib(I,dataset.X)
-    else:
+    elif interpretation=="EXIFFI":
         fi=I.global_importances(dataset.X,p)
+    elif interpretation=="RandomForest":
+        rf = RandomForestRegressor()
+        rf.fit(dataset.X, I.predict(dataset.X))
+        fi = rf.feature_importances_
     return fi
                         
 def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                dataset: Type[Dataset],
-                               isdiffi:bool=False,
                                n_runs:int = 10, 
-                               p = 0.1) -> tuple[np.array,dict,str,str]:
+                               p = 0.1,
+                               interpretation="EXIFFI") -> tuple[np.array,dict,str,str]:
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
         fi[i,:]=compute_global_importances(I,
                         dataset,
-                        isdiffi=isdiffi,
-                        p = p)
+                        p = p,
+                        interpretation=interpretation)
     return fi
 
 def compute_plt_data(imp_path):
