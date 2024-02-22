@@ -1,21 +1,19 @@
 #!/bin/bash
 
-printf "Executing DIFFI Experiments:\n"
+printf "Executing Experiments:\n"
 
 # Path to the Python script to execute 
-SCRIPT_PATH="test_DIFFI_importances.py"
+#SCRIPT_PATH="test_global_importancies.py"
+SCRIPT_PATH="test_feature_selection.py"
 
 #DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="glass"
+DATASETS="wine"
 
 DATASET_PATHS="../data/real/"
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
-    --n_runs 10 \
-    --split True \
-    --n_estimators 300 \
-    --feats_plot '(5, 4)'
+    --model "EIF+" 
 
 
 # Possible parameters to add (for now they are at the default value)
