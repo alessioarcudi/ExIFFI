@@ -198,8 +198,12 @@ class Dataset:
             self.X_train=self.X
 
         scaler = StandardScaler()
-        self.X_train=scaler.fit_transform(self.X_train)
-        self.X=scaler.transform(self.X)
+        
+        if split:
+            self.X=scaler.fit_transform(self.X)
+        else:
+            self.X_train=scaler.fit_transform(self.X_train)
+            self.X=scaler.transform(self.X)
         
         """
         else:
