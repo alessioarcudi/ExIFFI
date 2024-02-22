@@ -26,3 +26,8 @@
 - `shuttle`
 - `moodify`
 
+## `EIF+` , `EXIFFI` and `scenario=1`
+
+- `wine` :
+	- Global Importance 10 run → `22-02-2024_22-14`
+	- Feature Selection → `22-02-2024_22-16` → no sense 
