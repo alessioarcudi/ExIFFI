@@ -16,7 +16,7 @@ from model_reboot.EIF_reboot import ExtendedIsolationForest
 import argparse
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Global Importances')
+parser = argparse.ArgumentParser(description='Test Feature Selection')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='wine', help='Name of the dataset')
@@ -31,6 +31,8 @@ parser.add_argument('--model', type=str, default="EIF+", help='Name of the AD mo
 parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Name of the interpretation model. Accepted values are: [EXIFFI,DIFFI,RF,TreeSHAP]')
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--split',action='store_true', help='If set, split the dataset when pre procesing')
+parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
+
 
 # Parse the arguments
 args = parser.parse_args()
@@ -48,12 +50,14 @@ model = args.model
 interpretation = args.interpretation
 pre_process = args.pre_process
 split = args.split
+scenario = args.scenario
 
 
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
-if pre_process:
-    dataset.pre_process(split=split)
+if scenario==2:
+    dataset.split_dataset(train_size=0.8,contamination=0)
+dataset.pre_process()
 
 if model == "EIF+" or model == "EIF":
     I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
@@ -79,21 +83,21 @@ path_experiment = path_experiments + "/feature_selection"
 if not os.path.exists(path_experiment):
     os.makedirs(path_experiment)
 
-path_experiment_model = path_experiment + "/" + model + "/" + interpretation
+path_experiment_model = path_experiment + "/" + model
 if not os.path.exists(path_experiment_model):
     os.makedirs(path_experiment_model)
-
-# path_feat_sel_values = path_experiment_model + "/values"os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
-# if not os.path.exists(path_feat_sel_values):
-#     os.makedirs(path_feat_sel_values)
-# path_experiment_matrices = path_experiment_model + "/matrices"
-# if not os.path.exists(path_experiment_matrices):
-#     os.makedirs(path_experiment_matrices)
     
-path_experiment_feats = path_experiments + "/global_importances/" + interpretation + "/matrices"
+path_experiment_model_interpretation = path_experiment_model + "/" + interpretation
+if not os.path.exists(path_experiment_model_interpretation):
+    os.makedirs(path_experiment_model_interpretation)
+path_experiment_model_interpretation_scenario = path_experiment_model_interpretation + "/scenario_"+str(scenario)
+if not os.path.exists(path_experiment_model_interpretation_scenario):
+    os.makedirs(path_experiment_model_interpretation_scenario)
+    
+    
+path_experiment_feats = path_experiments + "/global_importances/" + model + "/" + interpretation + "/scenario_" + str(scenario)
 if not os.path.exists(path_experiment_feats):
-    os.makedirs(path_experiment_feats)
-    
+    os.makedirs(path_experiment_feats) 
 
 # feature selection
 most_recent_file = get_most_recent_file(path_experiment_feats)
@@ -104,10 +108,10 @@ direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=Fal
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
 data = Precisions(direct, inverse, dataset.name, I.name, value)
-save_element([data], path_experiment_model, filetype="pickle")
+save_element([data], path_experiment_model_interpretation_scenario, filetype="pickle")
 
 #plot feature selection
-most_recent_file = get_most_recent_file(path_experiment_model)
+most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
 plot_feature_selection(most_recent_file, path_plots, plot_image=False)
 
 
