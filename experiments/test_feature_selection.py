@@ -1,7 +1,8 @@
 # initialize feature_selection paths
 import sys
 import os
-os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -26,6 +27,10 @@ parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
+parser.add_argument('--model', type=str, default="EIF+", help='Name of the AD model. Accepted values are: [IF,EIF,EIF+,DIF,AE]')
+parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Name of the interpretation model. Accepted values are: [EXIFFI,DIFFI,RF,TreeSHAP]')
+parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
+parser.add_argument('--split',action='store_true', help='If set, split the dataset when pre procesing')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -39,14 +44,26 @@ max_depth = args.max_depth
 max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
+model = args.model
+interpretation = args.interpretation
+pre_process = args.pre_process
+split = args.split
 
 
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
+if pre_process:
+    dataset.pre_process(split=split)
 
-I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+if model == "EIF+" or model == "EIF":
+    I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+elif model == "IF":
+    I=IsolationForest(n_estimators=n_estimators, max_samples=max_samples, contamination=contamination)
+# elif model == "AE":
+#     I=AutoEncoder(contamination=contamination)
 
-cwd = '/Users/alessio/Documents/ExIFFI'
+#cwd = '/Users/alessio/Documents/ExIFFI'
+cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
@@ -61,14 +78,19 @@ if not os.path.exists(path_plots):
 path_experiment = path_experiments + "/feature_selection"
 if not os.path.exists(path_experiment):
     os.makedirs(path_experiment)
-path_feat_sel_values = path_experiment + "/values"
-if not os.path.exists(path_feat_sel_values):
-    os.makedirs(path_feat_sel_values)
-path_experiment_matrices = path_experiment + "/matrices"
-if not os.path.exists(path_experiment_matrices):
-    os.makedirs(path_experiment_matrices)
+
+path_experiment_model = path_experiment + "/" + model + "/" + interpretation
+if not os.path.exists(path_experiment_model):
+    os.makedirs(path_experiment_model)
+
+# path_feat_sel_values = path_experiment_model + "/values"os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+# if not os.path.exists(path_feat_sel_values):
+#     os.makedirs(path_feat_sel_values)
+# path_experiment_matrices = path_experiment_model + "/matrices"
+# if not os.path.exists(path_experiment_matrices):
+#     os.makedirs(path_experiment_matrices)
     
-path_experiment_feats = path_experiments + "/global_importances/EXIFFI/matrices"
+path_experiment_feats = path_experiments + "/global_importances/" + interpretation + "/matrices"
 if not os.path.exists(path_experiment_feats):
     os.makedirs(path_experiment_feats)
     
@@ -77,14 +99,33 @@ if not os.path.exists(path_experiment_feats):
 most_recent_file = get_most_recent_file(path_experiment_feats)
 matrix = open_element(most_recent_file,filetype="npz")
 feat_order = np.argsort(matrix.mean(axis=0))
-Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
-data = Precisions(direct, inverse, dataset.name, I.name)
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
-save_element([data], path_experiment_matrices, filetype="pickle")
-save_element(value, path_feat_sel_values, filetype="npz")
+data = Precisions(direct, inverse, dataset.name, I.name, value)
+save_element([data], path_experiment_model, filetype="pickle")
 
 #plot feature selection
-most_recent_file = get_most_recent_file(path_experiment_matrices)
+most_recent_file = get_most_recent_file(path_experiment_model)
 plot_feature_selection(most_recent_file, path_plots, plot_image=False)
+
+
+
+
+# if model == "EXIFFI":
+#     path_experiment_model = path_experiment + "/" + model + "/interpretation_name"
+#     if not os.path.exists(path_experiment_model):
+#         os.makedirs(path_experiment_model)
+# elif model == "DIFFI":
+#     path_experiment_model = path_experiment + "/" + model + "/interpretation_name"
+#     if not os.path.exists(path_experiment_model):
+#         os.makedirs(path_experiment_model)
+# elif model == "RF":
+#     path_experiment_model = path_experiment + "/RF"
+#     if not os.path.exists(path_experiment_model):
+#         os.makedirs(path_experiment_model)
+# elif model == "TS":
+#     path_experiment_model = path_experiment + "/TS"
+#     if not os.path.exists(path_experiment_model):
+#         os.makedirs(path_experiment_model)
