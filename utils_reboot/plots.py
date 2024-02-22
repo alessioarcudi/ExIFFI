@@ -220,6 +220,7 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     precision = open_element(precision_file)[0]
+
     model = precision.model
 
     median_direct     = [np.percentile(x, 50) for x in precision.direct]
@@ -280,7 +281,7 @@ def importance_map(dataset: Type[Dataset],
                    resolution: Optional[int] = 30,
                    path_plot: Optional[str] = os.getcwd(),
                    save_plot: Optional[bool] = True,
-                   show_plot: Optional[bool] = True,
+                   show_plot: Optional[bool] = False,
                    factor: Optional[int] = 3, 
                    feats_plot: Optional[tuple] = (0,1),
                    col_names: List[str] = None,
@@ -380,6 +381,41 @@ def importance_map(dataset: Type[Dataset],
             plt.show()
         if save_plot:
             plt.savefig(path_plot + '/{}'.format(filename), bbox_inches='tight')
+
+
+def gfi_over_contamination(importances, contamination, model_index, plot_path,col_names=None, save_plot=True, show_plot=False):
+    importances_mean = importances[model_index].mean(axis=0)
+    importances_95_upper = np.percentile(importances[model_index], 95, axis=0)
+    importances_95_lower = np.percentile(importances[model_index], 5, axis=0)
+    if col_names is None:
+        col_names = [f'Feature {i}' for i in range(importances_mean.shape[1])]
+    
+    number_colours = 20
+    patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
+    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    color = plt.cm.get_cmap('tab20',number_colours).colors
+    for i in range(importances_mean.shape[1]):
+        plt.plot(contamination, importances_mean[:,i], color=color[i % number_colours],  label=col_names[i],marker="o")
+        #plt.fill_between(contamination, importances_95_lower[:,i], importances_95_upper[:,i], alpha=0.1, color=color[i % number_colours])
+
+    plt.grid(alpha=0)
+    plt.xlabel("Contamination", fontsize=20)
+    plt.ylabel("Feature importance score", fontsize=20)
+    plt.legend(bbox_to_anchor=(1.05, 0.95), loc="upper left")
+
+        
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    if  save_plot:
+        plt.savefig(plot_path + '/'+ current_time + 'gfi_over_contamination_model_contamination=' +str(contamination[model_index]) + '.pdf', bbox_inches='tight')
+    if show_plot:
+        plt.show()
+
+
+
+
+
+
 
 # def importance_map_col_names(
 #                             name: str,

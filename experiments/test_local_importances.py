@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description='Test Global Importances')
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='wine', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
-parser.add_argument('--plus', type=bool, default=True, help='EIF parameter: plus')
+parser.add_argument('--plus', type=bool, default=False, help='EIF parameter: plus')
 parser.add_argument('--n_estimators', type=int, default=400, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
@@ -43,6 +43,7 @@ n_runs = args.n_runs
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
+
 I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
 cwd = '/Users/alessio/Documents/ExIFFI'
@@ -65,4 +66,5 @@ if not os.path.exists(path_experiment):
 
 # Compute local scoremap
 I.fit(dataset.X)
-importance_map(dataset,I,feats_plot=(12,4),path_plot=path_plots)
+print(I.avg_number_of_nodes)
+importance_map(dataset,I,feats_plot=(12,2),path_plot=path_plots)

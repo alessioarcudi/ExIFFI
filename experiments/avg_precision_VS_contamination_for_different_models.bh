@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Add your bash commands here
+for model in "EIF", "EIF+", "IF", "DIF", "AAE"; do
+   python3 /Users/alessio/Documents/ExIFFI/experiments/test_contamination_precision.py \
+    --dataset_name "wine"\
+    --model_name $model\
+    --compute_global_importances False\
+done
+
+
+
+

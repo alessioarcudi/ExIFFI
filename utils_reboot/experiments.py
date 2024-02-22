@@ -96,21 +96,25 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    ) -> tuple[np.array,dict,str,str]:
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_global_importances:
-        importances = np.zeros(shape=(len(contamination_values),n_runs,dataset.X.shape[1]))
+        importances = np.zeros(shape=(len(contamination_values),n_runs,len(contamination_values),dataset.X.shape[1]))
     for i,contamination in tqdm(enumerate(contamination_values)):
-        for run in range(n_runs):
+        for j in range(n_runs):
             dataset.split_dataset(train_size,contamination)
-            try:
-                I.fit(dataset.X_train)
-                if compute_global_importances:
-                    importances[i,run,:] = compute_global_importances(I,dataset,isdiffi=isdiffi,p=contamination,fit_model=False)
-                score = I.predict(dataset.X)
-                avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
-                precisions[i,run] = avg_prec
-            except:
-                precisions[i,run] = np.nan
-                if compute_global_importances:
-                    importances[i,run,:] = np.array([np.nan]*dataset.X.shape[1])
+            I.fit(dataset.X_train)
+            if compute_global_importances:
+                for k,c in enumerate(contamination_values):
+                    if isdiffi:
+                        importances[i,j,k,:],_=diffi_ib(I,dataset.X)
+                    else:
+                        importances[i,j,k,:]=I.global_importances(dataset.X,p=c) #non so se è la scelta migliore
+                # importances[i,j,:] = compute_global_importances(I,
+                #                                                 dataset,
+                #                                                 isdiffi=isdiffi,
+                #                                                 p=contamination,
+                #                                                 fit_model=False)
+            score = I.predict(dataset.X)
+            avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
+            precisions[i,j] = avg_prec
     if compute_global_importances:
         return precisions,importances
     return precisions
