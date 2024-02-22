@@ -196,14 +196,9 @@ class Dataset:
             return
         if self.X_train is None:
             self.X_train=self.X
-        scaler=StandardScaler()
-        self.X_train = scaler.fit_transform(self.X_train)
-        self.X = scaler.transform(self.X)
-        
-        
-        
-        """
 
+        scaler = StandardScaler()
+        
         if split:
             self.X_train=scaler.fit_transform(self.X_train)
             self.X_test=scaler.transform(self.X)
@@ -215,6 +210,6 @@ class Dataset:
             self.X_train=X_train
             self.X_test=X_test
             self.y=np.concatenate([y_train,y_test])
-        """  
+         
     
  
