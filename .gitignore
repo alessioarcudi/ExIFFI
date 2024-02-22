@@ -4,3 +4,4 @@ results/
 !experiments/results/
 src/test.py
 src/test_std
+notebooks/trial.ipynb

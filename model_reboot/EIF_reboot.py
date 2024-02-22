@@ -308,7 +308,8 @@ class ExtendedIsolationForest():
 class IsolationForest(ExtendedIsolationForest):
     def __init__(self,n_estimators=400, max_depth="auto", max_samples="auto"):
         super().__init__(plus=False,n_estimators=n_estimators,max_depth=max_depth,max_samples=max_samples)
-
+        self.name="IF"
+            
     def fit(self, X):
         return super().fit(X, locked_dims=12)
     
