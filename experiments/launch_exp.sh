@@ -13,6 +13,7 @@ DATASET_PATHS="../data/real/"
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
+    --scenario 1 \
     --model "EIF+" 
 
 
