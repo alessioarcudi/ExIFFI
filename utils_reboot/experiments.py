@@ -21,6 +21,7 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
                         dataset: Type[Dataset],
                         p = 0.1,
                         interpretation="EXIFFI",
+                        model = "EIF+",
                         fit_model = True) -> np.array: 
     if fit_model:
         I.fit(dataset.X_train)             
@@ -29,6 +30,10 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     elif interpretation=="EXIFFI":
         fi=I.global_importances(dataset.X,p)
     elif interpretation=="RandomForest":
+        if model=='DIF':
+            rf = RandomForestRegressor()
+            rf.fit(dataset.X, I.decision_function(dataset.X))
+            fi = rf.feature_importances_
         rf = RandomForestRegressor()
         rf.fit(dataset.X, I.predict(dataset.X))
         fi = rf.feature_importances_
@@ -38,6 +43,7 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                dataset: Type[Dataset],
                                n_runs:int = 10, 
                                p = 0.1,
+                               model = "EIF+",
                                interpretation="EXIFFI") -> tuple[np.array,dict,str,str]:
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
@@ -45,7 +51,8 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
         fi[i,:]=compute_global_importances(I,
                         dataset,
                         p = p,
-                        interpretation=interpretation)
+                        interpretation=interpretation,
+                        model = model)
     return fi
 
 def compute_plt_data(imp_path):
