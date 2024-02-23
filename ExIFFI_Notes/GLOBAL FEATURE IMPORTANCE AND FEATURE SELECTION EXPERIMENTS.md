@@ -9,21 +9,21 @@
 
 ### Synthetic Dataset
 
-- `Xaxis`
+- `Xaxis` → ==OK==
 	- Global Importance 40 run no pre process → `22-02-2024_22-30` → this makes sense
 	- Feature Importance → `22-02-2024_22-32` → makes sense 
 	- Global Importance 40 run pre process → `22-02-2024_22-44` → very similar to no pre process (probably because the training data are centered on the origin and so they are already pre processed )
 	- Feature Importance → `22-02-2024_22-47` → makes sense 
-- `Yaxis`:
+- `Yaxis`: → ==OK== 
 	- Global Importance 40 run pre process → `22-02-2024_22-49` → ok
 	- Feature Selection → `22-02-2024_22-50` → ok
-- `bisect`:
+- `bisect`: → ==OK== 
 	- Global Importance 40 run pre process → `22-02-2024_22-53` → there is a little piece of green (but that's probably because we used 40 runs and so there is the chance of getting the unlucky one)
 	- Feature Selection → `22-02-2024_22-54` → ok
-- `bisect_3d`:
+- `bisect_3d`: → ==OK== 
 	- Global Importance 40 run pre process → `22-02-2024_22-56` → ok
 	- Feature Selection → `22-02-2024_22-56` → ok → sligthly worse than `bisect` but that's because there are more anomalous features and so the interpretation task is more difficult 
-- `bisect_6d`:
+- `bisect_6d`: → for some reason it doesn't see the `csv` file in the path 
 	- Global Importance 40 run pre process → `22-02-2024_22-56` → ok
 	- Feature Selection → `22-02-2024_22-50` → ok
 
@@ -35,17 +35,29 @@
 	- Global Importance 40 run → `22-02-2024_22-02`
 	- Feature Importance → `22-02-2024_22-07`
 - `glass`
+	- Global Importance 40 run → `23-02-2024_08-59` → not so good 
+	- Feature Selection → `23-02-2024_09-04` → very bad, but also in the previous version of the Feature Selection plot the one of `glass` was very bad
 - `cardio`
 	- Global Importance 40 run → `22-02-2024_23-23`
-	- Feature Selection → 
+	- Feature Selection → `22-02-2024_23-28` → balena shape 
 - `pima`
 - `breastw`
 - `ionosphere`
 - `annthyroid`
+	- Global Importance 40 runs → `23-02-2024_09-07` → not perfectly 100% Feature 1 but that's probably because of some unlucky run. 
+	- Feature Selection → `23-02-2024_09-09` → Strangely the `direct` selection increases from 2 to 1 features. The `inverse` one instead continuously increases but starts from low Precision values so the $AUC_{FS}$ will not be so huge. In any case the increasing behavior of the Average Precision curve is similar to the first version of the paper. 
 - `pendigits`
+	- Global Importance 40 runs → `23-02-2024_09-14` → Similarly to the paper the results are not so good 
+	- Feature Selection → `23-02-2024_09-19` → The `inverse` direction has an up and down path similar to the one seen in the first version of the paper. 
 - `diabetes`
+	- Global Importance 40 runs → `23-02-2024_10-01` → Ok, but redo it setting `f=4` in the `bar_plot` function 
+	- Feature Selection → `23-02-2024_10-11` → Similar to old paper 
 - `shuttle`
+	- Global Importance 40 runs → `23-02-2024_10-22` → disaster
+	- Feature Selection → `23-02-2024_10-30` → even more disaster
 - `moodify`
+	- Global Importance 40 runs → not good (`loudness` instead of `energy` at the first place)
+	- Feature Selection → 
 
 ## `EIF+` , `EXIFFI` and `scenario=1`
 
@@ -59,9 +71,3 @@
 	- Global Importance 40 run pre process → `22-02-2024_22-37` → with pre process much better than without pre process
 	- Feature Selection → `22-02-2024_22-38` → no sense 
 
-Risultati primi test
-
-- Sui dataset sintetici i risultati sono quelli attesi (a parte `bisect_6d` che non so per quale strano motivo non mi trova nella cartella). La Feature Selection credo sia nella sua forma migliore possibile → rettangolo che copre quasi tutto il plot. Diventa un pò peggio con `bisect_3d` ma credo sia perchè ci sono più dimensioni su cui si distribuiscono le anomalie e quindi è più difficile per il modello dare un interpretazione precisa. 
-- Su `wine` i risultati non sono proprio bellissimi → nella Feature Selection la parte `inverse` sale si ma parte da valori bassi quindi la figura che viene fuori è una sorta di triangolo 
-- Su `cardio` la situazione è abbastanza particolare. Il plot della Feature Selection ha la forma di una balena direi. La parte `inverse` sta stazionaria poi scende da 5 feature a 2 e poi fa un balzo in alto da 2 a 1 feature. Dall'altra parte la parte `direct` scende ma non cosi repentinamente come in `wine` e in quelli sintetici e poi sale all'ultimo 
-- Non so per quale motivo ma su `pima` e `breastw` mi da un errore `split_dataset()` (sembra che non ci siano inlier ma ho già ricontrollato e non so che problemi abbia) → non ho controllato su tutti i dataset quindi `pima` e `breastw` potrebbero non essere gli unici con sto errore. 
