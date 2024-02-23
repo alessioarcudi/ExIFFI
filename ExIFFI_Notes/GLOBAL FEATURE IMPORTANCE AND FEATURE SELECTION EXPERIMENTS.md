@@ -56,8 +56,8 @@
 	- Global Importance 40 runs → `23-02-2024_10-22` → disaster
 	- Feature Selection → `23-02-2024_10-30` → even more disaster
 - `moodify`
-	- Global Importance 40 runs → not good (`loudness` instead of `energy` at the first place)
-	- Feature Selection → 
+	- Global Importance 40 runs → `23-02-2024_11-20` not good (`loudness` instead of `energy` at the first place)
+	- Feature Selection → `23-02-2024_12-32` → Strangely the `inverse` path increases from 3 features onwards. 
 
 ## `EIF+` , `EXIFFI` and `scenario=1`
 
