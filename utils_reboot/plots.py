@@ -229,7 +229,7 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     precision = open_element(precision_file)[0]
 
     #model = precision.model
-    aucfs = precision.values
+    aucfs = precision.value
 
     median_direct     = [np.percentile(x, 50) for x in precision.direct]
     five_direct       = [np.percentile(x, 95) for x in precision.direct]
