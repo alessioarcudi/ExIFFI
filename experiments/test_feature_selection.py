@@ -115,7 +115,7 @@ save_element([data], path_experiment_model_interpretation_scenario, filetype="pi
 
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-plot_feature_selection(most_recent_file, path_plots, plot_image=False)
+plot_feature_selection(most_recent_file, path_plots, model=model, plot_image=False)
 
 
 
