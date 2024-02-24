@@ -222,13 +222,14 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
     if model is None:
         model = ""
-    Precisions = namedtuple("Precisions",["direct","inverse","dataset","model"])
+    #Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     precision = open_element(precision_file)[0]
 
     model = precision.model
+    aucfs = precision.value
 
     median_direct     = [np.percentile(x, 50) for x in precision.direct]
     five_direct       = [np.percentile(x, 95) for x in precision.direct]
@@ -247,9 +248,11 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     plt.xlabel("Number of Features",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
     plt.title("Feature selection "+model, fontsize = 18)
-    plt.xticks(range(dim),range(dim,0,-1))
-        
-        
+    plt.xticks(range(dim),range(dim,0,-1))    
+    
+    text_box_content = r'${}'.format("AUC") + r'_{FS}$' + " = " + str(np.round(aucfs,3))
+    plt.text(3.5,0.6, text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
+         verticalalignment='top', horizontalalignment='right')
         
     plt.fill_between(np.arange(dim),five_direct, ninetyfive_direct,alpha=0.1, color="k")
     plt.fill_between(np.arange(dim),five_inverse, ninetyfive_inverse,alpha=0.1, color="k")
