@@ -27,7 +27,10 @@ def Dataset_feature_names(name:str):
         'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
        'speechiness', 'acousticness', 'instrumentalness', 'liveness',
        'valence', 'tempo', 'spec_rate'],
-       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level']
+       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
+       'annthyroid': ['TSH', 'T3', 'TT4', 'T4U', 'FTI'],
+       'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
+                'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline'],
     }
 
     if name in data_feature_names:    
@@ -93,12 +96,16 @@ class Dataset:
             try:
                 datapath = self.path + self.name + ".csv"
                 T = pd.read_csv(datapath)
+                if 'Unnamed: 0' in T.columns:
+                    T = T.drop(columns=['Unnamed: 0'])
                 self.X = T['X'].to_numpy(dtype=float)
                 self.y = T['y'].to_numpy(dtype=float).reshape(-1, 1)
             except Exception as e:
                 try:
                     datapath = self.path + self.name + ".csv"
                     T = pd.read_csv(datapath,index_col=0)
+                    if 'Unnamed: 0' in T.columns:
+                        T = T.drop(columns=['Unnamed: 0'])
                     self.X = T.loc[:,T.columns != "Target"].to_numpy(float)
                     self.y = T.loc[:,"Target"].to_numpy(float)
                 except:
@@ -172,16 +179,21 @@ class Dataset:
             print("Dataset not loaded.")
             return
         
-        inexes_outliers = np.where(self.y==1)[0].tolist()
+        # Check if train_size is correct
+        if train_size > 1 - self.perc_outliers:
+            print("Train size is too large. Settng it at 1-dataset.perc_outliers.")
+            train_size = 1 - self.perc_outliers
+        
+        indexes_outliers = np.where(self.y==1)[0].tolist()
         indexes_inliers = np.where(self.y==0)[0].tolist()
-        random.shuffle(inexes_outliers)
+        random.shuffle(indexes_outliers)
         random.shuffle(indexes_inliers)
         dim_train = int(len(self.X)*train_size)
         self.X_train = np.zeros((dim_train,self.X.shape[1]))
         self.y_train = np.zeros(dim_train)
         for i in range(dim_train):
-            if i < dim_train*contamination and len(inexes_outliers) > 0:
-                index = inexes_outliers.pop()
+            if i < dim_train*contamination and len(indexes_outliers) > 0:
+                index = indexes_outliers.pop()
             else:
                 index = indexes_inliers.pop()
             self.X_train[i] = self.X[index]
