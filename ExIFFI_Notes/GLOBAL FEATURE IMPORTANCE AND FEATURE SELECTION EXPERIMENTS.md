@@ -77,10 +77,34 @@
 
 > [!todo] 
 > Re do `annthyroid` and `wine` since I have added the `feature_names` attribute 
+
+###  `plots_new` execution
+
+#### Synthetic Datasets
+
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
+
+#### Real World Dataset
+
+- `wine` → Re do after having added `feature_names`
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok
+- `breastw` → ok
+- `ionosphere` → ok
+- `annthyroid`  → Re do after having added `feature_names`
+- `pendigits` → ok
+- `diabetes` → ok
+- `shuttle` → ok
+- `moodify` → ok
+
 ## `EIF+` , `EXIFFI` and `scenario=1`
 
 ### Synthetic Dataset 
-
 
 ### Real World Dataset 
 
@@ -90,10 +114,29 @@
 
 ## `EIF` , `EXIFFI` and `scenario=2`
 
-- `wine` :
-	- Global Importance 40 run pre process → `22-02-2024_22-37` → with pre process much better than without pre process
-	- Feature Selection → `22-02-2024_22-38` → no sense 
+### `plots_new` Execution
 
+#### Synthetic Datasets
+
+- `Xaxis` 
+- `Yaxis` 
+- `bisect` 
+- `bisect_3d` 
+- `bisect_6d` 
+
+#### Real World Dataset
+
+- `wine` → ok
+- `glass`  → ok 
+- `cardio` → ok
+- `pima` → ok
+- `breastw` → ok
+- `ionosphere` → ok 
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes` →
+- `shuttle` →
+- `moodify` →
 
 ## Problem with `pima,ionosphere` and `breastw` datasets
 
