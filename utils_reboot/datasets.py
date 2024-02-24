@@ -28,7 +28,7 @@ def Dataset_feature_names(name:str):
        'speechiness', 'acousticness', 'instrumentalness', 'liveness',
        'valence', 'tempo', 'spec_rate'],
        'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
-       'annthyroid': ['TSH', 'T3', 'TT4', 'T4U', 'FTI'],
+       #'annthyroid': ['TSH', 'T3', 'TT4', 'T4U', 'FTI'],
        'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
                 'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline'],
     }
@@ -181,7 +181,7 @@ class Dataset:
         
         # Check if train_size is correct
         if train_size > 1 - self.perc_outliers:
-            print("Train size is too large. Settng it at 1-dataset.perc_outliers.")
+            print("Train size is too large. Setting it at 1-dataset.perc_outliers.")
             train_size = 1 - self.perc_outliers
         
         indexes_outliers = np.where(self.y==1)[0].tolist()
