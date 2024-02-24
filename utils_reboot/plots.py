@@ -251,7 +251,7 @@ def plot_feature_selection(precision_file: str, plot_path:str, color:int=0, mode
     plt.xticks(range(dim),range(dim,0,-1))    
     
     text_box_content = r'${}'.format("AUC") + r'_{FS}$' + " = " + str(np.round(aucfs,3))
-    plt.text(3.5,0.3, text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
+    plt.text(3.5,0.6, text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
          verticalalignment='top', horizontalalignment='right')
         
     plt.fill_between(np.arange(dim),five_direct, ninetyfive_direct,alpha=0.1, color="k")

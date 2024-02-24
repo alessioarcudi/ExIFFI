@@ -117,6 +117,6 @@ save_element(full_importances, path_experiment_model_interpretation_scenario, fi
 
 # plot global importances
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
+bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 score_plot(dataset, most_recent_file, plot_path=path_plots, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 
