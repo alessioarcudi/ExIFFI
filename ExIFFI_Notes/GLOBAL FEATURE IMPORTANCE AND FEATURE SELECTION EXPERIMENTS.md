@@ -108,9 +108,8 @@
 
 ### Real World Dataset 
 
-- `wine` :
-	- Global Importance 10 run → `22-02-2024_22-14`
-	- Feature Selection → `22-02-2024_22-16` → no sense 
+- `wine`  →
+- `moodify` → Job 201367 
 
 ## `EIF` , `EXIFFI` and `scenario=2`
 
@@ -134,9 +133,20 @@
 - `ionosphere` → ok 
 - `annthyroid` → ok
 - `pendigits` → ok
-- `diabetes` →
-- `shuttle` →
-- `moodify` →
+- `diabetes` → ok 
+- `shuttle` → ok
+- `moodify` → Job 201365 on CAPRI 
+
+## `EIF` , `EXIFFI` and `scenario=1`
+
+- `moodify` → Job 201368 
+
+## `IF` , `DIFFI` and `scenario=2`
+
+### Real World Datasets
+
+- `wine` → On CAPRI 
+- `moodify` → Job 201261 on CAPRI
 
 ## Problem with `pima,ionosphere` and `breastw` datasets
 
