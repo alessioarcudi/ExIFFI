@@ -78,7 +78,7 @@ if not os.path.exists(path):
 path_experiments = cwd +"/experiments/results/"+dataset.name+"/experiments"
 if not os.path.exists(path_experiments):
     os.makedirs(path_experiments)
-path_plots = cwd +"/experiments/results/"+dataset.name+"/plots"
+path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new"
 if not os.path.exists(path_plots):
     os.makedirs(path_plots)
 

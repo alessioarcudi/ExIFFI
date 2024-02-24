@@ -7,7 +7,7 @@ printf "Executing Experiments:\n"
 SCRIPT_PATH="test_feature_selection.py"
 
 #DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="moodify"
+DATASETS="shuttle"
 
 DATASET_PATHS="../data/real/"
 
