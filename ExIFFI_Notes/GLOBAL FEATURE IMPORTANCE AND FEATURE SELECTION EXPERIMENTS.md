@@ -24,8 +24,17 @@
 	- Global Importance 40 run pre process → `22-02-2024_22-56` → ok
 	- Feature Selection → `22-02-2024_22-56` → ok → sligthly worse than `bisect` but that's because there are more anomalous features and so the interpretation task is more difficult 
 - `bisect_6d`: → for some reason it doesn't see the `csv` file in the path 
-	- Global Importance 40 run pre process → `22-02-2024_22-56` → ok
-	- Feature Selection → `22-02-2024_22-50` → ok
+	- Global Importance 40 run pre process → `22-02-2024_22-56`
+	- Feature Selection → `22-02-2024_22-50` 
+
+> [!important] 
+>  The performances are probably a bit worse than the ones obtained in the first paper version because in the Scenario 2 we are doing:
+>  `dataset.split_dataset(train_size=0.8,contamination=0)` so with `contamination=0` we are taking only the inliers (so as usual for Scenario 2 we train only on the inliers) but doing `train_size=0.8` we are taking a subsample of the inliers (80% of them) so we are essentially training on less data. 
+>  In case we want to take all the inliers we have to use `train_size=1-p` where `p` is the contamination factor of the dataset. 
+
+
+> [!note] Message for Alessio
+>  Mi sono accorto di una cosa. Noi nello Scenario 2 facciamo `dataset.split_dataset(train_size=0.8,contamination=0)` quindi con `contamination=0` prendiamo solo gli inlier mentre con `train_size=0.8` prendiamo solo 80% degli inlier. Quindi in realtà non stiamo facendo esattamente la stessa cosa che facevamo nella prima versione del paper perchè stiamo prendendo un subset di tutti gli inlier. Quindi forse è anche per questo che i grafici in alcuni casi sono un pò peggio di prima. 
 
 ### Real World Dataset
 
@@ -34,6 +43,8 @@
 	- Feature Selection → `22-02-2024_21-53` → no sense → maybe it's the dataset that is bad 
 	- Global Importance 40 run → `22-02-2024_22-02`
 	- Feature Importance → `22-02-2024_22-07`
+	- Global Importance 40 run con tutti gli inlier → `24-02-2024_10-02` → does not change a lot 
+	- Feature Importance → `24-02-2024_10-45` → Also added the value of $AUC_{FS}$ on the plot  
 - `glass`
 	- Global Importance 40 run → `23-02-2024_08-59` → not so good 
 	- Feature Selection → `23-02-2024_09-04` → very bad, but also in the previous version of the Feature Selection plot the one of `glass` was very bad
@@ -59,7 +70,19 @@
 	- Global Importance 40 runs → `23-02-2024_11-20` not good (`loudness` instead of `energy` at the first place)
 	- Feature Selection → `23-02-2024_12-32` → Strangely the `inverse` path increases from 3 features onwards. 
 
+> [!note] 
+> Added new folder `plots_new` for each dataset (then the folder plots can be deleted and we rename the folder `plots_new` as `plots`). 
+> - Restarting all the experiments changing `train_size` in `split_dataset` to `train_size=1-dataset.perc_outliers` so that we have all the inliers on the training set
+> - Running again the experiments because I added the visualization of the $AUC_{FS}$ value on the Feature Selection plot 
+
+> [!todo] 
+> Re do `annthyroid` and `wine` since I have added the `feature_names` attribute 
 ## `EIF+` , `EXIFFI` and `scenario=1`
+
+### Synthetic Dataset 
+
+
+### Real World Dataset 
 
 - `wine` :
 	- Global Importance 10 run → `22-02-2024_22-14`
@@ -70,4 +93,37 @@
 - `wine` :
 	- Global Importance 40 run pre process → `22-02-2024_22-37` → with pre process much better than without pre process
 	- Feature Selection → `22-02-2024_22-38` → no sense 
+
+
+## Problem with `pima,ionosphere` and `breastw` datasets
+
+`pima`, `ionosphere` and `breastw` have an high contamination factor: 34.89%, 35.71% and 52.56% respectively. In particular `train_size`=0.8 + these contamination percentanges is higher than 1.
+
+In the case of `pima` we call `dataset.split_dataset(train_size=0.8,contamination=0)` in Scenario 2. So essentially we want to create a training set of only inliers taking a subsample containing 80% of the inliers of the original dataset.
+
+> [!example] `pima`
+> `pima` has 768 samples, so 80% of the inliers is 614.4. We round this number to 614.
+
+> [!important] 
+> The problem is that if we divide `dataset.y` into the inliers and outliers indexes we have 268 outliers and 500 inliers. So we can't take 614 inliers from the original dataset. 
+
+> [!example] `ionosphere`
+> In case of `ionosphere` the inliers are 225 but with `train_size=08` we try to take 280 inliers from the original dataset. 
+
+> [!example] `breastw`
+> In case of `breastw` the inliers are 213 and we try to take 359 inliers with `train_size=0.8`. 
+
+So essentially the problem is that `len(indexes_inliers) < dim_train`
+
+In the case I have `contamination=c` as a parameter of `split_dataset` the problem appears when `len(indexes_inliers) < (1-c)*dim_train`
+
+So if we have `contamination=0` then it should hold that `len(indexes_inliers) >= dim_train`. 
+
+On the other hand if we have `contamination=c`, `split_dataset` works if `len(indexes_inliers) >= (1-c)*dim_train`. So if
+
+$$
+	c \leq \frac{dimtrain - len(inliers)}{dimtrain}
+$$
+> [!done] 
+> The solution is than in general we want to have `train_size <= 1-p`  so in `split_dataset` if the argument `train_size` passed is higher than `1-p` we automatically set it to `1-p`. In this case the resulting `dataset.X_train` will contain all the inliers of the dataset. 
 
