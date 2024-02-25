@@ -1,5 +1,6 @@
 # initialize feature_selection paths
 import sys
+import ast
 import os
 #os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
 os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
@@ -32,7 +33,8 @@ parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Name o
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--split',action='store_true', help='If set, split the dataset when pre procesing')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
-
+parser.add_argument('--box_loc', type=str, default=(3,0.8), help='Location of the box in the feature selection plot')
+parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -51,6 +53,9 @@ interpretation = args.interpretation
 pre_process = args.pre_process
 split = args.split
 scenario = args.scenario
+box_loc_str = args.box_loc
+box_loc=ast.literal_eval(box_loc_str)
+rotation = args.rotation
 
 
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -71,6 +76,15 @@ elif model == "IF":
 
 #cwd = '/Users/alessio/Documents/ExIFFI'
 cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+
+print('#'*50)
+print('Feature Selection Experiment')
+print('#'*50)
+print(f'Dataset: {dataset.name}')
+print(f'Model: {model}')
+print(f'Interpretation Model: {interpretation}')
+print(f'Scenario: {scenario}')
+print('#'*50)
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
@@ -115,7 +129,7 @@ save_element([data], path_experiment_model_interpretation_scenario, filetype="pi
 
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-plot_feature_selection(most_recent_file, path_plots, model=model, plot_image=False)
+plot_feature_selection(most_recent_file, path_plots, model=model, plot_image=False,box_loc=dataset.box_loc)
 
 
 
