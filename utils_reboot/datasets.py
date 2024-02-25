@@ -37,6 +37,29 @@ def Dataset_feature_names(name:str):
         return data_feature_names[name]
     else:
         return None 
+    
+def Dataset_box_loc(name:str):
+
+    data_box_loc={
+        'wine': (3,0.8),
+        'cardio': (3,0.8),
+        'glass': (3,0.8),
+        'pima': (3,0.8),
+        'breastw': (3,0.8),
+        'ionosphere': (3,0.8),
+        'annthyroid': (3,0.8),
+        'pendigits': (3,0.8),
+        'diabetes': (3,0.8),
+        'shuttle': (3,0.8),
+        'moodify': (3,0.5),
+        'Xaxis': (3,0.8),
+        'Yaxis': (3,0.8),
+        'bisect': (3,0.8),
+        'bisect_3d': (3,0.8),
+        'bisect_6d': (3,0.8),
+    }
+
+    return data_box_loc[name]
 
 @dataclass
 class Dataset:
@@ -63,12 +86,14 @@ class Dataset:
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
     y_train: Optional[npt.NDArray] = field(default=None, init=False)
     feature_names: Optional[List[str]] = field(default=None, init=False)
+    box_loc: Optional[tuple] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
         self.load()
         self.feature_names=Dataset_feature_names(self.name)
         if self.feature_names is None:
             self.feature_names=np.arange(self.shape[1])
+        self.box_loc=Dataset_box_loc(self.name)
         
     @property
     def shape(self) -> tuple:
