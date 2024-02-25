@@ -1,27 +1,21 @@
 #!/bin/bash
 
-printf "Executing Experiments %s:\n" 
-
 
 # Path to the Python script to execute 
-SCRIPT_PATH="test_global_importancies.py"
+#SCRIPT_PATH="test_global_importancies.py"
 #SCRIPT_PATH="test_feature_selection.py"
+SCRIPT_PATH="test_GFI_FS.py"
 
-#DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="moodify"
+#DATASETS="Xaxis"
+DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 
-DATASET_PATHS="../data/real/"
+
+DATASET_PATHS="../data/syn/"
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --pre_process \
-    --model "IF" \
-    --interpretation "DIFFI" 
-
-
-# Possible parameters to add (for now they are at the default value)
-# --dataset_path (if different from ../data/real/)
-# --max_samples 10 \
-# --train_size 0.7 \
-# --contamination 0.05 \ path_plots=os.path.join(os.getcwd(),'pendigits','plots_new')
+    --model "EIF" \
+    --interpretation "RandomForest" \
+    --box_loc "(3,0.8)"
