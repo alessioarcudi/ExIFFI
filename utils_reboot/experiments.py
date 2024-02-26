@@ -58,8 +58,16 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
 def compute_plt_data(imp_path):
 
     fi = np.load(imp_path)['element']
-    mean_imp = np.mean(fi,axis=0)
-    std_imp = np.std(fi,axis=0)
+    # Handle the case in which there are some np.nan in the fi array
+    if np.isnan(fi).any():
+        #Substitute the np.nan values with 0  
+        #fi=np.nan_to_num(fi,nan=0)
+        mean_imp = np.nanmean(fi,axis=0)
+        std_imp = np.nanstd(fi,axis=0)
+    else:
+        mean_imp = np.mean(fi,axis=0)
+        std_imp = np.std(fi,axis=0)
+    
     feat_ordered = mean_imp.argsort()
     mean_ordered = mean_imp[feat_ordered]
     std_ordered = std_imp[feat_ordered]
