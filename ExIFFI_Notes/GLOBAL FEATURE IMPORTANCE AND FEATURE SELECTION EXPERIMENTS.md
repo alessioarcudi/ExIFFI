@@ -105,13 +105,13 @@
 
 #### Real World Dataset
 
-- `wine` → Re do after having added `feature_names`
+- `wine` → ok
 - `glass` → ok
 - `cardio` → ok
 - `pima` → ok
 - `breastw` → ok
 - `ionosphere` → ok
-- `annthyroid`  → Re do after having added `feature_names`
+- `annthyroid`  → ok
 - `pendigits` → ok
 - `diabetes` → ok
 - `shuttle` → ok
@@ -129,26 +129,26 @@
 
 ### Real World Dataset 
 
-- `wine`  → ok, relocate the box in feature selection plot 
-- `glass` → ok, relocate the box in feature selection plot 
-- `cardio` → ok, relocate the box in feature selection plot
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
 - `pima` → ok 
 - `breast` → ok 
-- `ionosphere` → ok, relocate the box in feature selection plot 
+- `ionosphere` → ok
 - `annthyroid` → ok
 - `pendigits` → ok 
-- `diabetes`→ ok, relocate the box in feature selection plot 
-- `shuttle` → 
+- `diabetes`→ ok
+- `shuttle` → ok 
 - `moodify` → ok
 ## `EIF` , `EXIFFI` and `scenario=2`
 
 #### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 
 #### Real World Dataset
 
@@ -168,122 +168,138 @@
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok 
+- `breast` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ ok 
+- `shuttle` → ok 
 - `moodify` → ok
 ## `IF` , `DIFFI` and `scenario=2`
 
 ### Real World Datasets
+### Synthetic Datasets
 
-- `wine` → On CAPRI 
-- `moodify` → Job 201261 on CAPRI
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
+### Real World Datasets
+
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → error → `nan` values in importance computation 
+- `pima` → ok 
+- `breast` → ok, Feature 8 with importance `inf`
+- `ionosphere` → error → `nan` values in importance computation 
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ ok
+- `shuttle` → ok
+- `moodify` → ok
 
 ## `IF` , `DIFFI` and `scenario=1`
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → 
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok, Feature 5 with importance `inf`
+- `pima` → ok
+- `breast` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ ok
+- `shuttle` → ok
+- `moodify` → ok
 
 ## `EIF+` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
 
-- `Xaxis` → 
-- `Yaxis` → 
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok 
+- `bisect_6d` → ok
 ### Real World Datasets
 
 - `wine`  → ok 
-- `glass` →
-- `cardio` →
-- `pima` → relocate box in feature selection plot 
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → 
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok
+- `breast` → ok 
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok 
+- `diabetes`→ Job 201493
+- `shuttle` → Job 201493
+- `moodify` → Job 201493
 
 ## `EIF+` , `RandomForest` and `scenario=1`
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → 
-
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok
+- `breast` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok 
+- `diabetes`→ Job 201491 → ok, relocate the box in feature selection plot
+- `shuttle` → Job 201491 →
+- `moodify` → Job 201491 → 
 ## `EIF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
 
 - `Xaxis` → ok
 - `Yaxis` → ok
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
 - `wine`  → ok
 - `glass` → 
 - `cardio` →
-- `pima` → ok, relocate the $AUC_{FS}$ box 
-- `breast`
-- `ionosphere`
+- `pima` → ok
+- `breast` →
+- `ionosphere` →
 - `annthyroid` →
 - `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → 
+- `diabetes`→ Job 201495
+- `shuttle` → Job 201495
+- `moodify` → Job 201495
 
 ## `EIF` , `RandomForest` and `scenario=1`
 
@@ -304,9 +320,9 @@
 - `ionosphere`
 - `annthyroid` →
 - `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → 
+- `diabetes`→ Job 201496
+- `shuttle` → Job 201496
+- `moodify` → Job 201496
 
 ## `IF` , `RandomForest` and `scenario=2`
 
@@ -356,7 +372,7 @@
 
 ## Problem with `pima,ionosphere` and `breastw` datasets
 
-`pima`, `ionosphere` and `breastw` have an high contamination factor: 34.89%, 35.71% and 52.56% respectively. In particular `train_size`=0.8 + these contamination percentanges is higher than 1.
+`pima`, `ionosphere` and `breastw` have an high contamination factor: 34.89%, 35.71% and 52.56% respectively. In particular `train_size`=0.8 + these contamination percentages is higher than 1.
 
 In the case of `pima` we call `dataset.split_dataset(train_size=0.8,contamination=0)` in Scenario 2. So essentially we want to create a training set of only inliers taking a subsample containing 80% of the inliers of the original dataset.
 
