@@ -31,7 +31,6 @@ parser.add_argument('--pre_process',action='store_true', help='If set, preproces
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
 parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
-parser.add_argument('--box_loc', type=str, default=(3,0.8), help='Location of the box in the feature selection plot')
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
 
 # Parse the arguments
@@ -54,9 +53,11 @@ pre_process = args.pre_process
 model = args.model
 interpretation = args.interpretation
 scenario = args.scenario
-box_loc_str = args.box_loc
-box_loc=ast.literal_eval(box_loc_str)
 rotation = args.rotation
+
+#parser.add_argument('--box_loc', type=str, default=(3,0.8), help='Location of the box in the feature selection plot')
+# box_loc_str = args.box_loc
+# box_loc=ast.literal_eval(box_loc_str)
 
 # print(f"Dataset: {dataset_name}")
 # print(f"Path: {dataset_path}")
@@ -165,5 +166,5 @@ save_element([data], path_experiment_model_interpretation_scenario_fs, filetype=
 
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario_fs)
-plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation, plot_image=False,box_loc=dataset.box_loc)
+plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,box_loc=dataset.box_loc,rotation=rotation)
 
