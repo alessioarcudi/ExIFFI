@@ -19,6 +19,12 @@
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]]
 
+## TODO Today 26 February
+
+- [ ] Adjust the function  `Dataset_box_loc` looking at the Feature Selection Plots already done
+- [ ] Modify `plot_feature_selection` to add also the scenario number in the name of the Feature Selection plots
+- [ ] Launch some jobs (while I am at the lecture)
+
 ## `EIF+` , `EXIFFI` and `scenario=2` old 
 
 ### Synthetic Dataset
@@ -133,9 +139,7 @@
 - `pendigits` →
 - `diabetes`→
 - `shuttle`
-- `moodify` → 
-	- Global Importance → Job 201405
-	- Feature Selection → Job 201408
+- `moodify` → Ok, load it from CAPRI 
 ## `EIF` , `EXIFFI` and `scenario=2`
 
 #### Synthetic Datasets
@@ -158,9 +162,7 @@
 - `pendigits` → ok
 - `diabetes` → ok 
 - `shuttle` → ok
-- `moodify` → 
-	- Global Importance → Job 201403
-	- Feature Selection → Job 201409
+- `moodify` → ok, load from CAPRI 
 
 ## `EIF` , `EXIFFI` and `scenario=1`
 
@@ -183,9 +185,7 @@
 - `pendigits` →
 - `diabetes`→
 - `shuttle`
-- `moodify` → 
-	- Global Importance → Job 201404
-	- Feature Selection → Job 201410
+- `moodify` → ok, load from CAPRI 
 ## `IF` , `DIFFI` and `scenario=2`
 
 ### Real World Datasets
