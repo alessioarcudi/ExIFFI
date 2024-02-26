@@ -22,7 +22,7 @@
 ## TODO Today 26 February
 
 - [ ] Adjust the function  `Dataset_box_loc` looking at the Feature Selection Plots already done
-- [ ] Modify `plot_feature_selection` to add also the scenario number in the name of the Feature Selection plots
+- [x] Modify `plot_feature_selection` to add also the scenario number in the name of the Feature Selection plots
 - [ ] Launch some jobs (while I am at the lecture)
 
 ## `EIF+` , `EXIFFI` and `scenario=2` old 
@@ -121,25 +121,25 @@
 
 ### Synthetic Dataset 
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 
 ### Real World Dataset 
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
-- `moodify` → Ok, load it from CAPRI 
+- `wine`  → ok, relocate the box in feature selection plot 
+- `glass` → ok, relocate the box in feature selection plot 
+- `cardio` → ok, relocate the box in feature selection plot
+- `pima` → ok 
+- `breast` → ok 
+- `ionosphere` → ok, relocate the box in feature selection plot 
+- `annthyroid` → ok
+- `pendigits` → ok 
+- `diabetes`→ ok, relocate the box in feature selection plot 
+- `shuttle` → 
+- `moodify` → ok
 ## `EIF` , `EXIFFI` and `scenario=2`
 
 #### Synthetic Datasets
@@ -162,7 +162,7 @@
 - `pendigits` → ok
 - `diabetes` → ok 
 - `shuttle` → ok
-- `moodify` → ok, load from CAPRI 
+- `moodify` → ok
 
 ## `EIF` , `EXIFFI` and `scenario=1`
 
@@ -185,7 +185,7 @@
 - `pendigits` →
 - `diabetes`→
 - `shuttle`
-- `moodify` → ok, load from CAPRI 
+- `moodify` → ok
 ## `IF` , `DIFFI` and `scenario=2`
 
 ### Real World Datasets
@@ -230,7 +230,7 @@
 - `wine`  → ok 
 - `glass` →
 - `cardio` →
-- `pima` →
+- `pima` → relocate box in feature selection plot 
 - `breast`
 - `ionosphere`
 - `annthyroid` →
