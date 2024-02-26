@@ -224,6 +224,7 @@ def plot_feature_selection(
         color:int=0,
         model:Optional[str]=None,
         interpretation:Optional[str]=None,
+        scenario:Optional[int]=2,
         save_image:bool=True,
         plot_image:bool=False,
         box_loc:tuple=(3,0.8),
@@ -273,7 +274,7 @@ def plot_feature_selection(
     plt.fill_between(np.arange(dim),median_direct, median_inverse,alpha=0.7, color=colors[color])
     plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
-    namefile = "/" + current_time + "_" + precision.dataset + "_" + model + "_" + interpretation + "_feature_selection_.pdf"
+    namefile = "/" + current_time + "_" + precision.dataset + "_" + model + "_" + interpretation + "_feature_selection_" + str(scenario) + ".pdf"
     if save_image:
         plt.savefig(plot_path+namefile,bbox_inches = "tight")
     if plot_image:
