@@ -161,7 +161,12 @@ Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","valu
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
-data = Precisions(direct, inverse, dataset.name, I.name, value)
+
+if model=='IF':
+    data = Precisions(direct, inverse, dataset.name, 'IF', value)
+else:
+    data = Precisions(direct, inverse, dataset.name, I.name, value)
+
 save_element([data], path_experiment_model_interpretation_scenario_fs, filetype="pickle")
 
 #plot feature selection
