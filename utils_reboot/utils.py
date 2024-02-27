@@ -1,5 +1,3 @@
-
-
 import time
 from typing import Type
 import pickle
@@ -11,7 +9,9 @@ from model_reboot.EIF_reboot import ExtendedIsolationForest
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
-Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","values"])
+Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
+
+NewPrecisions = namedtuple("NewPrecisions", ["direct", "inverse", "dataset", "model", "value", "aucfs"])
 
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
@@ -76,3 +76,22 @@ def performance(y_pred:np.array,
     save_element(df, path, filename)
     
     return df
+
+def fix_fs_file(dataset,model,interpretation,scenario):
+    path=os.path.join(os.getcwd(),dataset.name,'experiments','feature_selection',model,interpretation,f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(path)
+    precs=open_element(file_path)[0]
+    aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    new_precs = NewPrecisions(direct=precs.direct,
+                            inverse=precs.inverse,
+                            dataset=precs.dataset,
+                            model=precs.model,
+                            value=precs.value,
+                            aucfs=aucfs)
+    save_element(new_precs, path, filetype="pickle")
+
+def get_fs_file(dataset,model,interpretation,scenario):
+    path=os.path.join(os.getcwd(),dataset.name,'experiments','feature_selection',model,interpretation,f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(path)
+    precs=open_element(file_path)
+    return precs
