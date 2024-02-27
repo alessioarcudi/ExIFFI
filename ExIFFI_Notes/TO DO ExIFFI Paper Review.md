@@ -189,3 +189,11 @@ y=np.concatenate([y_train,y_test])
 
 - [ ] Always on a new branch create a wrapper of class `ExtendedIsolationForest` to implement the `IsolationForest` model. 
 
+## TO DO from 27/02 
+
+- [ ] Finish the Importance + Feature Selection Experiments 
+	- [ ] Remove `abs` from the $AUC_{FS}$ computation (put a minus in the Feature Selection plots where the blue line is always higher than the blue line)
+	- [ ] Add the casual Feature Selection 
+- [ ] EIF+ Ablation Study → Do the precision contamination experiments (re organize the folders to do these experiments)
+- [ ] Add time computation on the experiments 
+- [ ] List of final results to put on a piece of paper → Alessio 

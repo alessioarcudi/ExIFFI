@@ -7,11 +7,11 @@
 >  - `scenario=[1,2]`
 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=2`|`EIF+` , `EXIFFI` and `scenario=2`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=1`|`EIF+` , `EXIFFI` and `scenario=1`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=2`|`EIF` , `EXIFFI` and `scenario=2`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=1`|`EIF` , `EXIFFI` and `scenario=1`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]]
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=1`|`EIF+` , `EXIFFI` and `scenario=1`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=2`|`EIF` , `EXIFFI` and `scenario=2`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=1`|`EIF` , `EXIFFI` and `scenario=1`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==completed== (a part the `nan` problem in `cardio` and `ionosphere`)
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=2`|`EIF+` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=1`|`EIF+` , `RandomForest` and `scenario=1`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=2`|`EIF` , `RandomForest` and `scenario=2`]]
@@ -140,6 +140,11 @@
 - `diabetes`→ ok
 - `shuttle` → ok 
 - `moodify` → ok
+
+## `EIF+`, `EXIFFI+` and `scenario=2`
+
+## `EIF+`, `EXIFFI+` and `scenario=1`
+
 ## `EIF` , `EXIFFI` and `scenario=2`
 
 #### Synthetic Datasets
@@ -186,6 +191,12 @@
 - `diabetes`→ ok 
 - `shuttle` → ok 
 - `moodify` → ok
+
+
+## `EIF`, `EXIFFI+` and `scenario=2`
+
+## `EIF`, `EXIFFI+` and `scenario=1`
+
 ## `IF` , `DIFFI` and `scenario=2`
 
 ### Real World Datasets
@@ -252,9 +263,9 @@
 - `ionosphere` → ok
 - `annthyroid` → ok
 - `pendigits` → ok 
-- `diabetes`→ Job 201493
-- `shuttle` → Job 201493
-- `moodify` → Job 201493
+- `diabetes`→ Job 201510 → ok, relocate box in feature selection plot
+- `shuttle` → Job 201510 → ok
+- `moodify` → Job 201521
 
 ## `EIF+` , `RandomForest` and `scenario=1`
 
@@ -276,8 +287,8 @@
 - `annthyroid` → ok
 - `pendigits` → ok 
 - `diabetes`→ Job 201491 → ok, relocate the box in feature selection plot
-- `shuttle` → Job 201491 →
-- `moodify` → Job 201491 → 
+- `shuttle` → Job 201491 → ok 
+- `moodify` → Job 201522
 ## `EIF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
@@ -290,85 +301,115 @@
 ### Real World Datasets
 
 - `wine`  → ok
-- `glass` → 
-- `cardio` →
+- `glass` → ok
+- `cardio` → ok
 - `pima` → ok
-- `breast` →
-- `ionosphere` →
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→ Job 201495
-- `shuttle` → Job 201495
-- `moodify` → Job 201495
+- `breast` → ok
+- `ionosphere` → ok 
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
+- `shuttle` → Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
+- `moodify` → Job 201523
 
 ## `EIF` , `RandomForest` and `scenario=1`
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→ Job 201496
-- `shuttle` → Job 201496
-- `moodify` → Job 201496
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok
+- `breastw` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ Job 201496 → ok
+- `shuttle` → Job 201496 → ok 
+- `moodify` → Job 201524
 
 ## `IF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok
+- `breast` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes`→ Job 201526
+- `shuttle` → Job 201526
 - `moodify` → 
 
 ## `IF` , `RandomForest` and `scenario=1`
 
 ### Synthetic Datasets
 
-- `Xaxis` →
-- `Yaxis` →
-- `bisect` →
-- `bisect_3d` →
-- `bisect_6d` →
+- `Xaxis` → ok
+- `Yaxis` → ok
+- `bisect` → ok
+- `bisect_3d` → ok
+- `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  →
-- `glass` →
-- `cardio` →
-- `pima` →
-- `breast`
-- `ionosphere`
-- `annthyroid` →
-- `pendigits` →
-- `diabetes`→
-- `shuttle`
+- `wine`  → ok
+- `glass` → ok
+- `cardio` → ok
+- `pima` → ok 
+- `breastw` → ok
+- `ionosphere` → ok
+- `annthyroid` → ok
+- `pendigits` → ok
+- `diabetes` → Job 201520 → ok, relocate box in feature selection plot 
+- `shuttle` → Job 201520 → ok
 - `moodify` → 
+
+
+
+## `pickle` file to update
+
+- `cardio`:
+	- `IF/DIFFI/scenario_2` → problem with `nan`
+- `ionosphere` :
+	- `IF/DIFFI/scenario_2` → problem with `nan`
+- `diabetes`:
+	- `EIF+/RandomForest/scenario_2` → CAPRI
+	- `IF/RandomForest/scenario_1` → CAPRI
+	- `IF/RandomForest/scenario_2` → CAPRI 
+- `shuttle`:
+	-  `EIF+/RandomForest/scenario_2` → CAPRI
+	- `EIF/EXIFFI/scenario_1`  → this I can do now
+	- `EIF/EXIFFI/scenario_2` → this I can do now
+	- `EIF/RandomForest/scenario_1` → this I can do now
+	- `EIF/RandomForest/scenario_2` → this I can do now
+	- `IF/DIFFI/scenario_1` → this I can do now
+	- `IF/DIFFI/scenario_2` → this I can do now
+	- `IF/RandomForest/scenario_1` → CAPRI
+	- `IF/RandomForest/scenario_2` → CAPRI 
+- `moodify`: 
+	- `EIF/RandomForest/scenario_1` →CAPRI
+	- `EIF/RandomForest/scenario_2` →CAPRI
+	- `EIF+/RandomForest/scenario_1` →CAPRI
+	- `EIF+/RandomForest/scenario_2` →CAPRI
+	- `IF/RandomForest/scenario_1` → CAPRI
+	- `IF/RandomForest/scenario_2` → CAPRI 
 
 ## Problem with `pima,ionosphere` and `breastw` datasets
 
@@ -383,7 +424,7 @@ In the case of `pima` we call `dataset.split_dataset(train_size=0.8,contaminatio
 > The problem is that if we divide `dataset.y` into the inliers and outliers indexes we have 268 outliers and 500 inliers. So we can't take 614 inliers from the original dataset. 
 
 > [!example] `ionosphere`
-> In case of `ionosphere` the inliers are 225 but with `train_size=08` we try to take 280 inliers from the original dataset. 
+> In case of `ionosphere` the inliers are 225 but with `train_size=0.8` we try to take 280 inliers from the original dataset. 
 
 > [!example] `breastw`
 > In case of `breastw` the inliers are 213 and we try to take 359 inliers with `train_size=0.8`. 
