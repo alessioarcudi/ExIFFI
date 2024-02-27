@@ -19,12 +19,9 @@
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]]
 
-## TODO Today 26 February
+## TODO as soon as possible 
 
-- [ ] Adjust the function  `Dataset_box_loc` looking at the Feature Selection Plots already done
-- [x] Modify `plot_feature_selection` to add also the scenario number in the name of the Feature Selection plots
-- [ ] Launch some jobs (while I am at the lecture)
-
+- [ ] Redo the feature selection plots using the new `aucfs` values (also the negative ones)
 ## `EIF+` , `EXIFFI` and `scenario=2` old 
 
 ### Synthetic Dataset
@@ -265,7 +262,7 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201510 → ok, relocate box in feature selection plot
 - `shuttle` → Job 201510 → ok
-- `moodify` → Job 201521
+- `moodify` → Job 201528
 
 ## `EIF+` , `RandomForest` and `scenario=1`
 
@@ -288,7 +285,7 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201491 → ok, relocate the box in feature selection plot
 - `shuttle` → Job 201491 → ok 
-- `moodify` → Job 201522
+- `moodify` → Job 201529
 ## `EIF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
@@ -310,7 +307,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
 - `shuttle` → Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
-- `moodify` → Job 201523
+- `moodify` → Job 201531
 
 ## `EIF` , `RandomForest` and `scenario=1`
 
@@ -333,7 +330,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201496 → ok
 - `shuttle` → Job 201496 → ok 
-- `moodify` → Job 201524
+- `moodify` → Job 201530
 
 ## `IF` , `RandomForest` and `scenario=2`
 
@@ -354,9 +351,9 @@
 - `ionosphere` → ok
 - `annthyroid` → ok
 - `pendigits` → ok
-- `diabetes`→ Job 201526
-- `shuttle` → Job 201526
-- `moodify` → 
+- `diabetes`→ Job 201526 → ok, relocate the box in the feature selection plot
+- `shuttle` → Job 201526 → ok 
+- `moodify` → Job 201532
 
 ## `IF` , `RandomForest` and `scenario=1`
 
@@ -379,9 +376,7 @@
 - `pendigits` → ok
 - `diabetes` → Job 201520 → ok, relocate box in feature selection plot 
 - `shuttle` → Job 201520 → ok
-- `moodify` → 
-
-
+- `moodify` → Job 201533
 
 ## `pickle` file to update
 
@@ -389,20 +384,6 @@
 	- `IF/DIFFI/scenario_2` → problem with `nan`
 - `ionosphere` :
 	- `IF/DIFFI/scenario_2` → problem with `nan`
-- `diabetes`:
-	- `EIF+/RandomForest/scenario_2` → CAPRI
-	- `IF/RandomForest/scenario_1` → CAPRI
-	- `IF/RandomForest/scenario_2` → CAPRI 
-- `shuttle`:
-	-  `EIF+/RandomForest/scenario_2` → CAPRI
-	- `EIF/EXIFFI/scenario_1`  → this I can do now
-	- `EIF/EXIFFI/scenario_2` → this I can do now
-	- `EIF/RandomForest/scenario_1` → this I can do now
-	- `EIF/RandomForest/scenario_2` → this I can do now
-	- `IF/DIFFI/scenario_1` → this I can do now
-	- `IF/DIFFI/scenario_2` → this I can do now
-	- `IF/RandomForest/scenario_1` → CAPRI
-	- `IF/RandomForest/scenario_2` → CAPRI 
 - `moodify`: 
 	- `EIF/RandomForest/scenario_1` →CAPRI
 	- `EIF/RandomForest/scenario_2` →CAPRI
