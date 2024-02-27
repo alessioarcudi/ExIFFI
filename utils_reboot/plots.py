@@ -285,7 +285,7 @@ def plot_feature_selection(
         plt.show()
         
 
-def plot_precision_over_contamination(precisions, model, interpretation, scenario, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
+def plot_precision_over_contamination(precisions, dataset_name, model, interpretation, scenario, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     
@@ -297,7 +297,7 @@ def plot_precision_over_contamination(precisions, model, interpretation, scenari
     plt.ylim(0,1)
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
-    #plt.title("Precision over Contamination "+model.name, fontsize = 18)
+    plt.title(f"Precision over Contamination {dataset_name} {model} {interpretation} scenario {str(scenario)}", fontsize = 18)
     namefile = current_time + "_" + model + '_' + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
     if save_image:
         plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")
