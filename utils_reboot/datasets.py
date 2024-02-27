@@ -41,14 +41,14 @@ def Dataset_feature_names(name:str):
 def Dataset_box_loc(name:str):
 
     data_box_loc={
-        'wine': (3,0.8),
-        'cardio': (3,0.7),
-        'glass': (3,0.225),
-        'pima': (3,0.4),
-        'breastw': (3,0.7),
-        'ionosphere': (8,0.4),
-        'annthyroid': (4,0.7),
-        'pendigits': (3,0.35),
+        'wine': (4,0.8),
+        'cardio': (3,0.3),
+        'glass': (5,0.35),
+        'pima': (4,0.5),
+        'breastw': (4,0.7),
+        'ionosphere': (8,0.6),
+        'annthyroid': (4,0.6),
+        'pendigits': (3,0.5),
         'diabetes': (3,0.6),
         'shuttle': (4,0.6),
         'moodify': (3,0.5),
