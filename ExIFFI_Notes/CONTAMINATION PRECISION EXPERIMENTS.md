@@ -24,10 +24,10 @@
 - `pima` → ok
 - `breastw` → ok
 - `ionosphere` → ok
-- `annthyroid`  →
-- `pendigits` → 
-- `diabetes` → 
-- `shuttle` → 
+- `annthyroid`  → ok
+- `pendigits` → ok
+- `diabetes` → Job 201541
+- `shuttle` → Job 201541
 - `moodify` → 
 
 ## `EIF+`, `EXIFFI` and `scenario=1`
