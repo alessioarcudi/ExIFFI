@@ -227,7 +227,7 @@ def plot_feature_selection(
         scenario:Optional[int]=2,
         save_image:bool=True,
         plot_image:bool=False,
-        box_loc:tuple=(3,0.8),
+        box_loc:tuple=None,
         rotation:bool=False):
     
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
@@ -237,10 +237,10 @@ def plot_feature_selection(
 
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    precision = open_element(precision_file)[0]
+    precision = open_element(precision_file)
 
     #model = precision.model
-    aucfs = precision.values
+    aucfs = precision.aucfs
 
     median_direct     = [np.percentile(x, 50) for x in precision.direct]
     five_direct       = [np.percentile(x, 95) for x in precision.direct]
@@ -265,10 +265,14 @@ def plot_feature_selection(
     else:
         plt.xticks(range(dim),range(dim,0,-1))    
     
+    if box_loc is None:
+       box_loc = (len(precision.direct)/2,0.9)
+
     text_box_content = r'${}'.format("AUC") + r'_{FS}$' + " = " + str(np.round(aucfs,3))
     plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
          verticalalignment='top', horizontalalignment='right')
-        
+    
+    plt.ylim(0,1)
     plt.fill_between(np.arange(dim),five_direct, ninetyfive_direct,alpha=0.1, color="k")
     plt.fill_between(np.arange(dim),five_inverse, ninetyfive_inverse,alpha=0.1, color="k")
     plt.fill_between(np.arange(dim),median_direct, median_inverse,alpha=0.7, color=colors[color])
@@ -281,7 +285,7 @@ def plot_feature_selection(
         plt.show()
         
 
-def plot_precision_over_contamination(precisions, model, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
+def plot_precision_over_contamination(precisions, model, interpretation, scenario, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     
@@ -294,7 +298,7 @@ def plot_precision_over_contamination(precisions, model, plot_path, contaminatio
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
     #plt.title("Precision over Contamination "+model.name, fontsize = 18)
-    namefile = current_time + "_" + model + "_precision_over_contamination_.pdf"
+    namefile = current_time + "_" + model + '_' + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
     if save_image:
         plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")
     if plot_image:
