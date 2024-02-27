@@ -7,8 +7,8 @@ SCRIPT_PATH="test_contamination_precision.py"
 #SCRIPT_PATH="test_GFI_FS.py"
 
 # List of datasets
-#DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
-DATASETS="wine"
+#DATASETS="bisect_6d"
+DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
