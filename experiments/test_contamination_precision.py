@@ -12,6 +12,8 @@ from utils_reboot.plots import *
 from utils_reboot.utils import *
 from pyod.models.dif import DIF
 
+import warnings
+warnings.simplefilter(action='ignore')
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 import argparse
@@ -137,5 +139,5 @@ else:
 
 #plot contamination evaluation
 (precisions,contamination) = open_element(get_most_recent_file(path_experiment_matrices))
-plot_precision_over_contamination(precisions, I.name, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
+plot_precision_over_contamination(precisions, dataset.name, I.name, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
 
