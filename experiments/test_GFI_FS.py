@@ -77,7 +77,7 @@ if pre_process:
 if model == "IF":
     if interpretation == "EXIFFI":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI":
+    elif interpretation == "DIFFI" or interpretation == "RandomForest":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
@@ -160,7 +160,7 @@ feat_order = np.argsort(full_importances.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
-value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+value = sum(direct.mean(axis=1)-inverse.mean(axis=1))
 
 if model=='IF':
     data = Precisions(direct, inverse, dataset.name, 'IF', value)

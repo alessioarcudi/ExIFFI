@@ -123,7 +123,7 @@ feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
-value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+value = sum(direct.mean(axis=1)-inverse.mean(axis=1))
 data = Precisions(direct, inverse, dataset.name, I.name, value)
 save_element([data], path_experiment_model_interpretation_scenario, filetype="pickle")
 
