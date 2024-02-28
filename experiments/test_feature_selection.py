@@ -33,7 +33,6 @@ parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Name o
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--split',action='store_true', help='If set, split the dataset when pre procesing')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
-parser.add_argument('--box_loc', type=str, default=(3,0.8), help='Location of the box in the feature selection plot')
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
 
 # Parse the arguments
@@ -53,8 +52,6 @@ interpretation = args.interpretation
 pre_process = args.pre_process
 split = args.split
 scenario = args.scenario
-box_loc_str = args.box_loc
-box_loc=ast.literal_eval(box_loc_str)
 rotation = args.rotation
 
 
@@ -123,13 +120,14 @@ feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
-value = sum(direct.mean(axis=1)-inverse.mean(axis=1))
-data = Precisions(direct, inverse, dataset.name, I.name, value)
-save_element([data], path_experiment_model_interpretation_scenario, filetype="pickle")
+value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+data = Precisions(direct, inverse, dataset.name, model, value)
+save_fs_prec(data, path_experiment_model_interpretation_scenario)
+#save_element([data], path_experiment_model_interpretation_scenario, filetype="pickle")
 
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-plot_feature_selection(most_recent_file, path_plots, model=model, plot_image=False,box_loc=dataset.box_loc)
+plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation,scenario=scenario,plot_image=False,rotation=rotation)
 
 
 

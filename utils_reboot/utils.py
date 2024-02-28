@@ -90,6 +90,16 @@ def fix_fs_file(dataset,model,interpretation,scenario):
                             aucfs=aucfs)
     save_element(new_precs, path, filetype="pickle")
 
+def save_fs_prec(precs,path):
+    aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    new_precs = NewPrecisions(direct=precs.direct,
+                            inverse=precs.inverse,
+                            dataset=precs.dataset,
+                            model=precs.model,
+                            value=precs.value,
+                            aucfs=aucfs)
+    save_element(new_precs, path, filetype="pickle")
+
 def get_fs_file(dataset,model,interpretation,scenario):
     path=os.path.join(os.getcwd(),dataset.name,'experiments','feature_selection',model,interpretation,f'scenario_{str(scenario)}')
     file_path=get_most_recent_file(path)
