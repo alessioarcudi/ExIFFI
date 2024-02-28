@@ -262,7 +262,7 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201510 → ok, relocate box in feature selection plot
 - `shuttle` → Job 201510 → ok
-- `moodify` → Job 201528
+- `moodify` → Job 201528 → only Bar and Score Plot done
 
 ## `EIF+` , `RandomForest` and `scenario=1`
 
@@ -285,7 +285,7 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201491 → ok, relocate the box in feature selection plot
 - `shuttle` → Job 201491 → ok 
-- `moodify` → Job 201529
+- `moodify` → Job 201529 → only Bar and Score Plot done
 ## `EIF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
@@ -307,7 +307,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
 - `shuttle` → Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
-- `moodify` → Job 201531
+- `moodify` → Job 201531 → only Bar and Score plot done 
 
 ## `EIF` , `RandomForest` and `scenario=1`
 
@@ -330,7 +330,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201496 → ok
 - `shuttle` → Job 201496 → ok 
-- `moodify` → Job 201530
+- `moodify` → Job 201530 → only Bar and Score Plot done
 
 ## `IF` , `RandomForest` and `scenario=2`
 
@@ -353,7 +353,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201526 → ok, relocate the box in the feature selection plot
 - `shuttle` → Job 201526 → ok 
-- `moodify` → Job 201532
+- `moodify` → Job 201532 → ok 
 
 ## `IF` , `RandomForest` and `scenario=1`
 
@@ -376,7 +376,7 @@
 - `pendigits` → ok
 - `diabetes` → Job 201520 → ok, relocate box in feature selection plot 
 - `shuttle` → Job 201520 → ok
-- `moodify` → Job 201533
+- `moodify` → Job 201533 → ok, relocate box in feature selection plot 
 
 ## `pickle` file to update
 
@@ -389,8 +389,6 @@
 	- `EIF/RandomForest/scenario_2` →CAPRI
 	- `EIF+/RandomForest/scenario_1` →CAPRI
 	- `EIF+/RandomForest/scenario_2` →CAPRI
-	- `IF/RandomForest/scenario_1` → CAPRI
-	- `IF/RandomForest/scenario_2` → CAPRI 
 
 ## Problem with `pima,ionosphere` and `breastw` datasets
 
