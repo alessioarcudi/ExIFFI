@@ -99,7 +99,7 @@ if not os.path.exists(path):
 path_experiments = cwd +"/experiments/results/"+dataset.name+"/experiments"
 if not os.path.exists(path_experiments):
     os.makedirs(path_experiments)
-path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new"
+path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new/contamination_plots"
 if not os.path.exists(path_plots):
     os.makedirs(path_plots)
 
@@ -108,14 +108,14 @@ if not os.path.exists(path_plots):
 path_experiment = path_experiments + "/contamination"
 if not os.path.exists(path_experiment):
     os.makedirs(path_experiment)
-path_experiment_matrices = path_experiment + "/precisions"
+path_experiment_matrices = path_experiment + "/precisions" + "/scenario_" + str(scenario)
 if not os.path.exists(path_experiment_matrices):
     os.makedirs(path_experiment_matrices)
 
 path_importances = path_experiments + "/global_importances/" + "/" + model + "/" + interpretation
 if not os.path.exists(path_importances):
     os.makedirs(path_importances)
-path_importances_over_contamination = path_importances + "/contamination"
+path_importances_over_contamination = path_importances + "/contamination" + "/scenario_" + str(scenario)
 if not os.path.exists(path_importances_over_contamination):
     os.makedirs(path_importances_over_contamination)
 
@@ -139,5 +139,5 @@ else:
 
 #plot contamination evaluation
 (precisions,contamination) = open_element(get_most_recent_file(path_experiment_matrices))
-plot_precision_over_contamination(precisions, dataset.name, I.name, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
+plot_precision_over_contamination(precisions, dataset.name, model, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
 

@@ -102,9 +102,9 @@ if not os.path.exists(path):
 path_experiments = cwd +"/experiments/results/"+dataset.name+"/experiments"
 if not os.path.exists(path_experiments):
     os.makedirs(path_experiments)
-path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new"
-if not os.path.exists(path_plots):
-    os.makedirs(path_plots)
+path_plots_imp = cwd +"/experiments/results/"+dataset.name+"/plots_new/imp_plots"
+if not os.path.exists(path_plots_imp):
+    os.makedirs(path_plots_imp)
 
 #----------------- GLOBAL IMPORTANCES -----------------#
 # initialize global_importances paths
@@ -147,9 +147,9 @@ save_element(full_importances, path_experiment_model_interpretation_scenario, fi
 
 # plot global importances
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
+bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots_imp, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 plt.close()
-score_plot(dataset, most_recent_file, plot_path=path_plots, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
+score_plot(dataset, most_recent_file, plot_path=path_plots_imp, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 plt.close()
 
 # feature selection
@@ -169,7 +169,11 @@ else:
 
 save_element([data], path_experiment_model_interpretation_scenario_fs, filetype="pickle")
 
+path_plots_fs = cwd +"/experiments/results/"+dataset.name+"/plots_new/fs_plots"
+if not os.path.exists(path_plots_fs):
+    os.makedirs(path_plots_fs)
+
 #plot feature selection
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario_fs)
-plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
+plot_feature_selection(most_recent_file, path_plots_fs, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
 
