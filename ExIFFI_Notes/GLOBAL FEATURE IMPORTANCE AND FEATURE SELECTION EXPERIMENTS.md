@@ -13,9 +13,9 @@
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==completed== (a part the `nan` problem in `cardio` and `ionosphere`)
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=2`|`EIF+` , `RandomForest` and `scenario=2`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=1`|`EIF+` , `RandomForest` and `scenario=1`]]
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=1`|`EIF+` , `RandomForest` and `scenario=1`]] 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=2`|`EIF` , `RandomForest` and `scenario=2`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=1`|`EIF` , `RandomForest` and `scenario=1`]]
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=1`|`EIF` , `RandomForest` and `scenario=1`]] → ==completed== 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]]
 
@@ -262,7 +262,7 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201510 → ok, relocate box in feature selection plot
 - `shuttle` → Job 201510 → ok
-- `moodify` → Job 201528 → only Bar and Score Plot done
+- `moodify` → Feature Selection → Job 201578 → 
 
 ## `EIF+` , `RandomForest` and `scenario=1`
 
@@ -285,7 +285,8 @@
 - `pendigits` → ok 
 - `diabetes`→ Job 201491 → ok, relocate the box in feature selection plot
 - `shuttle` → Job 201491 → ok 
-- `moodify` → Job 201529 → only Bar and Score Plot done
+- `moodify` → Job 201529 → only Bar and Score Plot done 
+	- Feature selection → Job 201577 → 
 ## `EIF` , `RandomForest` and `scenario=2`
 
 ### Synthetic Datasets
@@ -307,7 +308,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
 - `shuttle` → Job 201495 → Done 2 times (take one of the two) → relocate box in feature selection plot 
-- `moodify` → Job 201531 → only Bar and Score plot done 
+- `moodify` → Job 201531 → ok 
 
 ## `EIF` , `RandomForest` and `scenario=1`
 
@@ -330,7 +331,7 @@
 - `pendigits` → ok
 - `diabetes`→ Job 201496 → ok
 - `shuttle` → Job 201496 → ok 
-- `moodify` → Job 201530 → only Bar and Score Plot done
+- `moodify` → Job 201530 → ok
 
 ## `IF` , `RandomForest` and `scenario=2`
 
