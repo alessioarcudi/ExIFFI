@@ -2,13 +2,13 @@
 
 # Path to the Python script to execute
 # SCRIPT_PATH="test_global_importancies.py"
-SCRIPT_PATH="test_feature_selection.py"
-#SCRIPT_PATH="test_contamination_precision.py"
+#SCRIPT_PATH="test_feature_selection.py"
+SCRIPT_PATH="test_contamination_precision.py"
 #SCRIPT_PATH="test_GFI_FS.py"
 
 # List of datasets
-#DATASETS="bisect_6d"
-DATASETS="moodify"
+#DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
+DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -22,8 +22,8 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --pre_process \
-        --model "EIF" \
-        --interpretation "RandomForest" \
-        --scenario 1 
+        --model "EIF+" \
+        --interpretation "EXIFFI" \
+        --scenario 1
 
 done
