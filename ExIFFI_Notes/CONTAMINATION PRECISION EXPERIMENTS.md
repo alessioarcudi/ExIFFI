@@ -1,7 +1,7 @@
 > [!note] Hyper parameters
 >  - `models = [IF,EIF,EIF+,DIF]`
 >  - `interpretation = [EXIFFI,DIFFI,RandomForest]`
->  - `scenario=[1,2]
+>  - `scenario=[1,2]`
 
 - [[CONTAMINATION PRECISION EXPERIMENTS#`EIF+`, `EXIFFI` and `scenario=2`|`EIF+`, `EXIFFI` and `scenario=2`]]
 - [[CONTAMINATION PRECISION EXPERIMENTS#`EIF+`, `EXIFFI` and `scenario=1`|`EIF+`, `EXIFFI` and `scenario=1`]]
@@ -30,7 +30,7 @@
 - `ionosphere` → ok
 - `annthyroid`  → ok
 - `pendigits` → ok
-- `diabetes` → Job 201579
+- `diabetes` → Job 201583
 - `shuttle` → Job 201579
 - `moodify` → 
 
@@ -54,9 +54,12 @@
 - `ionosphere` → ok
 - `annthyroid`  → ok
 - `pendigits` → ok
-- `diabetes` → Job 201580
+- `diabetes` → Job 201580 
 - `shuttle` → Job 201580
-- `moodify` → 
+- `moodify` → ok, after 4h and 17 minutes of execution 
+
+> [!note] Time per iteration
+> In `diabetes` it takes 24:27 minutes on the first iteration on my pc → strangely it is faster than on CAPRI were it took 35/40 minutes per iteration (according to the `out` file of the failed jobs). Probably that has something to do with the fact that in the new implementation of `EIF_reboot` we save all the quantities in memory? 
 
 ## `EIF`, `EXIFFI` and `scenario=2`
 
@@ -153,3 +156,6 @@
 - `diabetes` → 
 - `shuttle` → 
 - `moodify` → 
+
+# Comments on the results 
+
