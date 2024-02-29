@@ -75,9 +75,9 @@ if pre_process:
     dataset.pre_process()
 
 if model == "IF":
-    if interpretation == "EXIFFI":
+    if interpretation == "EXIFFI" or interpretation == "RandomForest":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI" or interpretation == "RandomForest":
+    elif interpretation == "DIFFI":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
@@ -160,14 +160,16 @@ feat_order = np.argsort(full_importances.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
-value = sum(direct.mean(axis=1)-inverse.mean(axis=1))
+value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+data = Precisions(direct, inverse, dataset.name, model, value)
 
 if model=='IF':
     data = Precisions(direct, inverse, dataset.name, 'IF', value)
 else:
     data = Precisions(direct, inverse, dataset.name, I.name, value)
 
-save_element([data], path_experiment_model_interpretation_scenario_fs, filetype="pickle")
+save_fs_prec(data, path_experiment_model_interpretation_scenario_fs)
+#save_element([data], path_experiment_model_interpretation_scenario_fs, filetype="pickle")
 
 path_plots_fs = cwd +"/experiments/results/"+dataset.name+"/plots_new/fs_plots"
 if not os.path.exists(path_plots_fs):
