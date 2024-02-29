@@ -34,9 +34,10 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
             rf = RandomForestRegressor()
             rf.fit(dataset.X, I.decision_function(dataset.X))
             fi = rf.feature_importances_
-        rf = RandomForestRegressor()
-        rf.fit(dataset.X, I.predict(dataset.X))
-        fi = rf.feature_importances_
+        else:
+            rf = RandomForestRegressor()
+            rf.fit(dataset.X, I.predict(dataset.X))
+            fi = rf.feature_importances_
     return fi
                         
 def experiment_global_importances(I: Type[ExtendedIsolationForest],
