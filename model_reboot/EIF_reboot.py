@@ -311,7 +311,7 @@ class IsolationForest(ExtendedIsolationForest):
         self.name="IF"
             
     def fit(self, X):
-        return super().fit(X, locked_dims=12)
+        return super().fit(X, locked_dims=X.shape[1]-1)
     
     def decision_function_single_tree(self,tree_idx,X,p=0.1):
         self.compute_ids(X)
