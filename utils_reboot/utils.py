@@ -6,6 +6,7 @@ import pandas as pd
 import os
 from collections import namedtuple
 from model_reboot.EIF_reboot import ExtendedIsolationForest
+from sklearn.ensemble import IsolationForest 
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
@@ -13,6 +14,13 @@ Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","valu
 
 NewPrecisions = namedtuple("NewPrecisions", ["direct", "inverse", "dataset", "model", "value", "aucfs"])
 
+class sklearn_IsolationForest(IsolationForest):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
+    def predict(self, X):
+        score=self.decision_function(X)
+        return -1*score+0.5
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"

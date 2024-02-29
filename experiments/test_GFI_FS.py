@@ -13,7 +13,7 @@ from utils_reboot.utils import *
 
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest, IsolationForest
-from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
+#from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
 import argparse
 
 # Create the argument parser
@@ -75,9 +75,9 @@ if pre_process:
     dataset.pre_process()
 
 if model == "IF":
-    if interpretation == "EXIFFI" or interpretation == "RandomForest":
+    if interpretation == "EXIFFI":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI":
+    elif interpretation == "DIFFI" or interpretation == "RandomForest":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)

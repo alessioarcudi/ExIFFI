@@ -67,9 +67,8 @@ if pre_process:
 if model == "EIF+" or model == "EIF":
     I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "IF":
-    I=IsolationForest(n_estimators=n_estimators, max_samples=max_samples, contamination=contamination)
-# elif model == "AE":
-#     I=AutoEncoder(contamination=contamination)
+    I=sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples, contamination=contamination)
+
 
 #cwd = '/Users/alessio/Documents/ExIFFI'
 cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
