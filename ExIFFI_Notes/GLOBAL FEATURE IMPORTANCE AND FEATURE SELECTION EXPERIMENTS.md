@@ -657,3 +657,88 @@ In this dataset all the features are important (since the anomalies are distribu
 
 ### `wine`
 
+> [!note] What to expect
+>  In the first edition of the paper `wine` had not very high value for the Precision scores → in Scenario 1 it had [0.22,0.22,0.18] for IF,EIF,EIF+ respectively and [0.4,0.58,0.78] in Scenario 2. 
+>  For what concerns the Feature Importances we have a clear dominance of Feature 12 (`Proline`) in Scenario 2 while Scenario 1 was more random (very strange thing is that in Scenario 1 Feature 12 is the least important one while the two most important ones are Feature 4 and 8 (8 is the last one in Scenario 2)). In the Feature Selection Plot the Precision increases from 0.2 to 0.8 as we remove less important features. 
+>
+
+- `EIF+`
+	- `EXIFFI, scenario=2`
+		- Bar/Score Plots: Here we have a clear advantage of Feature 12 over the others even though it is not the most important one 100% of the times in the Bar Plot. 
+		- Feature Selection Plot: The red line increases from a bit higher than 0.2 to a bit lower than 0.8 as expected. The blue line instead drops immediately to values around 0.1 → $AUC_{FS} = 4.685$
+	- `EXIFFI, scenario=1`
+		- Bar/Score Plots: Very random (even more random than in the previous version). The most important features in the Score Plot are `Magnesium` and `Proanthocyanins` with `Proline` going down to $9^{th}$ place. 
+		- Feature Selection Plot: Here the situation is very bad → $AUC_{FS} = -0.697$ since the blue line is higher then the red one most of the time. Here it happens the same thing described in `RandomForest, scenario=1` → as soon as we remove `Proline` (the $5^{th}$) least important feature the precision drops. 
+	- `RandomForest, scenario=2` 
+		- Bar/Score Plots: As in the other cases `RandomForest` is very good in identifying a single dominant important feature in fact it is very clear that `Proline` is the most important one. 
+		- Feature Selection Plot: The shape is more or less the same as `EXIFFI, scenario=2` but there is a strange increase in the blue line going from 5 to 3 features, so $AUC_{FS} = 2.848$
+	- `RandomForest, scenario=1`
+		- Bar/Score Plots: Now we have a significant dominance of feature `Proanthocyanins` and `Magnesium` is at second place. 
+		- Feature Selection Plot: As in the case of `EXIFFI, scenario=1` the score is negative → $AUC_{FS} = -2.27$. It seems that in `scenario=1` it is better to remove everytime the most important feature. In any case the peak in Precision is obtained with the two least important features that, looking at the Score Plot, are `Proline` and `Flavanoids` → the fact that there is `Proline` is very strange → maybe there is an error? Or we can interpret this result in the following way → with `EXIFFI+` and `RandomForest, scenario=2` we have  found out that the real important feature is `Proline` however with `scenario=1` it is not possible to see the importance of `Proline` (because putting the anomalies in the training set the model thinks that they are normal points?) 
+
+
+> [!important] Riflessione risultati `wine`
+>  Ho scoperto una cosa un pò particolare guardando i plot di `wine`. Allora:
+>  -  Nella prima versione del paper noi abbiamo visto che nello Scenario 2 la feature più importante è chiaramente la 12 (che d'ora in poi chiamiamo `Proline`) mentre nello scenario 1 ci sono valori un po random (e tra l'altro `Proline` è addirittura all'ultimo posto). 
+>  - Con `EXIFFI+, scenario=2` si conferma il fatto che `Proline` è la più importante e nel plot Feature Selection tutto funziona come atteso con la linea rossa sempre sopra la blu e che aumenta al diminuire del numero di feature. 
+>  - Con `EXIFFI+, scenario=1` invece gli score ritornano ad essere molto randomici e `Proline` finisce al nono posto (5 feature meno importante). Nel Feature Selection plot abbiamo un valore di `AUC_FS`  negativo perchè per la maggior parte del tempo la linea blu sta sopra alla rossa a parte da quando passiamo da 5 a 4 feature → da li in poi passa sopra la linea rossa. E qual'è la quinta feature meno importante (che quando viene tolta fa scendere a picco la precisione)? Proprio `Proline`. Una cosa molto simile succede con `RandomForest`. 
+>  - `RandomForest, scenario=2` → Qua si vede bene che la Feature 12 è la più importante (in particolare anche negli altri casi si vede che `RandomForest` funziona molto bene quando bisogna individuare una singola feature come più importante) e il Feature Importance plot funziona come atteso (simile a `EXIFFI+, scenario=2`).
+>  - Passando a `RandomForest, scenario=1` di nuovo abbiamo un valore di `AUC_FS` negativo perchè la linea blu sta sopra alla rossa. Il picco di precisione nella linea blu si presenta quando ci sono solo 2 feature. E qual'è la second feature meno importante nello Score plot (che quando viene tolta fa cadere a picco la precisione)? Sempre il nostro amico `Proline`. 
+>  
+>Quindi concludendo secondo me questi risultati ci fanno capire come `Proline` sia realmente la feature più importante. Lo Scenario 2 riesce ad individuarla chiaramente come quella più importante mentre nello scenario 1 (probabilmente perchè si inseriscono le anomalie nel training set) non si riesce a metterla come più importante e quindi funziona meglio la Feature Selection `direct` perchè la togliamo verso la fine (mentre su quella `inverse` si toglie subito). 
+
+
+- `EIF`
+	- `EXIFFI, scenario=2`
+		- Bar/Score Plots: `Proline` clearly is the most important feature but with less margin on the others than with `EXIFFI, scenario=2`
+		- Feature Selection Plot: $AUC_{FS} = 3.591$ → similar to `EXIFFI+, scenario=2`
+	- `EXIFFI, scenario=1`
+		- Bar/Score Plots: Similarly to `EXIFFI+, scenario=1` now the most important features are `Magnesium` and `Proanthocyanins` and `Proline` goes down to $6^{th}$ place ($8^{th}$ least important feature)
+		- Feature Selection Plot: As expected the peak in the blue line goes down passing from 8 to 7 features (so after we remove `Proline`). In this case `Proline` is remove pretty soon in the `direct` approach so $AUC_{FS}$ is positive → $AUC_{FS} = 0.709$
+	- `RandomForest, scenario=2`
+		- Bar/Score Plots: `Proline` most important feature, not with a so high margin as it happens in `EIF+, RandomForest, scenario=2`.
+		- Feature Selection Plot: $AUC_{FS} = 3.318$. As previously we have a strange increase in precision in the blue line from 6 features to 2 features. 
+	- `RandomForest, scenario=1`
+		-  Bar/Score Plots: Random importance scores. Most important features are now `Proanthocyanins`, `Phenols` and `Magnesium`
+		- Feature Selection Plot: $AUC_{FS} = -2.192$. As usual we have a drop in precision passing from 3 to 2 features (so when we remove `Proline` that is the $3^{rd}$ least important feature)
+- `IF` 
+	- `DIFFI, scenario=2` → ==review after the new experiments==
+	- `DIFFI, scenario=1` → ==review after the new experiments==
+	- `RandomForest, scenario=2`
+		- Bar/Score Plots: Here we have `Phenols` that is the most important feature, followed by `Proline`
+		- Feature Selection Plot: $AUC_{FS} = 3.077$ → it works as expected but we see a drop in precision (in the red line) as we pass from 2 to 1 features (so when we remove `Proline`). This result let us conclude about the superiority of `EIF/EIF+` over `IF` because these two models were able to detect `Proline` as the most important feature in Scenario 2 while `IF` not. 
+	- `RandomForest, scenario=1` → ==review after the new experiments==
+
+### `cardio`
+
+> [!note] What to expect
+>  The precision values are are a bit higher. In Scenario 1 we have (for IF, EIF, EIF+ respectively) [0.58,0.56,0.53] and for Scenario 2 instead we have [0.71,0.74,0.78].
+>  For what concerns the importances, Feature 6 is clearly the most important one (detected in Scenario 2) while in Scenario 1 the two most important ones are Feature 2 and 6. 
+>  The trend in the Feature Selection plot is more or less constant and it starts to increase from 8 features onward and it decreases a little bit from 3 features onward. 
+
+- `EIF+`
+	- `EXIFFI, scenario=2`
+		- Bar/Score Plots: Feature 6 is considered the most important but not with a so high margin on the others (it is first in around 50/60% of the cases in the Bar Plot)
+		- Feature Selection Plot: $AUC_{FS} = 6.991$. The red line has a behavior more or less similar to the one of the previous version of the paper. The difference is that we have a peak in precision passing from 5 to 4 features (i.e. so when we remove Feature 2) and then precision drops again passing from 4 to 3. 
+	- `EXIFFI, scenario=1`
+		- Bar/Score Plots: All pretty random importance values in the Bar Plot and in the Score plot we have Feature 2 and 6 as the most important ones. 
+		- Feature Selection Plot: $AUC_{FS} = 4.615$ The red line has a decreasing trend with peaks on 8 and 4 features. 
+	- `RandomForest, scenario=2`
+		- Bar/Score Plots: As usual `RandomForest` is good in detecting a single important feature, in fact here Feature 6 has a dominant importance score over all the others. 
+		- Feature Selection Plot: $AUC_{FS} = 6.984$ 
+	- `RandomForest, scenario=1`
+		- Bar/Score Plots: Very strange. It is pretty clear that Feature 16 and 17 are the most important ones. Feature 6 ends up in $13^{th}$ place. 
+		- Feature Selection Plot: $AUC_{FS} = 0.95$ → Considering that there are 21 features in `cardio` (and only the first 15 of them are represented in the Score Plot) this means that Feature 6 is the $9^{th}$ least important feature. In fact the drop in precision happens when we pass from 9 to 8 features. 
+- `EIF`
+	- `EXIFFI, scenario=2`
+		- Bar/Score Plots: Clearly Feature 6 is the most important. 
+		- Feature Selection Plot: $AUC_{FS} = 7.172$. Similar shape to `EXIFFI+` and there is a V shape passing from 3 to 1 features → precision increases a lot passing from 2 to 1 features → so considering Feature 6 alone we have a good precision. 
+	- `EXIFFI, scenario=1`
+		- Bar/Score Plots: More random values and the most important features are 2 and 6. 
+		- Feature Selection Plot: $AUC_{FS} = 5.464$ Red line has a decreasing shape. As expected the precision decreases a lot when we pass from 2 to 1 feature (so when we remove Feature 6)
+	- `RandomForest, scenario=2`
+		- Bar/Score Plots: As usual Feature 6 is the most important with an high margin on the others. 
+		- Feature Selection Plot: $AUC_{FS} = 8.027$ Better result then `EXIFFI+, scenario=2`. The shape of the plot is very similar to `EXIFFI+` but the precision values are higher (that's why the $AUC_{FS}$ metric is higher). Probably this happens because `RandomForest` detects Feature 6 as the most important with more confidence? 
+	- `RandomForest, scenario=1`
+		- Bar/Score Plots: As in `EIF+, RandomForest, scenario=1` we have Feature 16 and 17 as the most important ones, Feature 6 is still at $13^{th}$ place  
+		- Feature Selection Plot: $AUC_{FS} = -0.071$ Big drop from 5 to 4 features in the blue line.
