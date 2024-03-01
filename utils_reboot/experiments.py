@@ -10,12 +10,21 @@ from tqdm import tqdm
 import copy
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
-from models.interpretability_module import *
+from model_reboot.interpretability_module import *
 from utils_reboot.datasets import Dataset
 import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.ensemble import RandomForestRegressor
 
+import pickle
+import time
+with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "rb") as file:
+    time = pickle.load(file)
+if time is None:
+    time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+            "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+    
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
                         dataset: Type[Dataset],
@@ -98,8 +107,18 @@ def feature_selection(I: Type[ExtendedIsolationForest],
             runs = np.zeros(n_runs)
             for run in range(n_runs):
                 try:
-                    I.fit(dataset_shrinking.X)
-                    score = I.predict(dataset_shrinking.X)
+                    if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
+                        start_time = time.time()
+                        I.fit(dataset_shrinking.X)
+                        fit_time = time.time() - start_time
+                        time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                        start_time = time.time()
+                        score = I.predict(dataset_shrinking.X)
+                        fit_time = time.time() - start_time
+                        time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
+                    else:
+                        I.fit(dataset_shrinking.X)
+                        score = I.predict(dataset_shrinking.X)
                     avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y,score)
                     runs[run] = avg_prec
                 except:
@@ -125,10 +144,14 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             I.fit(dataset.X_train)
             if compute_global_importances:
                 for k,c in enumerate(contamination_values):
+                    start_time = time.time()
                     if isdiffi:
                         importances[i,j,k,:],_=diffi_ib(I,dataset.X)
                     else:
-                        importances[i,j,k,:]=I.global_importances(dataset.X,p=c) #non so se è la scelta migliore
+                        importances[i,j,k,:]=I.global_importances(dataset.X,p=c)
+                    
+                
+                #non so se è la scelta migliore
                 # importances[i,j,:] = compute_global_importances(I,
                 #                                                 dataset,
                 #                                                 isdiffi=isdiffi,
