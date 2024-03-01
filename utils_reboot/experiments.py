@@ -133,7 +133,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    train_size = 0.8,
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_global_importances:bool=False,
-                                                   isdiffi:bool=False,
+                                                   interpretation:str="EXIFFI",
                                                    ) -> tuple[np.array,dict,str,str]:
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_global_importances:
@@ -144,19 +144,11 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             I.fit(dataset.X_train)
             if compute_global_importances:
                 for k,c in enumerate(contamination_values):
-                    start_time = time.time()
-                    if isdiffi:
-                        importances[i,j,k,:],_=diffi_ib(I,dataset.X)
-                    else:
-                        importances[i,j,k,:]=I.global_importances(dataset.X,p=c)
-                    
-                
-                #non so se è la scelta migliore
-                # importances[i,j,:] = compute_global_importances(I,
-                #                                                 dataset,
-                #                                                 isdiffi=isdiffi,
-                #                                                 p=contamination,
-                #                                                 fit_model=False)
+                    importances[i,j,k,:] = compute_global_importances(I,
+                                                                    dataset,
+                                                                    p=c,
+                                                                    interpretation=interpretation,
+                                                                    fit_model=False)
             score = I.predict(dataset.X)
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
