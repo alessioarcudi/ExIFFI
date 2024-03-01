@@ -1,7 +1,8 @@
 import sys
 import os
-#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+cwd = os.getcwd()
+os.chdir('./experiments')
+
 sys.path.append("..")
 from collections import namedtuple
 
@@ -36,7 +37,7 @@ parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 args = parser.parse_args()
 
 assert args.model in ["IF", "EIF", "EIF+"], "Model not recognized"
-assert args.interpretation in ["EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
 
@@ -80,8 +81,7 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-#cwd = '/Users/alessio/Documents/ExIFFI'
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+cwd = os.getcwd()
 
 print('#'*50)
 print('GFI Experiment')

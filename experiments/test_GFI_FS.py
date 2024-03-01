@@ -1,8 +1,9 @@
 import sys
 import ast
 import os
-#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+cwd = os.getcwd()
+
+os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -37,7 +38,7 @@ parser.add_argument('--rotation',action='store_true', help='If set, rotate the x
 args = parser.parse_args()
 
 assert args.model in ["IF", "EIF", "EIF+"], "Model not recognized"
-assert args.interpretation in ["EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert args.interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
 

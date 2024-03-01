@@ -2,8 +2,9 @@
 import sys
 import ast
 import os
-#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+cwd = os.getcwd()
+
+os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -70,9 +71,6 @@ elif model == "IF":
     I=sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples, contamination=contamination)
 
 
-#cwd = '/Users/alessio/Documents/ExIFFI'
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
-
 print('#'*50)
 print('Feature Selection Experiment')
 print('#'*50)
@@ -128,22 +126,3 @@ save_fs_prec(data, path_experiment_model_interpretation_scenario)
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
 plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation,scenario=scenario,plot_image=False,rotation=rotation)
 
-
-
-
-# if model == "EXIFFI":
-#     path_experiment_model = path_experiment + "/" + model + "/interpretation_name"
-#     if not os.path.exists(path_experiment_model):
-#         os.makedirs(path_experiment_model)
-# elif model == "DIFFI":
-#     path_experiment_model = path_experiment + "/" + model + "/interpretation_name"
-#     if not os.path.exists(path_experiment_model):
-#         os.makedirs(path_experiment_model)
-# elif model == "RF":
-#     path_experiment_model = path_experiment + "/RF"
-#     if not os.path.exists(path_experiment_model):
-#         os.makedirs(path_experiment_model)
-# elif model == "TS":
-#     path_experiment_model = path_experiment + "/TS"
-#     if not os.path.exists(path_experiment_model):
-#         os.makedirs(path_experiment_model)

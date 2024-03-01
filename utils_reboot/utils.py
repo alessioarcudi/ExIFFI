@@ -7,6 +7,7 @@ import os
 from collections import namedtuple
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from sklearn.ensemble import IsolationForest 
+from pyod.models.dif import DIF as oldDIF
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
@@ -17,10 +18,22 @@ NewPrecisions = namedtuple("NewPrecisions", ["direct", "inverse", "dataset", "mo
 class sklearn_IsolationForest(IsolationForest):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.name = "sklearn_IF"
     
     def predict(self, X):
         score=self.decision_function(X)
         return -1*score+0.5
+
+class DIF(oldDIF):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "DIF"
+    
+    def predict(self, X):
+        score=self.decision_function(X)
+        return score
+    
+
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"

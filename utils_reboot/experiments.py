@@ -4,6 +4,9 @@ import sys
 sys.path.append('..')
 
 import os
+os.chdir("../")
+cwd = os.getcwd()
+os.chdir("experiments")
 import numpy as np
 import numpy.typing as npt
 from tqdm import tqdm
@@ -18,12 +21,19 @@ from sklearn.ensemble import RandomForestRegressor
 
 import pickle
 import time
-with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "rb") as file:
-    time = pickle.load(file)
-if time is None:
-    time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+
+filename = cwd + "/utils_reboot/time.pickle"
+
+if not os.path.exists(filename):
+    dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
             "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
             "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+    with open(filename, "wb") as file:
+        pickle.dump(dict_time, file)
+               
+with open(cwd + "/utils_reboot/time.pickle", "rb") as file:
+    dict_time = pickle.load(file)
+
     
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
@@ -39,14 +49,9 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     elif interpretation=="EXIFFI":
         fi=I.global_importances(dataset.X,p)
     elif interpretation=="RandomForest":
-        if model=='DIF':
-            rf = RandomForestRegressor()
-            rf.fit(dataset.X, I.decision_function(dataset.X))
-            fi = rf.feature_importances_
-        else:
-            rf = RandomForestRegressor()
-            rf.fit(dataset.X, I.predict(dataset.X))
-            fi = rf.feature_importances_
+        rf = RandomForestRegressor()
+        rf.fit(dataset.X, I.predict(dataset.X))
+        fi = rf.feature_importances_
     return fi
                         
 def experiment_global_importances(I: Type[ExtendedIsolationForest],
@@ -58,11 +63,18 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
+        start_time = time.time()
         fi[i,:]=compute_global_importances(I,
                         dataset,
                         p = p,
                         interpretation=interpretation,
                         model = model)
+        fit_time = time.time() - start_time
+        if i>3:
+            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(fit_time)
+    
+    with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+        pickle.dump(dict_time, file)
     return fi
 
 def compute_plt_data(imp_path):
@@ -108,14 +120,19 @@ def feature_selection(I: Type[ExtendedIsolationForest],
             for run in range(n_runs):
                 try:
                     if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
+                        
                         start_time = time.time()
                         I.fit(dataset_shrinking.X)
                         fit_time = time.time() - start_time
-                        time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                        
+                        if run >3:
+                            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                         start_time = time.time()
                         score = I.predict(dataset_shrinking.X)
                         fit_time = time.time() - start_time
-                        time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
+                        
+                        if run >3:                        
+                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
                     else:
                         I.fit(dataset_shrinking.X)
                         score = I.predict(dataset_shrinking.X)
@@ -124,6 +141,9 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                 except:
                     runs[run] = np.nan
             precisions[number_of_features_dropped] = runs
+        
+        with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+            pickle.dump(dict_time, file)
         return precisions
     
 
@@ -141,17 +161,37 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     for i,contamination in tqdm(enumerate(contamination_values)):
         for j in range(n_runs):
             dataset.split_dataset(train_size,contamination)
+            
+            start_time = time.time()
             I.fit(dataset.X_train)
+            fit_time = time.time() - start_time
+            
+            if j>3:
+                dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+            
             if compute_global_importances:
                 for k,c in enumerate(contamination_values):
+                    start_time = time.time()
                     importances[i,j,k,:] = compute_global_importances(I,
                                                                     dataset,
                                                                     p=c,
                                                                     interpretation=interpretation,
                                                                     fit_model=False)
+                    fit_time = time.time() - start_time
+                    if k>3: 
+                        dict_time["importances"][interpretation].setdefault(dataset.name, []).append(fit_time)
+                    
+            start_time = time.time()
             score = I.predict(dataset.X)
+            fit_time = time.time() - start_time
+            if j>3:
+                dict_time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
+            
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
+    
+    with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+        pickle.dump(dict_time, file)
     if compute_global_importances:
         return precisions,importances
     return precisions

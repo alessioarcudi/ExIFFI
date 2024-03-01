@@ -1,8 +1,8 @@
 
 import sys
 import os
-#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+cwd = os.getcwd()
+os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -56,7 +56,7 @@ interpretation = args.interpretation
 
 
 assert model in ["IF", "EIF", "EIF+", "DIF", "AnomalyAutoencoder"], "Model not recognized"
-assert interpretation in ["EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
 
 if model == "DIF" and GFI:
     raise ValueError("DIF model does not support global feature importances")
@@ -81,9 +81,6 @@ elif model == "DIF":
 elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=100, random_state=42,verbose =0)
     
-
-#cwd = '/Users/alessio/Documents/ExIFFI'
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 print('#'*50)
 print('Precision and Contamination Experiments')

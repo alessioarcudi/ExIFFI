@@ -16,7 +16,7 @@ from utils_reboot.experiments import compute_plt_data
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from matplotlib import colors, cm
 from sklearn.ensemble import IsolationForest
-from models.interpretability_module import local_diffi
+from model_reboot.interpretability_module import local_diffi
 
 
 def bar_plot(dataset: Type[Dataset], 
