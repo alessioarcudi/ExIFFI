@@ -21,7 +21,7 @@ from model_reboot.interpretability_module import local_diffi
 
 def bar_plot(dataset: Type[Dataset], 
             global_importances_file: str,
-            filetype: str = "pickle", 
+            filetype: str = "npz", 
             plot_path: str = os.getcwd(), 
             f: int = 6, 
             save_image = True, 
@@ -285,7 +285,14 @@ def plot_feature_selection(
     plt.fill_between(np.arange(dim),median_direct, median_inverse,alpha=0.7, color=colors[color])
     plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
-    namefile = "/" + current_time + "_" + precision.dataset + "_" + model + "_" + interpretation + "_feature_selection_" + str(scenario) + ".pdf"
+
+    if model=='EIF+' and interpretation=='EXIFFI+':
+        namefile = "/" + current_time + "_" + precision.dataset + "_" + "EXIFFI+" + "_feature_selection_" + str(scenario) + ".pdf"
+    elif model=='EIF' and interpretation=='EXIFFI':
+            namefile = "/" + current_time + "_" + precision.dataset + "_" + 'EXIFFI' + "_feature_selection_" + str(scenario) + ".pdf"
+    else:
+        namefile = "/" + current_time + "_" + precision.dataset + "_" + model + "_" + interpretation + "_feature_selection_" + str(scenario) + ".pdf"
+    
     if save_image:
         plt.savefig(plot_path+namefile,bbox_inches = "tight")
     if plot_image:
