@@ -2,7 +2,7 @@ import sys
 import ast
 import os
 cwd = os.getcwd()
-os.chdir('experiments')
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -33,14 +33,22 @@ parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interp
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
 parser.add_argument('--include_random',action='store_true', help='If set, shows also the random precisions in the feature selection plot')
+parser.add_argument('--downsample',action='store_true', help='If set, apply downsample to the big datasets')
 
 # Parse the arguments
 args = parser.parse_args()
 
 assert args.model in ["IF", "EIF", "EIF+"], "Model not recognized"
 assert args.interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "EXIFFI":
+    assert args.model=="EIF", "EXIFFI can only be used with the EIF model"
+
+if args.interpretation == "EXIFFI+":
+    assert args.model=="EIF+", "EXIFFI can only be used with the EIF+ model"
 
 # Access the arguments
 dataset_name = args.dataset_name
@@ -56,10 +64,15 @@ interpretation = args.interpretation
 scenario = args.scenario
 rotation = args.rotation
 include_random = args.include_random
+downsample = args.downsample
 
 # Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
+
+# Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
+if downsample:
+    dataset.downsample(max_samples=7500)
 
 # Set scenario and scale the data
 if scenario==2:
