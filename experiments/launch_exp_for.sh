@@ -10,7 +10,7 @@ SCRIPT_PATH="test_GFI_FS.py"
 DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-#DATASETS="wine"
+#DATASETS="Yaxis"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -26,7 +26,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --pre_process \
         --model "EIF" \
         --interpretation "EXIFFI" \
-        --scenario 2 \
+        --scenario 1 \
         --include_random \
         --downsample \
 
