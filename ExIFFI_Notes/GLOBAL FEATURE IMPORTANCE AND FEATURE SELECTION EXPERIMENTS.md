@@ -3,15 +3,21 @@
 
 > [!note] Hyper parameters
 >  - `models = [IF,EIF,EIF+]`
->  - `interpretation = [EXIFFI,DIFFI,RandomForest]`
+>  - `interpretation = [EXIFFI+,EXIFFI,DIFFI,RandomForest]`
 >  - `scenario=[1,2]`
+
+> [!note] Notation
+>  - `EXIFFI+` → `EXIFFI` interpretation starting from the `EIF+` model. So it means that we use the `global_importances` method of class `EIF_reboot` using an object initialized as `ExtendedIsolationForest(plus=True)`. This is the same as `EIF+_EXIFFI` in the file names of the plots.
+>  - `EXIFFI` → `EXIFFI` interpretation using the `EIF` model. So it means that we use the `global_importances` method of class `EIF_reboot` using an object initialized as `ExtendedIsolationForest(plus=False)`. This is the same as `EIF_EXIFFI` in the file names of the plots. 
+>  - `DIFFI` → `DIFFI` interpretation of the `IsolationForest` model. In this case we use the `diffi_ib` method contained in `interpretability_module.py` → code by Mattia Carletti (original implementation of `DIFFI`). Here we have to use the `IsolationForest` model from `sklearn.ensemble`. 
+>  - `RandomForest` → Post-hoc interpretation algorithm. We train a `RandomForestRegressor` on the Anomaly Scores produced by one model between `EIF+,EIF,IF` and then we compute the importances using the `feature_importances_` method which implements the Feature Importance of Random Forest. 
 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=2`|`EIF+` , `EXIFFI` and `scenario=2`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=1`|`EIF+` , `EXIFFI` and `scenario=1`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=2`|`EIF` , `EXIFFI` and `scenario=2`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=1`|`EIF` , `EXIFFI` and `scenario=1`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==completed== (a part the `nan` problem in `cardio` and `ionosphere`)
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==re run== (a part the `nan` problem in `cardio` and `ionosphere`)
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] → ==re run==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=2`|`EIF+` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=1`|`EIF+` , `RandomForest` and `scenario=1`]] 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=2`|`EIF` , `RandomForest` and `scenario=2`]]
