@@ -48,8 +48,10 @@ def save_element(element, directory_path, filename="", filetype="pickle"):
         np.savez(path, element=element)
         
 def get_most_recent_file(directory_path):
-    files = sorted(os.listdir(directory_path))
-    return directory_path+"/"+files[-1]
+    # files = sorted(os.listdir(directory_path))
+    # return directory_path+"/"+files[-1]
+    files = sorted(os.listdir(directory_path), key=lambda x: os.path.getmtime(os.path.join(directory_path, x)), reverse=True)
+    return os.path.join(directory_path, files[0])
 
 def open_element(file_path, filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"
