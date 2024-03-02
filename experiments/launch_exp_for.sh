@@ -24,9 +24,10 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --pre_process \
-        --model "IF" \
-        --interpretation "DIFFI" \
+        --model "EIF" \
+        --interpretation "EXIFFI" \
         --scenario 2 \
-        --include_random
+        --include_random \
+        --downsample \
 
 done
