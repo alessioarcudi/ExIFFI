@@ -742,3 +742,9 @@ In this dataset all the features are important (since the anomalies are distribu
 	- `RandomForest, scenario=1`
 		- Bar/Score Plots: As in `EIF+, RandomForest, scenario=1` we have Feature 16 and 17 as the most important ones, Feature 6 is still at $13^{th}$ place  
 		- Feature Selection Plot: $AUC_{FS} = -0.071$ Big drop from 5 to 4 features in the blue line.
+- `IF`
+	- `DIFFI, scenario=2` → ==review after the new experiments==
+	- `DIFFI, scenario=1` → ==review after the new experiments==
+	- `RandomForest, scenario=2`
+		- Bar/Score Plots: Feature 17 is the most important one with high margin on the others
+		- Feature Selection Plot: $AUC_{FS} = 6.743$ 
