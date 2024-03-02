@@ -59,7 +59,8 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                n_runs:int = 10, 
                                p = 0.1,
                                model = "EIF+",
-                               interpretation="EXIFFI") -> tuple[np.array,dict,str,str]:
+                               interpretation="EXIFFI",
+                               cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI') -> tuple[np.array,dict,str,str]:
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
@@ -69,11 +70,11 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                         p = p,
                         interpretation=interpretation,
                         model = model)
-        fit_time = time.time() - start_time
+        gfi_time = time.time() - start_time
         if i>3:
-            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(fit_time)
+            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
     
-    with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+    with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
         pickle.dump(dict_time, file)
     return fi
 
@@ -105,7 +106,8 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       importances_indexes: npt.NDArray,
                       n_runs: int = 10, 
                       inverse: bool = True,
-                      random: bool = False
+                      random: bool = False,
+                      cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
                       ) -> tuple[np.array,dict,str,str]:
         dataset_shrinking = copy.deepcopy(dataset)
         d = dataset.X.shape[1]
@@ -129,10 +131,10 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                             dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                         start_time = time.time()
                         score = I.predict(dataset_shrinking.X)
-                        fit_time = time.time() - start_time
+                        predict_time = time.time() - start_time
                         
                         if run >3:                        
-                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
+                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                     else:
                         I.fit(dataset_shrinking.X)
                         score = I.predict(dataset_shrinking.X)
@@ -142,7 +144,7 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                     runs[run] = np.nan
             precisions[number_of_features_dropped] = runs
         
-        with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+        with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
             pickle.dump(dict_time, file)
         return precisions
     
@@ -154,6 +156,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_global_importances:bool=False,
                                                    interpretation:str="EXIFFI",
+                                                    cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
                                                    ) -> tuple[np.array,dict,str,str]:
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_global_importances:
@@ -177,20 +180,20 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                                     p=c,
                                                                     interpretation=interpretation,
                                                                     fit_model=False)
-                    fit_time = time.time() - start_time
+                    gfi_time = time.time() - start_time
                     if k>3: 
-                        dict_time["importances"][interpretation].setdefault(dataset.name, []).append(fit_time)
+                        dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
                     
             start_time = time.time()
             score = I.predict(dataset.X)
-            fit_time = time.time() - start_time
+            predict_time = time.time() - start_time
             if j>3:
-                dict_time["predict"][I.name].setdefault(dataset.name, []).append(fit_time)
+                dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
     
-    with open("/Users/alessio/Documents/ExIFFI/utils_reboot/time.pickle", "wb") as file:
+    with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
         pickle.dump(dict_time, file)
     if compute_global_importances:
         return precisions,importances

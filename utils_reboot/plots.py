@@ -221,6 +221,7 @@ def score_plot(dataset: Type[Dataset],
 def plot_feature_selection(
         precision_file: str,
         plot_path:str,
+        precision_file_random:Optional[str]=None,
         color:int=0,
         model:Optional[str]=None,
         interpretation:Optional[str]=None,
@@ -253,6 +254,12 @@ def plot_feature_selection(
     plt.style.use('default')
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
+
+    if precision_file_random is not None:
+        precision_random=open_element(precision_file_random)
+        median_random = [np.percentile(x, 50) for x in precision_random.random]
+        plt.plot(median_random,label="random",c=colors[3],alpha=0.5,marker="o")
+
     plt.plot(median_direct,label="direct",c=colors[4],alpha=0.5,marker="o")#markers[c])
     plt.plot(median_inverse,label="inverse",c=colors[color],alpha=0.5,marker="o")
     

@@ -2,7 +2,6 @@ import sys
 import ast
 import os
 cwd = os.getcwd()
-
 os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
@@ -33,6 +32,7 @@ parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, 
 parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
+parser.add_argument('--include_random',action='store_true', help='If set, shows also the random precisions in the feature selection plot')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -55,23 +55,16 @@ model = args.model
 interpretation = args.interpretation
 scenario = args.scenario
 rotation = args.rotation
+include_random = args.include_random
 
-#parser.add_argument('--box_loc', type=str, default=(3,0.8), help='Location of the box in the feature selection plot')
-# box_loc_str = args.box_loc
-# box_loc=ast.literal_eval(box_loc_str)
-
-# print(f"Dataset: {dataset_name}")
-# print(f"Path: {dataset_path}")
-# quit()
-
+# Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
-
+# Set scenario and scale the data
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
-
 if pre_process:
     dataset.pre_process()
 
@@ -138,6 +131,9 @@ if not os.path.exists(path_experiment_model_fs):
 path_experiment_model_interpretation_fs = path_experiment_model_fs + "/" + interpretation
 if not os.path.exists(path_experiment_model_interpretation_fs):
     os.makedirs(path_experiment_model_interpretation_fs)
+path_experiment_model_interpretation_fs_random = path_experiment_model_fs + "/random"
+if not os.path.exists(path_experiment_model_interpretation_fs_random):
+    os.makedirs(path_experiment_model_interpretation_fs_random)
 path_experiment_model_interpretation_scenario_fs = path_experiment_model_interpretation_fs + "/scenario_"+str(scenario)
 if not os.path.exists(path_experiment_model_interpretation_scenario_fs):
     os.makedirs(path_experiment_model_interpretation_scenario_fs)
@@ -153,30 +149,30 @@ plt.close()
 score_plot(dataset, most_recent_file, plot_path=path_plots_imp, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 plt.close()
 
-# feature selection
-
-# most_recent_file = get_most_recent_file(path_experiment_feats)
-# matrix = open_element(most_recent_file,filetype="npz")
+# feature selection → direct and inverse feature selection
 feat_order = np.argsort(full_importances.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
 data = Precisions(direct, inverse, dataset.name, model, value)
-
-if model=='IF':
-    data = Precisions(direct, inverse, dataset.name, 'IF', value)
-else:
-    data = Precisions(direct, inverse, dataset.name, I.name, value)
-
 save_fs_prec(data, path_experiment_model_interpretation_scenario_fs)
-#save_element([data], path_experiment_model_interpretation_scenario_fs, filetype="pickle")
+
+# random feature selection
+Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
+random = feature_selection(I, dataset, feat_order, 10, inverse=True, random=True)
+data_random = Precisions_random(random, dataset.name, model)
+save_fs_prec_random(data_random, path_experiment_model_interpretation_fs_random)
 
 path_plots_fs = cwd +"/experiments/results/"+dataset.name+"/plots_new/fs_plots"
 if not os.path.exists(path_plots_fs):
     os.makedirs(path_plots_fs)
 
 #plot feature selection
-most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario_fs)
-plot_feature_selection(most_recent_file, path_plots_fs, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
+fs_prec = get_most_recent_file(path_experiment_model_interpretation_scenario_fs)
+if include_random:
+    fs_prec_random = get_most_recent_file(path_experiment_model_interpretation_fs_random)
+    plot_feature_selection(fs_prec, path_plots_fs, fs_prec_random, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
+else:
+    plot_feature_selection(fs_prec, path_plots_fs, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
 

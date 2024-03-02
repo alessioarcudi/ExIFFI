@@ -35,6 +35,7 @@ parser.add_argument('--pre_process',action='store_true', help='If set, preproces
 parser.add_argument('--split',action='store_true', help='If set, split the dataset when pre procesing')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
+parser.add_argument('--include_random',action='store_true', help='If set, shows also the random precisions in the feature selection plot')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -54,6 +55,7 @@ pre_process = args.pre_process
 split = args.split
 scenario = args.scenario
 rotation = args.rotation
+include_random = args.include_random
 
 
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -101,6 +103,9 @@ if not os.path.exists(path_experiment_model):
 path_experiment_model_interpretation = path_experiment_model + "/" + interpretation
 if not os.path.exists(path_experiment_model_interpretation):
     os.makedirs(path_experiment_model_interpretation)
+path_experiment_model_interpretation_random = path_experiment_model + "/random"
+if not os.path.exists(path_experiment_model_interpretation_random):
+    os.makedirs(path_experiment_model_interpretation_random)
 path_experiment_model_interpretation_scenario = path_experiment_model_interpretation + "/scenario_"+str(scenario)
 if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
@@ -110,7 +115,7 @@ path_experiment_feats = path_experiments + "/global_importances/" + model + "/" 
 if not os.path.exists(path_experiment_feats):
     os.makedirs(path_experiment_feats) 
 
-# feature selection
+# feature selection → direct and inverse feature selection
 most_recent_file = get_most_recent_file(path_experiment_feats)
 matrix = open_element(most_recent_file,filetype="npz")
 feat_order = np.argsort(matrix.mean(axis=0))
@@ -120,9 +125,18 @@ inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=Fal
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
 data = Precisions(direct, inverse, dataset.name, model, value)
 save_fs_prec(data, path_experiment_model_interpretation_scenario)
-#save_element([data], path_experiment_model_interpretation_scenario, filetype="pickle")
+
+# random feature selection
+Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
+random = feature_selection(I, dataset, feat_order, 10, inverse=True, random=True)
+data_random = Precisions_random(random, dataset.name, model)
+save_fs_prec_random(data_random, path_experiment_model_interpretation_random)
 
 #plot feature selection
-most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario)
-plot_feature_selection(most_recent_file, path_plots, model=model, interpretation=interpretation,scenario=scenario,plot_image=False,rotation=rotation)
+fs_prec = get_most_recent_file(path_experiment_model_interpretation_scenario)
+if include_random:
+    fs_prec_random = get_most_recent_file(path_experiment_model_interpretation_random)
+    plot_feature_selection(fs_prec, path_plots, fs_prec_random, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
+else:
+    plot_feature_selection(fs_prec, path_plots, model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
 

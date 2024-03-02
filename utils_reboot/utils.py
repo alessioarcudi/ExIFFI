@@ -12,8 +12,9 @@ from pyod.models.dif import DIF as oldDIF
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
-
 NewPrecisions = namedtuple("NewPrecisions", ["direct", "inverse", "dataset", "model", "value", "aucfs"])
+Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
+
 
 class sklearn_IsolationForest(IsolationForest):
     def __init__(self, **kwargs):
@@ -33,7 +34,6 @@ class DIF(oldDIF):
         score=self.decision_function(X)
         return score
     
-
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"
@@ -119,6 +119,12 @@ def save_fs_prec(precs,path):
                             model=precs.model,
                             value=precs.value,
                             aucfs=aucfs)
+    save_element(new_precs, path, filetype="pickle")
+
+def save_fs_prec_random(precs,path):
+    new_precs = Precisions_random(random=precs.random,
+                            dataset=precs.dataset,
+                            model=precs.model)
     save_element(new_precs, path, filetype="pickle")
 
 def get_fs_file(dataset,model,interpretation,scenario):
