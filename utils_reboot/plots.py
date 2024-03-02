@@ -59,7 +59,11 @@ def bar_plot(dataset: Type[Dataset],
     
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    name_file = f"{current_time}_GFI_Bar_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
+    
+    if (model=='EIF+' and interpretation=='EXIFFI+') or (model=='EIF' and interpretation=='EXIFFI'):
+        name_file = f"{current_time}_GFI_Bar_plot_{dataset.name}_{interpretation}_{scenario}"
+    else:
+        name_file = f"{current_time}_GFI_Bar_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
     
     #Load the imps array from the pkl file contained in imps_path -> the imps_path is returned from the 
     #compute_local_importances or compute_global_importances functions so we have it for free 
@@ -161,7 +165,11 @@ def score_plot(dataset: Type[Dataset],
 
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    name_file = f"{current_time}_GFI_Score_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
+
+    if (model=='EIF+' and interpretation=='EXIFFI+') or (model=='EIF' and interpretation=='EXIFFI'):
+        name_file = f"{current_time}_GFI_Score_plot_{dataset.name}_{interpretation}_{scenario}"
+    else:
+        name_file = f"{current_time}_GFI_Score_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
 
     patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
     '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
