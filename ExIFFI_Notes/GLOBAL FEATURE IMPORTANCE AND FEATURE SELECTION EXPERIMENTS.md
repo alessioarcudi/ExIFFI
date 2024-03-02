@@ -12,25 +12,25 @@
 >  - `DIFFI` → `DIFFI` interpretation of the `IsolationForest` model. In this case we use the `diffi_ib` method contained in `interpretability_module.py` → code by Mattia Carletti (original implementation of `DIFFI`). Here we have to use the `IsolationForest` model from `sklearn.ensemble`. 
 >  - `RandomForest` → Post-hoc interpretation algorithm. We train a `RandomForestRegressor` on the Anomaly Scores produced by one model between `EIF+,EIF,IF` and then we compute the importances using the `feature_importances_` method which implements the Feature Importance of Random Forest. 
 
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=2`|`EIF+` , `EXIFFI` and `scenario=2`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `EXIFFI` and `scenario=1`|`EIF+` , `EXIFFI` and `scenario=1`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=2`|`EIF` , `EXIFFI` and `scenario=2`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `EXIFFI` and `scenario=1`|`EIF` , `EXIFFI` and `scenario=1`]] → ==completed==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==re run== (a part the `nan` problem in `cardio` and `ionosphere`)
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] → ==re run==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EXIFFI+` and `scenario=2`|`EXIFFI+` and `scenario=2`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EXIFFI+` and `scenario=1`|EXIFFI+` and `scenario=1`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#EXIFFI` and `scenario=2`|EXIFFI` and `scenario=2`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EXIFFI` and `scenario=1`|`EXIFFI` and `scenario=1`]] → ==completed==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=2`|`IF` , `DIFFI` and `scenario=2`]] → ==completed== (a part the `nan` problem in `cardio` and `ionosphere`)
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `DIFFI` and `scenario=1`|`IF` , `DIFFI` and `scenario=1`]] 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=2`|`EIF+` , `RandomForest` and `scenario=2`]]
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF+` , `RandomForest` and `scenario=1`|`EIF+` , `RandomForest` and `scenario=1`]] 
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=2`|`EIF` , `RandomForest` and `scenario=2`]]
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=1`|`EIF` , `RandomForest` and `scenario=1`]] → ==completed== 
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]] → ==re run==
-- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]] → ==re run==
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`EIF` , `RandomForest` and `scenario=1`|`EIF` , `RandomForest` and `scenario=1`]] 
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]] 
+- [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]] 
 
 ## TODO as soon as possible 
 
 - [x] Redo the feature selection plots using the new `aucfs` values (also the negative ones)
 - [x] Re do the feature selection plot for `annthyroid, EIF+, RandomForest, scenario=1,2` (apparently they have disappeared)
-- [ ] When Alessio inserts the time computation in the experiment scripts re run all the experiment to take the time into account. In particular re run the configurations `IF, DIFFI` and `IF, RandomForest` since they where wrong in the implementation used up to now. 
-- [ ] Try to use `dataset.downsample` on `diabetes, shuttle, moodify` to see how the results change with the respect to the experiment results on the entire dataset. 
+- [x] When Alessio inserts the time computation in the experiment scripts re run all the experiment to take the time into account. In particular re run the configurations `IF, DIFFI` and `IF, RandomForest` since they where wrong in the implementation used up to now. 
+- [x] Try to use `dataset.downsample` on `diabetes, shuttle, moodify` to see how the results change with the respect to the experiment results on the entire dataset → they essentially stay the same.
 
 > [!important] Alternatives for very big datasets → `diabetes, shuttle, moodify`
 >  Running the experiments using the complete dataset for these very big datasets takes too much time. We can try two solutions to reduce the execution time:
@@ -104,31 +104,31 @@
 > [!todo] 
 > Re do `annthyroid` and `wine` since I have added the `feature_names` attribute 
 
-##  `EIF+` , `EXIFFI` and `scenario=2`
+##  `EXIFFI+` and `scenario=2`
 
 #### Synthetic Datasets
 
-- `Xaxis` → ok
-- `Yaxis` → ok
-- `bisect` → ok
-- `bisect_3d` → ok
-- `bisect_6d` → ok
+- `Xaxis` → ==ok==
+- `Yaxis` → ==ok==
+- `bisect` → ==ok==
+- `bisect_3d` → ==ok==
+- `bisect_6d` → ==ok==
 
 #### Real World Dataset
 
-- `wine` → ok
-- `glass` → ok
-- `cardio` → ok
-- `pima` → ok
-- `breastw` → ok
-- `ionosphere` → ok
-- `annthyroid`  → ok
-- `pendigits` → ok
-- `diabetes` → ok
-- `shuttle` → ok
-- `moodify` → ok
+- `wine` → ==ok==
+- `glass` → ==ok==
+- `cardio` → ==ok==
+- `pima` → ==ok==
+- `breastw` → ==ok==
+- `ionosphere` → ==ok==
+- `annthyroid`  → ==ok==
+- `pendigits` → ==ok==
+- `diabetes` → ==ok==
+- `shuttle` → ==ok==
+- `moodify` → ==ok==
 
-## `EIF+` , `EXIFFI` and `scenario=1`
+## `EXIFFI+` and `scenario=1`
 
 ### Synthetic Dataset 
 
@@ -156,7 +156,7 @@
 
 ## `EIF+`, `EXIFFI+` and `scenario=1`
 
-## `EIF` , `EXIFFI` and `scenario=2`
+##  `EXIFFI` and `scenario=2`
 
 #### Synthetic Datasets
 
@@ -180,7 +180,7 @@
 - `shuttle` → ok
 - `moodify` → ok
 
-## `EIF` , `EXIFFI` and `scenario=1`
+## `EXIFFI` and `scenario=1`
 
 ### Synthetic Datasets
 
@@ -220,7 +220,7 @@
 - `bisect_6d` → ok
 ### Real World Datasets
 
-- `wine`  → ok
+- `wine`  → ==ok==
 - `glass` → ok
 - `cardio` → error → `nan` values in importance computation 
 - `pima` → ok 
