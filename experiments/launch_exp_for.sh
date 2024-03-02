@@ -7,8 +7,8 @@
 SCRIPT_PATH="test_GFI_FS.py"
 
 # List of datasets
-#DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
-DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits"
+DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
+#DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="wine"
 
@@ -16,7 +16,7 @@ DATASETS="wine glass cardio pima breastw ionosphere annthyroid pendigits"
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasetsok, put the `xlim` at 1.1
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
 # Iterate over the datasets and call the Python command for each dataset
 for dataset in "${DATASET_ARRAY[@]}"; do
@@ -25,7 +25,8 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_path "$DATASET_PATH" \
         --pre_process \
         --model "IF" \
-        --interpretation "RandomForest" \
-        --scenario 2
+        --interpretation "DIFFI" \
+        --scenario 2 \
+        --include_random
 
 done
