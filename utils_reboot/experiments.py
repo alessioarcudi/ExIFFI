@@ -22,7 +22,7 @@ from sklearn.ensemble import RandomForestRegressor
 import pickle
 import time
 
-filename = cwd + "/utils_reboot/time.pickle"
+filename = cwd + "/utils_reboot/new_time.pickle"
 
 if not os.path.exists(filename):
     dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
@@ -31,7 +31,7 @@ if not os.path.exists(filename):
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
                
-with open(cwd + "/utils_reboot/time.pickle", "rb") as file:
+with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
     dict_time = pickle.load(file)
 
     
@@ -46,7 +46,7 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
         I.fit(dataset.X_train)             
     if interpretation=="DIFFI":
         fi,_=diffi_ib(I,dataset.X)
-    elif interpretation=="EXIFFI":
+    elif interpretation=="EXIFFI" or interpretation=='EXIFFI+':
         fi=I.global_importances(dataset.X,p)
     elif interpretation=="RandomForest":
         rf = RandomForestRegressor()
@@ -62,6 +62,9 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                interpretation="EXIFFI",
                                cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI') -> tuple[np.array,dict,str,str]:
 
+    with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
+        dict_time=pickle.load(file)
+
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
         start_time = time.time()
@@ -73,14 +76,18 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
         gfi_time = time.time() - start_time
         if i>3:
             dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+            #print(f'Added time {str(gfi_time)} to time dict')
     
-    with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
+    with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
         pickle.dump(dict_time, file)
     return fi
 
 def compute_plt_data(imp_path):
 
-    fi = np.load(imp_path)['element']
+    try:
+        fi = np.load(imp_path)['element']
+    except:
+        print("Error: importances file should be npz")
     # Handle the case in which there are some np.nan in the fi array
     if np.isnan(fi).any():
         #Substitute the np.nan values with 0  
@@ -109,6 +116,10 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       random: bool = False,
                       cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
                       ) -> tuple[np.array,dict,str,str]:
+        
+        with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
+            dict_time=pickle.load(file)
+
         dataset_shrinking = copy.deepcopy(dataset)
         d = dataset.X.shape[1]
         precisions = np.zeros(shape=(len(importances_indexes),n_runs))
@@ -144,7 +155,7 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                     runs[run] = np.nan
             precisions[number_of_features_dropped] = runs
         
-        with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
+        with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
             pickle.dump(dict_time, file)
         return precisions
     
@@ -158,6 +169,10 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    interpretation:str="EXIFFI",
                                                     cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
                                                    ) -> tuple[np.array,dict,str,str]:
+    
+    with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
+        dict_time=pickle.load(file)
+
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_global_importances:
         importances = np.zeros(shape=(len(contamination_values),n_runs,len(contamination_values),dataset.X.shape[1]))
@@ -193,7 +208,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
     
-    with open(cwd + "/utils_reboot/time.pickle", "wb") as file:
+    with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
         pickle.dump(dict_time, file)
     if compute_global_importances:
         return precisions,importances
