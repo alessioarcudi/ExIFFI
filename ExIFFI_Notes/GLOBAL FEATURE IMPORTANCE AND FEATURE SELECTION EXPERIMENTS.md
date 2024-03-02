@@ -748,3 +748,4 @@ In this dataset all the features are important (since the anomalies are distribu
 	- `RandomForest, scenario=2`
 		- Bar/Score Plots: Feature 17 is the most important one with high margin on the others
 		- Feature Selection Plot: $AUC_{FS} = 6.743$ 
+	- `RandomForest, scenario=1` → ==review after the new experiments==
