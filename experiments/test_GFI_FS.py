@@ -182,6 +182,12 @@ if not os.path.exists(path_plots_fs):
     os.makedirs(path_plots_fs)
 
 #plot feature selection
+
+# Use rotation if the dataset is ionosphere
+    
+if dataset.name == "ionosphere":
+    rotation = True
+
 fs_prec = get_most_recent_file(path_experiment_model_interpretation_scenario_fs)
 if include_random:
     fs_prec_random = get_most_recent_file(path_experiment_model_interpretation_fs_random)
