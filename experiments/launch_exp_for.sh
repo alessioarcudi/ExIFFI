@@ -26,7 +26,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --pre_process \
         --model "EIF" \
         --interpretation "RandomForest" \
-        --scenario 2 \
+        --scenario 1 \
         --include_random \
         --downsample \
 
