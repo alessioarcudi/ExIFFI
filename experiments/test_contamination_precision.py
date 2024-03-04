@@ -35,8 +35,8 @@ parser.add_argument('--n_runs', type=int, default=10, help='Global feature impor
 parser.add_argument('--train_size', type=float, default=0.9, help='Global feature importances parameter: train_size')
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
 
-parser.add_argument('--model', type=str, default="EIF+", help='Name of the model')
-parser.add_argument('--interpretation', type=str, default="EXIFFI+", help='Name of the interpretation algorithm')
+parser.add_argument('--model', type=str, default="EIF", help='Name of the model')
+parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Name of the interpretation algorithm')
 parser.add_argument('--pre_process', type=bool, default=True, help='If set, preprocess the dataset')
 
 # Parse the arguments
