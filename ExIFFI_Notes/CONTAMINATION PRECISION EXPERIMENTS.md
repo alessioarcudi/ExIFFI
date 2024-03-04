@@ -10,10 +10,6 @@
 - [[CONTAMINATION PRECISION EXPERIMENTS#`IF`, `DIFFI` and `scenario=2`|`IF`, `DIFFI` and `scenario=2`]]
 - [[CONTAMINATION PRECISION EXPERIMENTS#`IF`, `DIFFI` and `scenario=1`|`IF`, `DIFFI` and `scenario=1`]]
 
-## TODO 4/03 Afternoon
-
-- [ ] Reproduce the contamination plots using `fix_contamination_plot` with the right title 
-
 ## `EXIFFI+` and `scenario=2`
 
 #### Synthetic Datasets
@@ -163,7 +159,19 @@
 
 # New version of `contamination` experiments 
 
-- `glass`
+- `wine` → ==ok==
+	- `EIF+` → ok
+	- `EIF` → ok
+	- `IF` → ok
+	- `DIF` → ok 
+	- `AutoEncoder` → ok
+- `glass` → ==ok==
+	- `EIF+` → ok
+	- `EIF` → ok
+	- `IF` → ok
+	- `DIF` → ok 
+	- `AutoEncoder` → ok
+- `cardio` → ==ok==
 	- `EIF+` → ok
 	- `EIF` → ok
 	- `IF` → ok
