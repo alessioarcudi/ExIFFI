@@ -162,5 +162,5 @@ else:
 
 #plot contamination evaluation
 (precisions,contamination) = open_element(get_most_recent_file(path_experiment_contamination_model_scenario))
-plot_precision_over_contamination(precisions,  I.name, model, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
+plot_precision_over_contamination(precisions, dataset.name, model, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
 
