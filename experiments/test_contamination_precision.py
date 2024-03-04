@@ -2,8 +2,7 @@
 import sys
 import os
 cwd = os.getcwd()
-
-os.chdir('experiments')
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -15,7 +14,7 @@ from utils_reboot.datasets import *
 from utils_reboot.plots import *
 from utils_reboot.utils import *
 #from pyod.models.dif import DIF
-from pyod.models.auto_encoder import AutoEncoder
+#from pyod.models.auto_encoder import AutoEncoder
 #from sklearn.ensemble import IsolationForest as sklearn_IsolationForest 
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
@@ -36,7 +35,7 @@ parser.add_argument('--train_size', type=float, default=0.9, help='Global featur
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
 
 parser.add_argument('--model', type=str, default="EIF+", help='Name of the model')
-parser.add_argument('--interpretation', type=str, default="EXIFFI+", help='Name of the interpretation algorithm')
+parser.add_argument('--interpretation', type=str, default="NA", help='Name of the interpretation algorithm')
 parser.add_argument('--pre_process', type=bool, default=True, help='If set, preprocess the dataset')
 
 # Parse the arguments
@@ -58,7 +57,7 @@ interpretation = args.interpretation
 pre_process = args.pre_process
 
 assert model in ["IF", "EIF", "EIF+", "DIF", "AnomalyAutoencoder"], "Model not recognized"
-assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
     assert model=="IF", "DIFFI can only be used with the IF model"
@@ -81,7 +80,6 @@ dataset.drop_duplicates()
 # Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
 if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
-
 
 dataset.pre_process()
 
@@ -107,6 +105,8 @@ print(f'Model: {model}')
 print(f'Interpretation Model: {interpretation}')
 print('#'*50)
 
+cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
     os.makedirs(path)
@@ -122,25 +122,30 @@ if not os.path.exists(path_plots):
 path_experiment_contamination = path_experiments + "/contamination"
 if not os.path.exists(path_experiment_contamination):
     os.makedirs(path_experiment_contamination)
-path_experiment_global_importances = path_experiments + "/global_importances/contamination"
-if not os.path.exists(path_experiment_global_importances):
-    os.makedirs(path_experiment_global_importances)
+
 
 path_experiment_contamination_model = path_experiment_contamination + "/" + model
 if not os.path.exists(path_experiment_contamination_model):
     os.makedirs(path_experiment_contamination_model)
 
-
-path_experiment_global_importances_model = path_experiment_global_importances + "/" + model
-if not os.path.exists(path_experiment_global_importances_model):
-    os.makedirs(path_experiment_global_importances_model)
-path_experiment_global_importances_model_interpretation = path_experiment_global_importances_model + "/" + interpretation
-if not os.path.exists(path_experiment_global_importances_model_interpretation):
-    os.makedirs(path_experiment_global_importances_model_interpretation)
-
-
 # contamination evaluation
 if GFI:
+
+    if interpretation == "NA":
+        raise ValueError("Interpretation algorithm not specified")
+    
+    path_experiment_global_importances = path_experiments + "/global_importances/contamination"
+    if not os.path.exists(path_experiment_global_importances):
+        os.makedirs(path_experiment_global_importances)
+
+    path_experiment_global_importances_model = path_experiment_global_importances + "/" + model
+    if not os.path.exists(path_experiment_global_importances_model):
+        os.makedirs(path_experiment_global_importances_model)
+
+    path_experiment_global_importances_model_interpretation = path_experiment_global_importances_model + "/" + interpretation
+    if not os.path.exists(path_experiment_global_importances_model_interpretation):
+        os.makedirs(path_experiment_global_importances_model_interpretation)
+
     precisions, importances = contamination_in_training_precision_evaluation(I, dataset, n_runs, train_size=train_size, contamination_values=contamination, compute_GFI=GFI, interpretation = interpretation)
     save_element((importances,contamination), path_experiment_global_importances_model_interpretation, filetype="pickle")
     save_element((precisions,contamination), path_experiment_contamination_model, filetype="pickle")
@@ -149,6 +154,6 @@ else:
     save_element((precisions,contamination), path_experiment_contamination_model, filetype="pickle")
 
 #plot contamination evaluation
-(precisions,contamination) = open_element(get_most_recent_file(path_experiment_contamination_model_scenario))
-plot_precision_over_contamination(precisions, dataset.name, model, interpretation, scenario, path_plots, contamination=contamination, plot_image=False)
+(precisions,contamination) = open_element(get_most_recent_file(path_experiment_contamination_model))
+plot_precision_over_contamination(precisions,dataset.name,model,path_plots, contamination, plot_image=False)
 

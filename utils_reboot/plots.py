@@ -308,8 +308,8 @@ def plot_feature_selection(
         
 
 def plot_precision_over_contamination(precisions,
-                                      dataset,
-                                      model,
+                                      dataset_name,
+                                      model_name,
                                       plot_path,
                                       contamination=np.linspace(0.0,0.1,10),
                                       save_image=True,
@@ -333,7 +333,7 @@ def plot_precision_over_contamination(precisions,
     plt.ylabel("Average Precision",fontsize = 20)
     
 
-    namefile = current_time + "_" + dataset.name + '_' + model.name + "_precision_over_contamination.pdf"
+    namefile = current_time + "_" + dataset_name + '_' + model_name + "_precision_over_contamination.pdf"
     
     if save_image:
         plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")

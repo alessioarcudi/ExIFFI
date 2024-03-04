@@ -8,6 +8,7 @@ from collections import namedtuple
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from sklearn.ensemble import IsolationForest 
 from pyod.models.dif import DIF as oldDIF
+from pyod.models.auto_encoder import AutoEncoder as oldAutoEncoder
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
@@ -33,6 +34,11 @@ class DIF(oldDIF):
     def predict(self, X):
         score=self.decision_function(X)
         return score
+    
+class AutoEncoder(oldAutoEncoder):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "AnomalyAutoencoder"
     
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
