@@ -13,7 +13,6 @@ from utils_reboot.utils import *
 
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest, IsolationForest
-#from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
 import argparse
 
 # Create the argument parser
@@ -48,7 +47,7 @@ if args.interpretation == "EXIFFI":
     assert args.model=="EIF", "EXIFFI can only be used with the EIF model"
 
 if args.interpretation == "EXIFFI+":
-    assert args.model=="EIF+", "EXIFFI can only be used with the EIF+ model"
+    assert args.model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 # Access the arguments
 dataset_name = args.dataset_name
