@@ -31,7 +31,7 @@ if not os.path.exists(filename):
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
                
-with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
+with open(filename, "rb") as file:
     dict_time = pickle.load(file)
 
     
@@ -59,11 +59,8 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                n_runs:int = 10, 
                                p = 0.1,
                                model = "EIF+",
-                               interpretation="EXIFFI",
-                               cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI') -> tuple[np.array,dict,str,str]:
+                               interpretation="EXIFFI") -> tuple[np.array,dict,str,str]:
 
-    with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
-        dict_time=pickle.load(file)
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     for i in tqdm(range(n_runs)):
@@ -78,7 +75,7 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
             dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
             #print(f'Added time {str(gfi_time)} to time dict')
     
-    with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
+    with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
     return fi
 
@@ -113,12 +110,8 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       importances_indexes: npt.NDArray,
                       n_runs: int = 10, 
                       inverse: bool = True,
-                      random: bool = False,
-                      cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
+                      random: bool = False
                       ) -> tuple[np.array,dict,str,str]:
-        
-        with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
-            dict_time=pickle.load(file)
 
         dataset_shrinking = copy.deepcopy(dataset)
         d = dataset.X.shape[1]
@@ -155,7 +148,7 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                     runs[run] = np.nan
             precisions[number_of_features_dropped] = runs
         
-        with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
+        with open(filename, "wb") as file:
             pickle.dump(dict_time, file)
         return precisions
     
@@ -166,12 +159,8 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    train_size = 0.8,
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_GFI:bool=False,
-                                                   interpretation:str="EXIFFI",
-                                                    cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
+                                                   interpretation:str="EXIFFI"
                                                    ) -> tuple[np.array,dict,str,str]:
-    
-    with open(cwd + "/utils_reboot/new_time.pickle", "rb") as file:
-        dict_time=pickle.load(file)
 
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_GFI:
@@ -208,7 +197,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
     
-    with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
+    with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
     if compute_GFI:
         return precisions,importances

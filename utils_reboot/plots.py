@@ -308,10 +308,8 @@ def plot_feature_selection(
         
 
 def plot_precision_over_contamination(precisions,
-                                      dataset_name,
+                                      dataset,
                                       model,
-                                      interpretation,
-                                      scenario,
                                       plot_path,
                                       contamination=np.linspace(0.0,0.1,10),
                                       save_image=True,
@@ -334,12 +332,8 @@ def plot_precision_over_contamination(precisions,
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
     
-    if interpretation=='EXIFFI+' or interpretation=='EXIFFI':
-        plt.title(f"Precision over Contamination {dataset_name} {interpretation} scenario {str(scenario)}", fontsize = 18)
-        namefile = current_time + "_" + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
-    else:
-        plt.title(f"Precision over Contamination {dataset_name} {model} {interpretation} scenario {str(scenario)}", fontsize = 18)
-        namefile = current_time + "_" + model + '_' + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
+
+    namefile = current_time + "_" + dataset.name + '_' + model.name + "_precision_over_contamination.pdf"
     
     if save_image:
         plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")
