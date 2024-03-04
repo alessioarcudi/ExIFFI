@@ -8,9 +8,9 @@ SCRIPT_PATH="test_contamination_precision.py"
 
 # List of datasets
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
-DATASETS="pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
+DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-#DATASETS="cardio"
+#DATASETS="wine"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -24,9 +24,9 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --pre_process \
-        --model "EIF+" \
-        --interpretation "EXIFFI+" \
-        --scenario 1 \
+        --model "EIF" \
+        --interpretation "EXIFFI" \
+        --scenario 2 \
         --downsample \
         --compute_GFI 1 \
 
