@@ -307,7 +307,16 @@ def plot_feature_selection(
         plt.show()
         
 
-def plot_precision_over_contamination(precisions, dataset_name, model, interpretation, scenario, plot_path, contamination=np.linspace(0.0,0.1,10), save_image=True, plot_image=False,change_ylim=False):
+def plot_precision_over_contamination(precisions,
+                                      dataset_name,
+                                      model,
+                                      interpretation,
+                                      scenario,
+                                      plot_path,
+                                      contamination=np.linspace(0.0,0.1,10),
+                                      save_image=True,
+                                      plot_image=False,
+                                      change_ylim=False):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     
@@ -324,10 +333,17 @@ def plot_precision_over_contamination(precisions, dataset_name, model, interpret
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
-    plt.title(f"Precision over Contamination {dataset_name} {model} {interpretation} scenario {str(scenario)}", fontsize = 18)
-    namefile = current_time + "_" + model + '_' + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
+    
+    if interpretation=='EXIFFI+' or interpretation=='EXIFFI':
+        plt.title(f"Precision over Contamination {dataset_name} {interpretation} scenario {str(scenario)}", fontsize = 18)
+        namefile = current_time + "_" + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
+    else:
+        plt.title(f"Precision over Contamination {dataset_name} {model} {interpretation} scenario {str(scenario)}", fontsize = 18)
+        namefile = current_time + "_" + model + '_' + interpretation + "_precision_over_contamination_" + str(scenario) + ".pdf"
+    
     if save_image:
         plt.savefig(plot_path + "/" + namefile, bbox_inches = "tight")
+    
     if plot_image:
         plt.show()
     

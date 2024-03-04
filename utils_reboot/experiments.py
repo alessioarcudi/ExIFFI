@@ -165,7 +165,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    n_runs: int = 10,
                                                    train_size = 0.8,
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
-                                                   compute_global_importances:bool=False,
+                                                   compute_GFI:bool=False,
                                                    interpretation:str="EXIFFI",
                                                     cwd='/home/davidefrizzo/Desktop/PHD/ExIFFI'
                                                    ) -> tuple[np.array,dict,str,str]:
@@ -174,7 +174,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
         dict_time=pickle.load(file)
 
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
-    if compute_global_importances:
+    if compute_GFI:
         importances = np.zeros(shape=(len(contamination_values),n_runs,len(contamination_values),dataset.X.shape[1]))
     for i,contamination in tqdm(enumerate(contamination_values)):
         for j in range(n_runs):
@@ -187,7 +187,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             if j>3:
                 dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
             
-            if compute_global_importances:
+            if compute_GFI:
                 for k,c in enumerate(contamination_values):
                     start_time = time.time()
                     importances[i,j,k,:] = compute_global_importances(I,
@@ -210,7 +210,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     
     with open(cwd + "/utils_reboot/new_time.pickle", "wb") as file:
         pickle.dump(dict_time, file)
-    if compute_global_importances:
+    if compute_GFI:
         return precisions,importances
     return precisions
 
