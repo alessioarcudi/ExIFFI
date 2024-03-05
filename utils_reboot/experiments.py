@@ -174,7 +174,11 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             fit_time = time.time() - start_time
             
             if j>3:
-                dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                try:
+                    dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                except:
+                    print('Model not recognized: creating a new key in the dict_time for the new model')
+                    dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
             
             if compute_GFI:
                 for k,c in enumerate(contamination_values):
@@ -192,7 +196,11 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             score = I.predict(dataset.X)
             predict_time = time.time() - start_time
             if j>3:
-                dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                try:
+                    dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                except:
+                    print('Model not recognized: creating a new key in the dict_time for the new model')
+                    dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
             precisions[i,j] = avg_prec
