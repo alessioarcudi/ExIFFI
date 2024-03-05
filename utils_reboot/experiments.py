@@ -117,13 +117,13 @@ def feature_selection(I: Type[ExtendedIsolationForest],
         d = dataset.X.shape[1]
         precisions = np.zeros(shape=(len(importances_indexes),n_runs))
         for number_of_features_dropped in tqdm(range(len(importances_indexes))):
-            if random:
-                importances_indexes = np.random.choice(importances_indexes, len(importances_indexes), replace=False)
-            dataset_shrinking.X = dataset.X[:,importances_indexes[:d-number_of_features_dropped]] if not inverse else dataset.X[:,importances_indexes[number_of_features_dropped:]]
-            dataset_shrinking.y = dataset.y
-            dataset_shrinking.drop_duplicates()
             runs = np.zeros(n_runs)
             for run in range(n_runs):
+                if random:
+                    importances_indexes = np.random.choice(importances_indexes, len(importances_indexes), replace=False)
+                dataset_shrinking.X = dataset.X[:,importances_indexes[:d-number_of_features_dropped]] if not inverse else dataset.X[:,importances_indexes[number_of_features_dropped:]]
+                dataset_shrinking.y = dataset.y
+                dataset_shrinking.drop_duplicates()
                 try:
                     if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
                         
