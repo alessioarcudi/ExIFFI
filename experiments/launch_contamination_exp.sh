@@ -5,7 +5,7 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="pima"
+DATASETS="pendigits"
 
 # Path to the datasets
 DATASET_PATHS="../data/real/"
@@ -30,19 +30,19 @@ python $SCRIPT_PATH \
 
 # Experiment IF
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATHS \
-        --model "IF" \
-        --interpretation "DIFFI" \
-        --compute_GFI 1 \
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "IF" \
+    --interpretation "DIFFI" \
+    --compute_GFI 1 \
 
 # Experiment DIF
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATHS \
-        --model "DIF" \
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "DIF" \
 
 # Experiment AnomalyAutoencoder
 
