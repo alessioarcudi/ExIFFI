@@ -232,6 +232,7 @@ def plot_feature_selection(
         precision_file_random:Optional[str]=None,
         color:int=0,
         model:Optional[str]=None,
+        eval_model:Optional[str]='EIF+',
         interpretation:Optional[str]=None,
         scenario:Optional[int]=2,
         save_image:bool=True,
@@ -273,7 +274,7 @@ def plot_feature_selection(
     
     plt.xlabel("Number of Features",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
-    plt.title("Feature selection "+model, fontsize = 18)
+    #plt.title("Feature selection "+model, fontsize = 18)
 
     if rotation:
         plt.xticks(range(dim),range(dim,0,-1),rotation=45)
@@ -295,11 +296,11 @@ def plot_feature_selection(
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
 
     if model=='EIF+' and interpretation=='EXIFFI+':
-        namefile = "/" + current_time + "_" + precision.dataset + "_" + "EXIFFI+" + "_feature_selection_" + str(scenario) + ".pdf"
+        namefile = "/" + current_time + "_" + precision.dataset + "_" + eval_model + '_' + "EXIFFI+" + "_feature_selection_" + str(scenario) + ".pdf"
     elif model=='EIF' and interpretation=='EXIFFI':
-            namefile = "/" + current_time + "_" + precision.dataset + "_" + 'EXIFFI' + "_feature_selection_" + str(scenario) + ".pdf"
+            namefile = "/" + current_time + "_" + precision.dataset + "_" + eval_model + '_' + 'EXIFFI' + "_feature_selection_" + str(scenario) + ".pdf"
     else:
-        namefile = "/" + current_time + "_" + precision.dataset + "_" + model + "_" + interpretation + "_feature_selection_" + str(scenario) + ".pdf"
+        namefile = "/" + current_time + "_" + precision.dataset + "_" + eval_model + '_' + model + "_" + interpretation + "_feature_selection_" + str(scenario) + ".pdf"
     
     if save_image:
         plt.savefig(plot_path+namefile,bbox_inches = "tight")
