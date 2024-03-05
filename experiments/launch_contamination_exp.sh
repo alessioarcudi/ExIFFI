@@ -5,7 +5,7 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="pendigits"
+DATASETS="moodify"
 
 # Path to the datasets
 DATASET_PATHS="../data/real/"

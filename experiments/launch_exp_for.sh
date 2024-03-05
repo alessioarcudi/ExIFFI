@@ -2,8 +2,7 @@
 
 # Path to the Python script to execute
 # SCRIPT_PATH="test_global_importancies.py"
-#SCRIPT_PATH="test_feature_selection.py"
-SCRIPT_PATH="test_contamination_precision.py"
+SCRIPT_PATH="test_feature_selection.py"
 #SCRIPT_PATH="test_GFI_FS.py"
 
 # List of datasets
@@ -21,16 +20,14 @@ DATASET_PATH="../data/real/"
 # Iterate over the datasets and call the Python command for each dataset
 for dataset in "${DATASET_ARRAY[@]}"; do
 
-    # python $SCRIPT_PATH \
-    #     --dataset_name "$dataset" \
-    #     --dataset_path "$DATASET_PATH" \
-    #     --model "IF" \
-    #     --interpretation "DIFFI" \
-    #     --compute_GFI 1 \
-
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
-        --model "AnomalyAutoencoder" \
+        --model "EIF+" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
+        --pre_process \
+        --scenario 2 \
+        --compute_random \ 
 
 done
