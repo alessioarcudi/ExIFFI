@@ -25,12 +25,96 @@
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=2`|`IF` , `RandomForest` and `scenario=2`]] → ==completed==
 - [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`IF` , `RandomForest` and `scenario=1`|`IF` , `RandomForest` and `scenario=1`]] → ==completed==
 
-## TODO as soon as possible 
+## TODO 
 
-- [x] Redo the feature selection plots using the new `aucfs` values (also the negative ones)
-- [x] Re do the feature selection plot for `annthyroid, EIF+, RandomForest, scenario=1,2` (apparently they have disappeared)
-- [x] When Alessio inserts the time computation in the experiment scripts re run all the experiment to take the time into account. In particular re run the configurations `IF, DIFFI` and `IF, RandomForest` since they where wrong in the implementation used up to now. 
-- [x] Try to use `dataset.downsample` on `diabetes, shuttle, moodify` to see how the results change with the respect to the experiment results on the entire dataset → they essentially stay the same.
+- [ ] Finish completely the experiments for `annthyroid`, `glass`, `moodify`
+	- [ ] Finish contamination plots
+	- [ ] Complete Feature Selection plots (use all the interpretation models but evaluate the Average Precision with `EIF+` and `EIF`
+	
+	- `scenario=1`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+	- `scenario=2`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+> [!question] What does this mean?
+>  In the Feature Selection experiments there are two components:
+>  - Interpretation Model (parameter `--model_interpretation`)→ This is the model that, using the global importances, gives us an order of the importances of the features according to a certain interpretation (e.g. `EIF+,EXIFFI+` gives a certain order, `EIF,EXIFFI` gives a certain order, `IF,DIFFI` gives a certain order, `IF,RandomForest` gives a certain order,...). The global importances (from which we then get the order with `feat_order = np.argsort(matrix.mean(axis=0))`) are contained in paths like `dataset_name/experiments/global_importances/model_name/interpretation_name/scenario_1(or scenario_2)`.I have already computed all these files in the previous experiments and I load them in `test_feature_selection.py` doing `most_recent_file = get_most_recent_file(path_experiment_feats)`. 
+>  - Evaluation Model (parameter `--model`) → Once we have the feature order we have to produce the Feature Selection plot computing the Average Precision value with all the features, all the features minus the least/most important (`inverse` or `direct`  strategy) and so on. To have a fair comparison we need to use the same AD model to compute the Average Precision values on these different subset of features → this is what the evaluation model is doing. We will use two possible evaluation models (i.e. `EIF+` and `EIF`). This model is the one I use in these two commands: 
+>  ``` python
+> 	 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
+> 	 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
+> ```
+> For how I designed the Feature Selection experiments (in the `test_GFI_FS.py` script) I have always used the same model as Evaluation and Interpretation model.
+> So, looking at the list above I have already done the Feature Selection plots for the following combinations:
+> 
+> - `scenario=1,EIF+,EXIFFI+`
+> - `scenario=2,EIF+,EXIFFI+`
+> - `scenario=1,EIF,EXIFFI`
+> - `scenario=2,EIF,EXIFFI`
+> - `scenario=1,EIF+,RandomForest`
+> - `scenario=2,EIF+,RandomForest`
+> - `scenario=1,EIF,RandomForest`
+> - `scenario=2,EIF,RandomForest`
+> 
+> The combinations I am missing are: 
+> 
+> - `scenario=1,EIF+,(EIF,EXIFFI)`
+> - `scenario=2,EIF+,(EIF,EXIFFI)`
+> - `scenario=1,EIF,(EIF+,EXIFFI+)`
+> - `scenario=2,EIF,(EIF+,EXIFFI+)`
+> - `scenario=1,EIF+,(IF,DIFFI)`
+> - `scenario=2,EIF+,(IF,DIFFI)`
+> - `scenario=1,EIF,(IF,DIFFI)`
+> - `scenario=2,EIF,(IF,DIFFI)`
+> - `scenario=1,EIF+,(IF,RandomForest)`
+> - `scenario=2,EIF+,(IF,RandomForest)`
+> - `scenario=1,EIF,(IF,RandomForest)`
+> - `scenario=2,EIF,(IF,RandomForest)`
+> - `scenario=1,EIF+,(EIF,RandomForest)`
+> - `scenario=2,EIF+,(EIF,RandomForest)`
+> - `scenario=1,EIF,(EIF+,RandomForest)`
+> - `scenario=2,EIF,(EIF+,RandomForest)`
+>
+
 
 > [!important] Alternatives for very big datasets → `diabetes, shuttle, moodify`
 >  Running the experiments using the complete dataset for these very big datasets takes too much time. We can try two solutions to reduce the execution time:
@@ -437,6 +521,145 @@ $$
 > [!done] 
 > The solution is than in general we want to have `train_size <= 1-p`  so in `split_dataset` if the argument `train_size` passed is higher than `1-p` we automatically set it to `1-p`. In this case the resulting `dataset.X_train` will contain all the inliers of the dataset. 
 
+# Final Experiments Global Feature Importance 
+
+## `glass`
+
+- `scenario=1`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI` → ==ok==
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+	- `scenario=2`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI` → ==ok==
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+## `annthyroid`
+
+- `scenario=1`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+	- `scenario=2`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+## `moodify`
+
+- `scenario=1`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
+
+	- `scenario=2`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest`
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
+			- Ad-hoc
+				- `EXIFFI+`
+				- `EXIFFI`
+				- `DIFFI`
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest`
+				- `EIF, RandomForest`
+				- `IF, RandomForest
 
 # Comments on the results 
 
@@ -456,7 +679,7 @@ In the synthetic datasets the anomalies are very evident and they should be easy
 		- Bar/Score Plots: Feature 0 is still considered the most important in the Score Plot but with a smaller margin and moreover it is not 100% of the times the most important in the Bar Plot
 		- Feature Selection Plot: $AUC_{FS} = 2.926$ → the area is more or less half than the one in scenario 2
 	- `RandomForest, scenario=2`
-		- Bar/Score Plots: Here the dominance of Feature 0 is even more evident in the Score Plot (the Bar Plot is more or less the same as in `EXIFFI, scenario=2`). That's because we use the `EIF+` scores as labels for a `RandomForest` regressor that than has a probably more robust way to compute the Feature Importances. Obviously the problem of `RandomForest` is that it needs to labels.
+		- Bar/Score Plots: Here the dominance of Feature 0 is even more evident in the Score Plot (the Bar Plot is more or less the same as in `EXIFFI, scenario=2`). That's because we use the `EIF+` scores as labels for a `RandomForest` regressor that than has a probably more robust way to compute the Feature Importances. Obviously the problem of `RandomForest` is that it needs labels.
 		- Feature Selection Plot: Very similar to `EXIFFI, scenario=2` → $AUC_{FS} = 4.539$
 	- `RandomForest, scenario=1`
 		- Bar/Score Plots: Also in this case in the Score Plot Feature 0 is the most important but with a lower margin on the others while in the Bar Plot it is still at the first position in all the 40 runs
@@ -464,7 +687,7 @@ In the synthetic datasets the anomalies are very evident and they should be easy
 - `EIF`
 	- `EXIFFI, scenario=2`
 		- Bar/Score Plots: Similar to `EXIFFI, scenario=2` with a clear dominance of Feature 0 on the others
-		- Feature Selection Plot: Similar to `EIF+, EXIFFI, scenario=2` with even a sligthly better $AUC_{FS}$ value → $AUC_{FS} = 4.733$. That is probably because we have still a single anomalous feature. `EIF+` should be better in cases of multiple "anomalous" features
+		- Feature Selection Plot: Similar to `EIF+, EXIFFI, scenario=2` with even a sligthly better $AUC_{FS}$ value → $AUC_{FS} = 4.733$. That is probably because we have still a single anomalous feature. `EIF+` should be better in cases of multiple "anomalous" features.
     - `EXIFFI, scenario=1` 
 	    - Bar/Score Plots: As in `EXIFFI; scenario=1` the dominance of Feature 0 sligthly decreases but it is still the most important feature. 
 	    - Feature Selection Plot: $AUC_{FS} = 3.438$ → lower than in `scenario=2` but higher than the one of `EIF+, EXIFFI, scenario=1`
@@ -475,18 +698,18 @@ In the synthetic datasets the anomalies are very evident and they should be easy
 		- Bar/Score Plots: Dominance of Feature 0 is still there but sligthly less evident
 		- Feature Selection Plot: $AUC_{FS}$ decreases → $AUC_{FS} = 3.48$
 - `IF`
-	- `DIFFI, scenario=2` → ==review after the new experiments==
-		- Bar/Score Plots: Very bad. The importance scores are assigned more or less randomly. Probably if we launch another time the experiment the feature order may change. The Score Plot is not very informative because all the importance values are very similar and there is not a feature that raises with the respect to the others. This probably happens because in scenario 2 we train only on the inliers and the `IF` model probably needs to see some outliers in order to work well. 
-		- Feature Selection Plots: The blue and red line are overlapped for all the points except for 3 features where the red one is sligthly higher. As a consequence the $AUC_{FS}$ metric is very low → $AUC_{FS} = 0.037$
-      - `DIFFI, scenario=1`  → ==review after the new experiments==
+	- `DIFFI, scenario=2` 
+		- Bar/Score Plots: Very bad. The importance scores are assigned more or less randomly. Probably if we launch another time the experiment the feature order may change. The Score Plot is not very informative because all the importance values are very similar and there is Feature 1 that is considered the most important. This probably happens because in scenario 2 we train only on the inliers and the `IF` model probably needs to see some outliers in order to work well. 
+		- Feature Selection Plots:  $AUC_{FS} = 1.438$ → the red line has a peak with 2 features (that's probably because 0 and 1 have are sligthly more important than the others considered together?) and then the precision drops going from 2 to 1 feature. 
+      - `DIFFI, scenario=1`  
 		  - Bar/Score Plots: In scenario 1 the results are much better and resemble the typical results seen in scenario 2 for the previous configurations with Feature 0 raising as the most important feature. This result confirms the fact that `IF` requires to have some contamination in the training set to work well. So also for the rest of the datasets we should expect to have better results in `scenario=1`  for the `IF` model. 
-		  - Feature Selection Plot: Here the results are worse in the sense that the blue line is always higher than the red one and this causes the $AUC_{FS}$ metric to be negative → $AUC_{FS} = -0.19$
+		  - Feature Selection Plot:  $AUC_{FS} = 2.568$ Now the plots makes sense → the blue line is more or less always at the same low Precision values and the red one increases Precision as we remove the least important features. 
 	 - `RandomForest, scenario=2` 
-		 - Bar/Score Plots: As for `IF, DIFFI, scenario=2` the `IF` model does not work well in scenario 2 and so the results are pretty random, this can be noticed also looking at the error bars reported in the Score Plot (to represent the standard deviation) that are very long compared to the importance values. **After re run** → the results are still quite random but Feature 0 is the most important in almost 60% of the cases in the Bar Plot and it is first in the Score Plot (not by a lot but still first). 
-		 - Feature Selection Plot: Very bad as expected → $AUC_{FS} = -0.139$. **After re run** → The Feature Selection plot is much better → $AUC_{FS} = 2.55$
+		 - Bar/Score Plots: The results are still quite random but Feature 0 is the most important in almost 60% of the cases in the Bar Plot and it is first in the Score Plot (not by a lot but still first). 
+		 - Feature Selection Plot: The Feature Selection plot is much better → $AUC_{FS} = 2.458$
 	 - `RandomForest, scenario=1` 
-		 - Bar/Score Plots: In this case passing to scenario 1 does not help `IF` to achieve better results. Strangely Feature 0 is even considered the least important feature with a small margin on the others 
-		 - Feature Selection Plot: $AUC_{FS} = 0.188$
+		 - Bar/Score Plots: In this case passing to scenario 1 does not help `IF` to achieve better results. The importance of Feature 0 and 1 is very similar. 
+		 - Feature Selection Plot: $AUC_{FS} = 1.523$ → similarly to `IF,DIFFI scenario=2` → there is a peak at 2 features. 
 
 > [!error] Problem in `IF, RandomForest` Experiments 
 > In the function `compute_global_importances` when `interpretation='RandomForest'` we fit a `RandomForestRegressor` on the Anomaly Scores of the AD Model we are using. In the test script we have always used the `sklearn` implementation of the `IF` model because we need to compute the feature importances with `DIFFI`. The problem generates when we do `rf.fit(dataset.X, I.predict(dataset.X))`. In fact the `predict` method of `sklearn.ensemble.IsolationForest` returns the labels → -1 for outliers and +1 for inliers. If we want to obtain the Anomaly Scores we have to use the `I.decision_function(dataset.X)`. There is another problem here: the Anomaly Scores computed by `sklearn.ensemble.IsolationForest`  are different than the ones computed by us in `EIF_reboot` or the ones computed by the `IForest` implementation of `PyOD`. 
@@ -531,16 +754,18 @@ Here the results should be very similar to the ones of [[GLOBAL FEATURE IMPORTAN
 		- Bar/Score Plots: Feature 1 is still the most important but with less margin on the other features.
 		- Feature Selection Plot: $AUC_{FS}$ decreases to $AUC_{FS} = 3.359$
 - `IF` 
-	- `DIFFI, scenario=2` → ==review after the new experiments==
+	- `DIFFI, scenario=2` 
 		- Bar/Score Plots: Very random as in `Xaxis`
-		- Feature Selection Plots: Bad as in `Xaxis` → $AUC_{FS} = -0.195$
-	- `DIFFI, scenario=1` → ==review after the new experiments==
+		- Feature Selection Plots: Similar to `Xaxis` → $AUC_{FS} = 2.555$
+	- `DIFFI, scenario=1` 
 		- Bar/Score Plots: As in `Xaxis` with scenario 1 the situation is better and Feature 1 is clearly the most important one
-		- Feature Selection Plots: As in `Xaxis` not good → $AUC_{FS} = -0.191$
-	- `IF, scenario=2` 
-		- Bar/Score Plots: Similarly to `Xaxis` the results are more or less random but with a sligth advantage of Feature 1. 
-		- Feature Selection Plots: Similar to `Xaxis` → $AUC_{FS} = 2.494$
-	- `IF, scenario=1` → re do the experiments 
+		- Feature Selection Plots: Similar to `Xaxis` → $AUC_{FS} = 2.633$
+	- `RandomForest, scenario=2` 
+		- Bar/Score Plots: Similarly to `Xaxis` the results are more or less random but with a slight advantage of Feature 1. 
+		- Feature Selection Plots: Similar to `Xaxis` → $AUC_{FS} = 2.565$
+	- `RandomForest, scenario=1` 
+		- Bar/Score Plots: Pretty random. As in `Xaxis, IF, RandomForest, scenario=1` passing from `scenario=2` to `scenario=1` does not improve the results.  
+		- Feature Selection Plot: $AUC_{FS} = 2.614$
 
 ### `bisect`
 
@@ -574,12 +799,18 @@ Here the results should be very similar to the ones of [[GLOBAL FEATURE IMPORTAN
 		- Bar/Score Plots: Now we are closer to a 50/50 between Feature 0 and Feature 1 and in fact their importance values are closer in the Score Plot. 
 		- Feature Selection Plot: $AUC_{FS} = 4.125$ → sligthly higher than `scenario=2`
 - `IF`
-	- `DIFFI, scenario=2` → ==review after the new experiments==
-	- `DIFFI, scenario=1` → ==review after the new experiments==
+	- `DIFFI, scenario=2` 
+		- Bar/Score Plots: As usual `scenario=2` is pretty random. 
+		- Feature Selection Plot: $AUC_{FS} = 4.028$ Pretty high → we have this strange V shape in the red line between 3 and 1 feature. 
+	- `DIFFI, scenario=1` 
+		- Bar/Score Plots: Better as usual, clear division of importance between Feature 0 and Feature 1. 
+		- Feature Selection Plot: $AUC_ {FS} = 4.436$ → Better than `scenario=2`. Now the red line continues to increase as we remove features. 
 	- `RandomForest, scenario=2`
-		- Bar/Score Plots: Similar to `EIF, RandomForest, scenario=2` with a significant different in the importances of Feature 0 and Feature 1
-		- Feature Selection Plot: $AUC_{FS} = 4.466$ → Very high → also higher than `EIF+, EXIFFI, scenario=2`
-	- `RandomForest, scenario=1` → ==review after the new experiments==
+		- Bar/Score Plots: As usual `RandomForest` tends to detect a single feature as the most important one so here Feature 0 and 1 have much higher importances values than the other features but the higher importance is assigned to Feature 0. 
+		- Feature Selection Plot: $AUC_{FS} = 4.45$ → Very high → also higher than `EIF+, EXIFFI, scenario=2`
+	- `RandomForest, scenario=1` 
+		- Bar/Score Plots: Similar to `scenario=2` with a smaller difference in importances between Feature 0 and 1. 
+		- Feature Selection Plot: Similar to `scenario=2` → $AUC_{FS} = 4.469$ 
 
 ### `bisect_3d`
 
@@ -612,12 +843,18 @@ Now the anomalies are distributed along 3 features so the task of identifying co
 		- Bar/Score Plots: As in `EIF+, RandomForest, scenario=1` the importance is now more evenly shared among Feature 0, 1 and 2. 
 		- Feature Selection Plot: $AUC_{FS}$ increases to $AUC_{FS} = 3.803$
 - `IF`
-	- `DIFFI, scenario=2` → ==review after the new experiments==
-	- `DIFFI, scenario=1` → ==review after the new experiments==
+	- `DIFFI, scenario=2` 
+		- Bar/Score Plots: Pretty random importance values → more or less same importance on all the features. 
+		- Feature Importance Plot: $AUC_{FS} = 1.83$ → The red line has a similar behavior to the blue one between 6 and 4 features → there is a V shape because the precision decreases and then start to increase. 
+	- `DIFFI, scenario=1` 
+		- Bar/Score Plots: Now the importance is more concentrated on the three most important features 0,1 and 2. 
+		- Feature Importance Plot: Better Feature Selection plot → $AUC_{FS} = 3.946$
 	- `RandomForest, scenario=2`: 
 		- Bar/Score Plots: As in `EIF+, RandomForest, scenario=2` Feature 2 is the most important
-		- Feature Selection Plot: $AUC_{FS} = 3.996$ → very high value. All the precision values in the `inverse` red line are really close to 1. 
-	- `RandomForest, scenario=1` → ==review after the new experiments==
+		- Feature Selection Plot: $AUC_{FS} = 3.964$ → very high value. All the precision values in the `inverse` red line are really close to 1. 
+	- `RandomForest, scenario=1` 
+		- Bar/Score Plots: Feature 2 is still the most important one but with a smaller margin on Feature 0 and 1. 
+		- Feature Importance Plot: $AUC_{FS} = 3.956$ → The `direct` line takes sligthly more time to go down and so the $AUC_{FS}$ value is lower than in `scenario=2`. 
 
 ### `bisect_6d`
 
@@ -650,11 +887,18 @@ In this dataset all the features are important (since the anomalies are distribu
 		- Bar/Score Plots: Similar to `scenario=2`, also in this case Feature 2 is considered the most important 
 		- Feature Selection Plot: $AUC_{FS} = 0.18$
 - `IF`
-	- `DIFFI, scenario=2` → ==review after the new experiments==
-	- `DIFFI, scenario=1` → ==review after the new experiments==
+	- `DIFFI, scenario=2` 
+		- Bar/Score Plots: Pretty random scores as seen also in the other configurations. 
+		- Feature Selection Plots: $AUC_{FS} = -0.03$
+	- `DIFFI, scenario=1` 
+		- Bar/Score Plots: Similar to `scenario=2`
+		- Feature Selection Plot: $AUC_{FS} = 0.83$
 	- `RandomForest, scenario=2`
 		- Bar/Score Plots: `RandomForest` finds Feature 2 as the most important as usual → 3 and 0 are the second a third most important
-		- Feature Selection Plot: $AUC_{FS} = 0.235$
+		- Feature Selection Plot: $AUC_{FS} = 0.232$
+	 - `RandomForest, scenario=1`
+		- Bar/Score Plots: `RandomForest` finds Feature 2 as the most important as usual → less margin on the other two differently from `scenario=2`
+		- Feature Selection Plot: $AUC_{FS} = 0.241$
 
 > [!note] 
 > It seems that in `RandomForest` there is always a single feature raising out as the most important, also in the cases of `bisect` and `bisect_3d` where the importance is shared between multiple features. This is a point in favor of `EXIFFI` that is instead able to correctly assign  a shared importance score to multiple important features. 
@@ -755,3 +999,7 @@ In this dataset all the features are important (since the anomalies are distribu
 		- Bar/Score Plots: Feature 17 is the most important one with high margin on the others
 		- Feature Selection Plot: $AUC_{FS} = 6.743$ 
 	- `RandomForest, scenario=1` → ==review after the new experiments==
+
+
+### `glass`
+
