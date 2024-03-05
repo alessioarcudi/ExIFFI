@@ -23,11 +23,11 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
-        --model "EIF+" \
-        --model_interpretation "EIF+" \
-        --interpretation "EXIFFI+" \
+        --model "EIF" \
+        --model_interpretation "EIF" \
+        --interpretation "EXIFFI" \
         --pre_process \
-        --scenario 2 \
-        --compute_random \ 
+        --scenario 1 \
+        --compute_random 
 
 done
