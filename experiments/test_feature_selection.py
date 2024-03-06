@@ -62,8 +62,13 @@ compute_random = args.compute_random
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
+# Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
+if dataset.shape[0]>7500:
+    dataset.downsample(max_samples=7500)
+
 if scenario==2:
-    dataset.split_dataset(train_size=0.8,contamination=0)
+    #dataset.split_dataset(train_size=0.8,contamination=0)
+    dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
 if pre_process:
     dataset.pre_process()
