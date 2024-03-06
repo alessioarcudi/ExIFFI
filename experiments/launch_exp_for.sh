@@ -24,10 +24,9 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --model "EIF" \
-        --model_interpretation "EIF" \
-        --interpretation "EXIFFI" \
+        --model_interpretation "IF" \
+        --interpretation "RandomForest" \
         --pre_process \
-        --scenario 1 \
-        --compute_random 
+        --scenario 1
 
 done
