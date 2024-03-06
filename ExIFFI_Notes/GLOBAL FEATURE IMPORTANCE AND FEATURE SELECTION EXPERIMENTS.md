@@ -551,25 +551,25 @@ $$
 		- `EIF+`
 			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+` → ==ok==
-				- `EXIFFI` → ==ok==
-				- `DIFFI` → ==ok==
+				- `EXIFFI+` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `EXIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `DIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest` → ==ok==
-				- `EIF, RandomForest` → ==ok==
-				- `IF, RandomForest` → ==ok==
+				- `EIF+, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `EIF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `IF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 		- `EIF`
 			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+` → ==ok==
-				- `EXIFFI` → ==ok==
-				- `DIFFI` → ==ok==
+				- `EXIFFI+` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `EXIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `DIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest` → ==ok==
-				- `EIF, RandomForest` → ==ok==
-				- `IF, RandomForest` → ==ok==
+				- `EIF+, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `EIF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
+				- `IF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 
-## `annthyroid`
+## `annthyroid` → ==ok==
 
 - `scenario=1`
 		- `EIF+`
@@ -591,75 +591,74 @@ $$
 			- Post-hoc (surrogate model)
 				- `EIF+, RandomForest` → ==ok==
 				- `EIF, RandomForest` → ==ok==
-				- `IF, RandomForest` → 
+				- `IF, RandomForest` → ==ok==
 
 	- `scenario=2`
 		- `EIF+`
 			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`  → ==ok==
 			- Ad-hoc
-				- `EXIFFI+` → ==ok==
-				- `EXIFFI` → ==ok==
-				- `DIFFI` → ==ok==
+				- `EXIFFI+` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `EXIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `DIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest` → ==ok==
-				- `EIF, RandomForest` → ==ok==
-				- `IF, RandomForest` → ==ok==
+				- `EIF+, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `EIF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `IF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
 		- `EIF`
 			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+` → ==ok==
-				- `EXIFFI` → ==ok==
-				- `DIFFI` → ==ok==
+				- `EXIFFI+` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `EXIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `DIFFI` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest` → ==ok==
-				- `EIF, RandomForest` → ==ok==
-				- `IF, RandomForest` → 
+				- `EIF+, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
+				- `EIF, RandomForest` → ==ok== 
+				- `IF, RandomForest` → ==ok==
 ## `moodify`
 
 - `scenario=1`
 		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok== 
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok== 
+				- `EIF, RandomForest` → ==ok== 
+				- `IF, RandomForest` → ==ok==
 		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok== 
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
-
+				- `EIF+, RandomForest` → ==ok== 
+				- `EIF, RandomForest` → ==ok== 
+				- `IF, RandomForest` → ==ok== 
+		
 	- `scenario=2`
 		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok== (right)
+				- `EXIFFI` → ==ok== (right)
+				- `DIFFI` → ==ok== (right)
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok== (right)
+				- `EIF, RandomForest` → ==ok== (right)
+				- `IF, RandomForest` → ==ok== (right)
 		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok== (right)
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok== (right)
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
-
+				- `EIF+, RandomForest` → ==ok== (right) 
+				- `EIF, RandomForest` → ==ok== (right)
+				- `IF, RandomForest` → ==ok== (right)
 # Comments on the results 
 
 Let's look carefully at all the plots produced for each dataset and get some conclusions (that will then go in the paper)
@@ -999,6 +998,37 @@ In this dataset all the features are important (since the anomalies are distribu
 		- Feature Selection Plot: $AUC_{FS} = 6.743$ 
 	- `RandomForest, scenario=1` → ==review after the new experiments==
 
-
 ### `glass`
 
+For `glass` I computed all the 24 Feature Selection plots as described in [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#Final Experiments Global Feature Importance|here]] so here I can report a complete description and comments on the results obtained. 
+
+> [!note] What to expect
+>  In the first version of the paper both in `scenario 1` and `scenario 2` the most important features were Feature 5 and Feature 4 (followed by Feature 6 in `scenario 1` and by Feature 7 in `scenario 2`). For what concerns the Feature Selection proxy task the Average Precision values are pretty low (more or less between 0.1 and and 0.2/0.25). In `EXIFFI+` there is an increase in the Average Precision starting from 4 features onwards. 
+
+Let's start from an analysis of only the Bar and Score Plots, then we will look separately at the Feature Selection Plots so that we can compare the ad-hoc and post-hoc interpretations. 
+
+- `EIF+`
+	- `EXIFFI+, scenario=2`
+		- Bar Plot: The importance is divided between Features 4,5,6,7 in the first three ranks.
+		- Score Plot: In fact the first 4 positions in the Score Plot are 5,4,6,7 respectively. 
+	- `EXIFFI+, scenario=1`
+		- Bar Plot: Similar to `scenario 2` but Feature 5 is at the first place more than 50% of the times in the Bar Plot (so it is a significant advantage on the others). 
+		- Score Plot: We can see that Feature 5 has a bit higher importance score than the others
+	- `RandomForest, scenario=2`
+		- Bar Plot: Here there is clearly something strange going on. Apparently there is Feature 2 that is the most important one in all the runs. As usual `RandomForest` is good in detecting a dominant important feature but here it is choosing a different one then the one expected. 
+		- Score Plot:
+	- `RandomForest, scenario=1`
+		- Bar Plot:
+		- Score Plot:
+
+> [!attention] Problem `glass`
+>  Allora ho fatto tutti i nuovi plot Feature Selection per `glass`, `annthyroid` e ora sto facendo quellli di `moodify`. 
+>  Stavo un attimo guardando i plot di `glass` e mi sono accorto di una cosa. 
+>  
+>  - Con le interpretazioni `EXIFFI, EXIFFI+` e `DIFFI` nei Bar e Score Plot si vede che le Feature più importanti sono la 5 e la 4 (seguite a breve distanza da Feature 6 e Feature 7) con valori di importanza quasi uguali. 
+>  - Nelle interpretazioni con `RandomForest` invece viene la Feature 2 come nettamente la Feature più importante (con ampio margine sulle altre). 
+>  
+>  Quindi ho pensato che `RandomForest` stesse sbagliando completamente e invece se guardiamo i plot della Feature Selection sono nettamente meglio quelli di `RandomForest`. 
+>  
+>  Infatti i plot con le interpretazioni ad-hoc (`EXIFFI+,EXIFFI,DIFFI`) hanno la linea blu sopra la rossa in molti punti (in alcuni casi ci sono anche dei zig zag cioè prima la blu sopra e poi la rossa sopra) e hanno spesso valori di `AUC_FS` negativi. Mentre i plot con `RandomForest` come modelli di interpretazione hanno sempre la linea rossa sopra e quindi sempre valori positivi di `AUC_FS`. 
+>  Da questo quindi si dovrebbe concludere che per `glass` la interpretazione con `RandomForest` è migliore rispetto alle altre. 
