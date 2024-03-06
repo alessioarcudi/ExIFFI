@@ -38,28 +38,28 @@ def Dataset_feature_names(name:str):
     else:
         return None 
     
-def Dataset_box_loc(name:str):
+# def Dataset_box_loc(name:str):
 
-    data_box_loc={
-        'wine': (4,0.8),
-        'cardio': (3,0.3),
-        'glass': (5,0.35),
-        'pima': (4,0.5),
-        'breastw': (4,0.7),
-        'ionosphere': (8,0.6),
-        'annthyroid': (4,0.6),
-        'pendigits': (3,0.5),
-        'diabetes': (3,0.6),
-        'shuttle': (4,0.6),
-        'moodify': (3,0.5),
-        'Xaxis': (4,0.8),
-        'Yaxis': (4,0.8),
-        'bisect': (4,0.8),
-        'bisect_3d': (2,0.6),
-        'bisect_6d': (4,0.9),
-    }
+#     data_box_loc={
+#         'wine': (4,0.8),
+#         'cardio': (3,0.3),
+#         'glass': (5,0.35),
+#         'pima': (4,0.5),
+#         'breastw': (4,0.7),
+#         'ionosphere': (8,0.6),
+#         'annthyroid': (4,0.6),
+#         'pendigits': (3,0.5),
+#         'diabetes': (3,0.6),
+#         'shuttle': (4,0.6),
+#         'moodify': (3,0.5),
+#         'Xaxis': (4,0.8),
+#         'Yaxis': (4,0.8),
+#         'bisect': (4,0.8),
+#         'bisect_3d': (2,0.6),
+#         'bisect_6d': (4,0.9),
+#     }
 
-    return data_box_loc[name]
+#     return data_box_loc[name]
 
 @dataclass
 class Dataset:
@@ -93,7 +93,7 @@ class Dataset:
         self.feature_names=Dataset_feature_names(self.name)
         if self.feature_names is None:
             self.feature_names=np.arange(self.shape[1])
-        self.box_loc=Dataset_box_loc(self.name)
+        #self.box_loc=Dataset_box_loc(self.name)
         
     @property
     def shape(self) -> tuple:
@@ -128,7 +128,10 @@ class Dataset:
             except Exception as e:
                 try:
                     datapath = self.path + self.name + ".csv"
-                    T = pd.read_csv(datapath,index_col=0)
+                    if self.name == "glass_DIFFI":
+                        T = pd.read_csv(datapath)
+                    else:
+                        T = pd.read_csv(datapath,index_col=0)
                     if 'Unnamed: 0' in T.columns:
                         T = T.drop(columns=['Unnamed: 0'])
                     self.X = T.loc[:,T.columns != "Target"].to_numpy(float)
