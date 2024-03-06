@@ -523,98 +523,97 @@ $$
 
 # Final Experiments Global Feature Importance 
 
-## `glass`
+## `glass` → ==ok== 
 
 - `scenario=1`
 		- `EIF+`
 			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
 			- Ad-hoc
 				- `EXIFFI+` → ==ok==
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 		- `EIF`
 			- `random` → use `--compute_random` in the first test of `EIF, scenario=1` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
+				- `EXIFFI+` → ==ok==
 				- `EXIFFI` → ==ok==
-				- `DIFFI`
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 
 	- `scenario=2`
 		- `EIF+`
 			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2` → ==ok==
 			- Ad-hoc
 				- `EXIFFI+` → ==ok==
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 		- `EIF`
 			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
+				- `EXIFFI+` → ==ok==
 				- `EXIFFI` → ==ok==
-				- `DIFFI`
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 
 ## `annthyroid`
 
 - `scenario=1`
 		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok== 
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → 
 
 	- `scenario=2`
 		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`  → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
 		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
 			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
 			- Post-hoc (surrogate model)
-				- `EIF+, RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
-
+				- `EIF+, RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → 
 ## `moodify`
 
 - `scenario=1`

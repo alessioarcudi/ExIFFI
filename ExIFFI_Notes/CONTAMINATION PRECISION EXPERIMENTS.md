@@ -10,6 +10,13 @@ In these experiments we fix the dataset and for each one of them we produce the 
 
 For the models who also have an interpretation algorithm associated (i.e. `IF,EIF,EIF+`) we also perform the contamination experiment for the Global Importances. In this case we see how the Global Importances change as we change the level of contamination used to divide between inliers and outliers to compute the Global Importances. Essentially we compute the importances using the function `compute_global_importances` using different values for the input parameter `p`. 
 
+## Synthetic Datasets
+
+
+## Real World Datasets
+
+### `wine`
+
 - `wine` → ==ok==
 	- `EIF+` → ok
 	- `EIF` → ok
@@ -29,6 +36,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 > 	 - `AutoEncoder` → 3.1
 > 
 
+### `glass`
+
 - `glass` → ==ok==
 	- `EIF+` → ok
 	- `EIF` → ok
@@ -38,7 +47,9 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 
 > [!summary] Comments on the results 
 >  `EIF+` and `DIF` are the only ones showing a decreasing behavior with `DIF` that is a little better because it starts (at `contamination=0`) at 0.3/0.4 while `EIF+` starts at 0.2. The other models (`IF,EIF,AutoEncoder`) have more or less constant low Average Precision values (between 0 and 0.2). 
- 
+
+### `cardio`
+
 - `cardio` → ==ok==
 	- `EIF+` → ok
 	- `EIF` → ok
@@ -50,6 +61,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 >  Also in `cardio` the best models are `EIF+` and `DIF`. `DIF` starts from something more than 0.8 and `EIF+` from about 0.7. The contamination plots show a continuously decreasing trend (there is not a proper saturation). 
 >  The interesting result is the one of `AutoEncoder` where there is an increasing trend up to `contamination=0.04/0.05` ($5^{th}$/$6^{th}$ point in the plot) and then it starts decreasing. 
 
+### `pima`
+
 - `pima`
 	- `EIF+` → ok
 	- `EIF` → ok
@@ -59,6 +72,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 
 > [!summary] Comments on the results 
 >  Here all the Precision values are more or less the same independently on the contamination level. What changes between the different models is the Precision value reached. Unexpectedly the best ones are `EIF+,EIF` and `IF` with values aroun 0.6. On the other hand `DIF` has values between 0.4 and 0.6 and `AutoEncoder` 0.4. 
+
+### `annthyroid`
 
 - `annthyroid`
 	- `EIF+`  → ok
@@ -79,6 +94,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 > 	 - `AutoEncoder` → 31 → now that we have increase a lot the dataset size the execution time of `AutoEncoder` increased a lot. 
 > 
 
+### `breastw`
+
 - `breastw` → Re obtain the plots using `change_ylim` 
 	- `EIF+` → ok 
 	- `EIF` → ok 
@@ -96,6 +113,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 > 	 - `IF`→ 0.05
 > 	 - `DIF` → $\approx$ 0.7 (it is still 10 times slower than `EIF+,EIF,IF`)
 > 	 - `AutoEncoder` → $\approx$ 3.5 
+
+### `ionosphere`
 
 - `ionosphere`
 	- `EIF+` → ok 
@@ -117,6 +136,8 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 > 	 - `DIF` → $\approx$ 0.8 (it is still 10 times slower than `EIF+,EIF,IF`)
 > 	 - `AutoEncoder` → $\approx$ 3.8 
 
+### `pendigits`
+
 - `pendigits`
 	- `EIF+` → ok
 	- `EIF` → ok
@@ -136,9 +157,25 @@ For the models who also have an interpretation algorithm associated (i.e. `IF,EI
 > 	 - `DIF` → $\approx$ 7.8 (much higher here because `pendigits` is a big dataset)
 > 	 - `AutoEncoder` → $\approx$ 30 
 
+### `diabetes`
+
 - `diabetes`
+	- `EIF+` →
+	- `EIF` →
+	- `IF` →
+	- `DIF` →
+	- `AutoEncoder` →
+
+### `shuttle`
 
 - `shuttle`
+	- `EIF+` →
+	- `EIF` →
+	- `IF` →
+	- `DIF` →
+	- `AutoEncoder` →
+
+### `moodify`
 
 - `moodify`
 	- `EIF+` → ok
