@@ -1,8 +1,7 @@
 import sys
 import os
 cwd = os.getcwd()
-os.chdir('./experiments')
-
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -22,13 +21,11 @@ parser = argparse.ArgumentParser(description='Test Global Importances')
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='wine', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
-
 parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
-
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
 parser.add_argument('--interpretation', type=str, default="EXIFFI", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
@@ -74,14 +71,14 @@ if pre_process:
 if model == "IF":
     if interpretation == "EXIFFI":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI":
+    elif interpretation == "DIFFI" or interpretation == "RandomForest":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-cwd = os.getcwd()
+cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 print('#'*50)
 print('GFI Experiment')
@@ -98,7 +95,7 @@ if not os.path.exists(path):
 path_experiments = cwd +"/experiments/results/"+dataset.name+"/experiments"
 if not os.path.exists(path_experiments):
     os.makedirs(path_experiments)
-path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new"
+path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new/imp_plots"
 if not os.path.exists(path_plots):
     os.makedirs(path_plots)
 
