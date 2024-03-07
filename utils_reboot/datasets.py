@@ -22,13 +22,13 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,Robus
 def Dataset_feature_names(name:str):
 
     data_feature_names={
-        'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
        'BMI', 'DiabetesPedigreeFunction', 'Age'],
-        'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
+       'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
        'speechiness', 'acousticness', 'instrumentalness', 'liveness',
        'valence', 'tempo', 'spec_rate'],
        'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
-       #'annthyroid': ['TSH', 'T3', 'TT4', 'T4U', 'FTI'],
+       'glass_DIFFI': ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe'],
        'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
                 'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline'],
     }
