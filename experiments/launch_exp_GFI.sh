@@ -21,7 +21,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
-        --model "IF" \
+        --model "EIF+" \
         --interpretation "RandomForest" \
         --pre_process \
         --scenario 1
