@@ -45,12 +45,12 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     if fit_model:
         I.fit(dataset.X_train)             
     if interpretation=="DIFFI":
-        fi,_=diffi_ib(I,dataset.X)
+        fi,_=diffi_ib(I,dataset.X_test)
     elif interpretation=="EXIFFI" or interpretation=='EXIFFI+':
-        fi=I.global_importances(dataset.X,p)
+        fi=I.global_importances(dataset.X_test,p)
     elif interpretation=="RandomForest":
         rf = RandomForestRegressor()
-        rf.fit(dataset.X, I.predict(dataset.X))
+        rf.fit(dataset.X_test, I.predict(dataset.X_test))
         fi = rf.feature_importances_
     return fi
                         
@@ -114,35 +114,35 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       ) -> tuple[np.array,dict,str,str]:
 
         dataset_shrinking = copy.deepcopy(dataset)
-        d = dataset.X.shape[1]
+        d = dataset.X_test.shape[1]
         precisions = np.zeros(shape=(len(importances_indexes),n_runs))
         for number_of_features_dropped in tqdm(range(len(importances_indexes))):
             runs = np.zeros(n_runs)
             for run in range(n_runs):
                 if random:
                     importances_indexes = np.random.choice(importances_indexes, len(importances_indexes), replace=False)
-                dataset_shrinking.X = dataset.X[:,importances_indexes[:d-number_of_features_dropped]] if not inverse else dataset.X[:,importances_indexes[number_of_features_dropped:]]
-                dataset_shrinking.y = dataset.y
+                dataset_shrinking.X_test = dataset.X_test[:,importances_indexes[:d-number_of_features_dropped]] if not inverse else dataset.X[:,importances_indexes[number_of_features_dropped:]]
+                dataset_shrinking.y_test = dataset.y_test
                 dataset_shrinking.drop_duplicates()
                 try:
-                    if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
+                    if dataset.X.shape[1] == dataset_shrinking.X_test.shape[1]:
                         
                         start_time = time.time()
-                        I.fit(dataset_shrinking.X)
+                        I.fit(dataset_shrinking.X_test)
                         fit_time = time.time() - start_time
                         
                         if run >3:
                             dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                         start_time = time.time()
-                        score = I.predict(dataset_shrinking.X)
+                        score = I.predict(dataset_shrinking.X_test)
                         predict_time = time.time() - start_time
                         
                         if run >3:                        
                             dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                     else:
-                        I.fit(dataset_shrinking.X)
-                        score = I.predict(dataset_shrinking.X)
-                    avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y,score)
+                        I.fit(dataset_shrinking.X_test)
+                        score = I.predict(dataset_shrinking.X_test)
+                    avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y_test,score)
                     runs[run] = avg_prec
                 except:
                     runs[run] = np.nan
@@ -168,6 +168,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     for i,contamination in tqdm(enumerate(contamination_values)):
         for j in range(n_runs):
             dataset.split_dataset(train_size,contamination)
+            dataset.pre_process()
             
             start_time = time.time()
             I.fit(dataset.X_train)
@@ -193,7 +194,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                         dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
                     
             start_time = time.time()
-            score = I.predict(dataset.X)
+            score = I.predict(dataset.X_test)
             predict_time = time.time() - start_time
             if j>3:
                 try:
@@ -202,7 +203,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                     print('Model not recognized: creating a new key in the dict_time for the new model')
                     dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
-            avg_prec = sklearn.metrics.average_precision_score(dataset.y,score)
+            avg_prec = sklearn.metrics.average_precision_score(dataset.y_test,score)
             precisions[i,j] = avg_prec
     
     with open(filename, "wb") as file:

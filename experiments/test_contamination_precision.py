@@ -2,7 +2,8 @@
 import sys
 import os
 cwd = os.getcwd()
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+
+os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -24,7 +25,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Test Global Importances')
 
 # Add the arguments
-parser.add_argument('--dataset_name', type=str, default='wine', help='Name of the dataset')
+parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
 parser.add_argument('--n_estimators', type=int, default=200, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
@@ -34,7 +35,7 @@ parser.add_argument('--n_runs', type=int, default=10, help='Global feature impor
 parser.add_argument('--train_size', type=float, default=0.9, help='Global feature importances parameter: train_size')
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
 
-parser.add_argument('--model', type=str, default="EIF+", help='Name of the model')
+parser.add_argument('--model', type=str, default="IF", help='Name of the model')
 parser.add_argument('--interpretation', type=str, default="NA", help='Name of the interpretation algorithm')
 parser.add_argument('--pre_process', type=bool, default=True, help='If set, preprocess the dataset')
 
@@ -87,9 +88,9 @@ if model == "EIF+":
     I = ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF":
     I = ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-elif (model == "IF" and interpretation == "EXIFFI") or (model =="IF" and not GFI):
+elif (model == "IF" and interpretation == "EXIFFI"):
     I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-elif model == "IF" and interpretation == "DIFFI":
+elif model == "IF" and interpretation == "DIFFI" or (model =="IF" and not GFI):
     I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "DIF":
     I = DIF(max_samples=max_samples)
@@ -104,8 +105,6 @@ print(f'Dataset: {dataset.name}')
 print(f'Model: {model}')
 print(f'Interpretation Model: {interpretation}')
 print('#'*50)
-
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
