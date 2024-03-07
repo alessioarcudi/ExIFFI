@@ -14,6 +14,7 @@ import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit as SSS
 from sklearn.preprocessing import StandardScaler
 import random
+import copy
 
 
 from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
@@ -85,6 +86,8 @@ class Dataset:
     y: Optional[npt.NDArray] = field(default=None, init=False)
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
     y_train: Optional[npt.NDArray] = field(default=None, init=False)
+    X_test: Optional[npt.NDArray] = field(default=None, init=False)
+    y_test: Optional[npt.NDArray] = field(default=None, init=False)
     feature_names: Optional[List[str]] = field(default=None, init=False)
     box_loc: Optional[tuple] = field(default=None, init=False)
 
@@ -226,33 +229,22 @@ class Dataset:
                 index = indexes_inliers.pop()
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
+        self.X_test = copy.deepcopy(self.X)
+        self.y_test = copy.deepcopy(self.y)
 
-    def pre_process(self,
-                split:bool=False):
+    def pre_process(self) -> None:
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
             return
         if self.X_train is None:
-            self.X_train=self.X
+            self.X_train=copy.deepcopy(self.X)
+            self.X_test=copy.deepcopy(self.X)
 
         scaler = StandardScaler()
         
-        if split:
-            self.X=scaler.fit_transform(self.X)
-        else:
-            self.X_train=scaler.fit_transform(self.X_train)
-            self.X=scaler.transform(self.X)
+        self.X_train=scaler.fit_transform(self.X_train)
+        self.X_test=scaler.transform(self.X_test)
         
-        """
-        else:
-            X_train,X_test,y_train,y_test=self.partition_data(self.X,self.y)
-            X_train=scaler.fit_transform(X_train)
-            X_test=scaler.transform(X_test)
-            X_test=np.r_[X_train,X_test]
-            self.X_train=X_train
-            self.X_test=X_test
-            self.y=np.concatenate([y_train,y_test])
-        """
-    
+
  
