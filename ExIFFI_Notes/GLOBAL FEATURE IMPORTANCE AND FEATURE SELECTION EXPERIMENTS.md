@@ -27,53 +27,10 @@
 
 ## TODO 
 
-- [ ] Finish completely the experiments for `annthyroid`, `glass`, `moodify`
-	- [ ] Finish contamination plots
-	- [ ] Complete Feature Selection plots (use all the interpretation models but evaluate the Average Precision with `EIF+` and `EIF`
-	
-	- `scenario=1`
-		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1`
-			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
-			- Post-hoc (surrogate model)
-				- `EIF+,RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
-		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=1`
-			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
-			- Post-hoc (surrogate model)
-				- `EIF+,RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
+- [x] Finish completely the experiments for `annthyroid`, `glass`, `moodify`
+	- [x] Finish contamination plots
+	- [x] Complete Feature Selection plots (use all the interpretation models but evaluate the Average Precision with `EIF+` and `EIF`
 
-	- `scenario=2`
-		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2`
-			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
-			- Post-hoc (surrogate model)
-				- `EIF+,RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest`
-		- `EIF`
-			- `random` → use `--compute_random` in the first test of `EIF, scenario=2`
-			- Ad-hoc
-				- `EXIFFI+`
-				- `EXIFFI`
-				- `DIFFI`
-			- Post-hoc (surrogate model)
-				- `EIF+,RandomForest`
-				- `EIF, RandomForest`
-				- `IF, RandomForest
 
 > [!question] What does this mean?
 >  In the Feature Selection experiments there are two components:
@@ -569,11 +526,59 @@ $$
 				- `EIF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 				- `IF, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot
 
+## `glass_DIFFI`
+
+`glass_DIFFI` is the version of the `glass` dataset used in the `DIFFI` paper. It uses the data from the `headlamps` glass class as the outliers → so now we have 29 outliers. On the other hand in `glass` (the version we took from the UCI Machine Learning Repository) the `tableware` glass class was the one used for the outliers → 9 outliers. In the Bar and Score Plots we were able to reproduce the results obtained in the `DIFFI` paper with Feature 7 (Barium) being clearly the most important one. Now probably also the Feature Selection plots should look better than the one of `glass`, that had [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#^ccccf7|this problem]]. 
+
+- `scenario=1`
+	- `EIF+`
+		-  `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok== 
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=1` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
+
+	- `scenario=2`
+		- `EIF+`
+			- `random` → use `--compute_random` in the first test of `EIF+, scenario=2` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok== 
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
+		- `EIF`
+			- `random` → use `--compute_random` in the first test of `EIF, scenario=2` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+,RandomForest` → ==ok==
+				- `EIF, RandomForest` → ==ok==
+				- `IF, RandomForest` → ==ok==
+
 ## `annthyroid` → ==ok==
 
 - `scenario=1`
-		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
+	- `EIF+`
+		- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
 			- Ad-hoc
 				- `EXIFFI+` → ==ok==
 				- `EXIFFI` → ==ok==
@@ -614,11 +619,11 @@ $$
 				- `EIF+, RandomForest` → ==ok== (redone with `train_size=1-dataset.perc_outliers`) → does not change a lot 
 				- `EIF, RandomForest` → ==ok== 
 				- `IF, RandomForest` → ==ok==
-## `moodify`
+## `moodify` → ==ok==
 
 - `scenario=1`
-		- `EIF+`
-			- `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
+	- `EIF+`
+		 - `random` → use `--compute_random` in the first test of `EIF+, scenario=1` → ==ok==
 			- Ad-hoc
 				- `EXIFFI+` → ==ok==
 				- `EXIFFI` → ==ok==
@@ -1032,3 +1037,5 @@ Let's start from an analysis of only the Bar and Score Plots, then we will look 
 >  
 >  Infatti i plot con le interpretazioni ad-hoc (`EXIFFI+,EXIFFI,DIFFI`) hanno la linea blu sopra la rossa in molti punti (in alcuni casi ci sono anche dei zig zag cioè prima la blu sopra e poi la rossa sopra) e hanno spesso valori di `AUC_FS` negativi. Mentre i plot con `RandomForest` come modelli di interpretazione hanno sempre la linea rossa sopra e quindi sempre valori positivi di `AUC_FS`. 
 >  Da questo quindi si dovrebbe concludere che per `glass` la interpretazione con `RandomForest` è migliore rispetto alle altre. 
+
+^ccccf7
