@@ -352,9 +352,9 @@ def importance_map(dataset: Type[Dataset],
                    factor: Optional[int] = 3, 
                    feats_plot: Optional[tuple] = (0,1),
                    col_names: List[str] = None,
-                   labels: Optional[bool] = True,
                    isdiffi: Optional[bool] = False,
-                   iforest: Type[IsolationForest] = IsolationForest()
+                   scenario: Optional[int] = 2,
+                   interpretation: Optional[str] = "EXIFFI+"
                    ):
         """
         Produce the Local Feature Importance Scoremap.   
@@ -397,9 +397,9 @@ def importance_map(dataset: Type[Dataset],
 
         importance_matrix = np.zeros_like(mean)
         if isdiffi:
-                iforest.max_samples = len(dataset.X)
+                model.max_samples = len(dataset.X)
                 for i in range(importance_matrix.shape[0]):
-                        importance_matrix[i] = local_diffi(iforest, mean[i])[0]
+                        importance_matrix[i] = local_diffi(model, mean[i])[0]
         else:
             importance_matrix = model.local_importances(mean)
         
@@ -426,12 +426,12 @@ def importance_map(dataset: Type[Dataset],
             ax.scatter(x[(dataset.y == 0)[:, 0]], y[(dataset.y == 0)[:, 0]], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
             ax.scatter(x[(dataset.y == 1)[:, 0]], y[(dataset.y == 1)[:, 0]], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
         
-        if (labels) and (col_names is not None):
-            ax.set_xlabel(col_names[feats_plot[0]],fontsize=20)
-            ax.set_ylabel(col_names[feats_plot[1]],fontsize=20)
-        elif (labels) and (col_names is None):
+        if (isinstance(col_names, np.ndarray)) or (col_names is None):
             ax.set_xlabel(f'Feature {feats_plot[0]}',fontsize=20)
             ax.set_ylabel(f'Feature {feats_plot[1]}',fontsize=20)
+        elif col_names is not None:
+            ax.set_xlabel(col_names[feats_plot[0]],fontsize=20)
+            ax.set_ylabel(col_names[feats_plot[1]],fontsize=20)
         
         ax.legend()
 
@@ -439,10 +439,9 @@ def importance_map(dataset: Type[Dataset],
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
         if isdiffi:
-            model_name='DIFFI'
-            filename = current_time+"_importance_map_"+model_name+"_"+dataset.name+".pdf"
+            filename = current_time+"_importance_map_"+dataset.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
         else:
-            filename = current_time+"_importance_map_"+model.name+"_"+dataset.name+".pdf"
+            filename = current_time+"_importance_map_"+dataset.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
 
         if show_plot:
             plt.show()
