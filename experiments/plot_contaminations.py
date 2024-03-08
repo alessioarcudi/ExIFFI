@@ -1,7 +1,7 @@
 import sys
 import os
-
-os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+#os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
