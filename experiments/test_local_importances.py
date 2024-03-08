@@ -2,7 +2,7 @@ import sys
 import ast
 import os
 cwd = os.getcwd()
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 #os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
@@ -101,7 +101,10 @@ print('#'*50)
 
 
 #cwd = '/Users/alessio/Documents/ExIFFI'
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+
+os.chdir('../')
+cwd=os.getcwd()
 
 path_plots = cwd +"/experiments/results/"+dataset.name+"/plots_new/local_scoremaps"
 if not os.path.exists(path_plots):

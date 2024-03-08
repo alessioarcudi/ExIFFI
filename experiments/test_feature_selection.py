@@ -3,7 +3,7 @@ import sys
 import ast
 import os
 cwd = os.getcwd()
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -74,7 +74,7 @@ if pre_process:
     dataset.pre_process()
 
 assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
-assert model in ["EIF", "EIF+"], "Evaluation Model not recognized"
+assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
 assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
@@ -87,8 +87,9 @@ if interpretation == "EXIFFI+":
     assert model_interpretation=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 if model == "IF":
-    if interpretation == "EXIFFI":
-        I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+    if interpretation == "EXIFFI" or interpretation=="EXIFFI+":
+        #I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+        I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
     elif interpretation == "DIFFI" or interpretation == "RandomForest":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
@@ -107,7 +108,10 @@ print(f'Interpretation Model: {interpretation}')
 print(f'Scenario: {scenario}')
 print('#'*50)
 
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+
+os.chdir('../')
+cwd=os.getcwd()
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):

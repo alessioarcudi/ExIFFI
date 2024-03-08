@@ -2,8 +2,6 @@
 import sys
 import os
 cwd = os.getcwd()
-
-os.chdir('experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -105,6 +103,9 @@ print(f'Dataset: {dataset.name}')
 print(f'Model: {model}')
 print(f'Interpretation Model: {interpretation}')
 print('#'*50)
+
+os.chdir('../')
+cwd=os.getcwd()
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):

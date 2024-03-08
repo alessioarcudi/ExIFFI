@@ -1,7 +1,7 @@
 import sys
 import os
 cwd = os.getcwd()
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -78,7 +78,10 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+    
+os.chdir('../')
+cwd=os.getcwd()
 
 print('#'*50)
 print('GFI Experiment')
