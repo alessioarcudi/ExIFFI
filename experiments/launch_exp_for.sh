@@ -2,15 +2,15 @@
 
 # Path to the Python script to execute
 # SCRIPT_PATH="test_global_importancies.py"
-#SCRIPT_PATH="test_feature_selection.py"
+SCRIPT_PATH="test_feature_selection.py"
 #SCRIPT_PATH="test_GFI_FS.py"
-SCRIPT_PATH="test_local_importances.py"
+#SCRIPT_PATH="test_local_importances.py"
 
 # List of datasets
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="moodify"
+DATASETS="glass_DIFFI"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -25,9 +25,11 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --model "IF" \
-        --interpretation "DIFFI" \
-        --feats_plot "(10,0)" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
         --pre_process \
-        --scenario 1
+        --scenario 2 \
 
 done
+
+#--feats_plot "(10,0)" \

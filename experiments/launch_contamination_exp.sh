@@ -5,10 +5,10 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="moodify"
+DATASETS="bisect_3d"
 
 # Path to the datasets
-DATASET_PATHS="../data/real/"
+DATASET_PATHS="../data/syn/"
 
 # Experiment EIF+
 
