@@ -22,12 +22,14 @@ parser = argparse.ArgumentParser(description='Test Global Importances')
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
+parser.add_argument("--change_ylim",action="store_true",help="If set, change the ylim of the plot")
 
 # Parse the arguments
 args = parser.parse_args()
 
 dataset_name = args.dataset_name
 dataset_path = args.dataset_path
+change_ylim = args.change_ylim
 
 dataset = Dataset(name=dataset_name, path=dataset_path)
 
@@ -43,8 +45,13 @@ for i,model in enumerate(["DIF","EIF","EIF+","IF","AnomalyAutoencoder"]):
     with open(file, "rb") as file:
         df = pickle.load(file)
     plt.plot(df[1],df[0].mean(axis=1),label=model,color=colors[i],marker='o')
-    plt.ylim(0,1)
     plt.fill_between(df[1], [np.percentile(x, 10) for x in df[0]], [np.percentile(x, 90) for x in df[0]],alpha=0.1, color=colors[i])
+
+if change_ylim:
+    plt.ylim(0,1.1)
+else:
+    plt.ylim(0,1)
+
 plt.xlabel("Contamination",fontsize = 20)
 plt.ylabel("Average Precision",fontsize = 20)
 plt.legend()
