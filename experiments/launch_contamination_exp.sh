@@ -5,7 +5,7 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="bisect_3d"
+DATASETS="bisect_6d"
 
 # Path to the datasets
 DATASET_PATHS="../data/syn/"
