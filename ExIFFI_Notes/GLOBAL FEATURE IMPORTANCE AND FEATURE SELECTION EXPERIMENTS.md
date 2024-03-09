@@ -551,6 +551,16 @@ $$
 				- `EIF+,RandomForest` → ==ok==
 				- `EIF, RandomForest` → ==ok==
 				- `IF, RandomForest` → ==ok==
+		- `IF`
+			- `random` → ==ok==
+			- Ad-hoc
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest` → 
+				- `EIF, RandomForest` → 
+				- `IF, RandomForest` → 
 
 	- `scenario=2`
 		- `EIF+`
@@ -573,6 +583,16 @@ $$
 				- `EIF+,RandomForest` → ==ok==
 				- `EIF, RandomForest` → ==ok==
 				- `IF, RandomForest` → ==ok==
+		- `IF`
+			- `random` → 
+			- Ad-hoc
+				- `EXIFFI+` → 
+				- `EXIFFI` → 
+				- `DIFFI` → 
+			- Post-hoc (surrogate model)
+				- `EIF+, RandomForest` → 
+				- `EIF, RandomForest` → 
+				- `IF, RandomForest` → 
 
 ## `annthyroid` → ==ok==
 
@@ -1086,7 +1106,13 @@ Since the [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`glass`|
 		- Score Plot: The most important features are `Si` and `Ca` while `Mg` and `Ba` end up at $7^{th}$ and $9^{th}$ place. 
 #### Feature Selection Plots 
 
-Here we divide the Feature Selection plots into the ones where the Average Precision values were evaluated with `EIF+` and the ones evaluated with `EIF`. Fixing one evaluation model (`EIF+` or `EIF`) we want to see which interpretation algorithm is the best. In particular we want also to compare the ad-hoc interpretability method (`EXIFFI+`, `EXIFFI`, `DIFFI`) with the post-hoc interpretation obtained with `RandomForest`. Let's analyse separately `scenario 1` and `scenario 2`
+Here we divide the Feature Selection plots into the ones where the Average Precision values were evaluated with `EIF+` and the ones evaluated with `EIF`. Fixing one evaluation model (`EIF+` or `EIF`) we want to see which interpretation algorithm is the best. In particular we want also to compare the ad-hoc interpretability method (`EXIFFI+`, `EXIFFI`, `DIFFI`) with the post-hoc interpretation obtained with `RandomForest`. Let's analyse separately `scenario 1` and `scenario 2`.
+
+> [!note] 
+>  In the plots where the blue line is over the red one (so when the metric is negative) it means that the interpretation model has wrongly ranked the most important features in the last places. 
+
+> [!question] 
+> May the fact that with 2 features the precision stays the same mean that these two features are containing very similar information? (highly correlated) So having both of them or only one of the them does not change a lot. Or maybe this happpen because  they have similar importance values? 
 
 - `EIF+`
 	- `scenario 2`
@@ -1097,10 +1123,12 @@ Here we divide the Feature Selection plots into the ones where the Average Preci
 			- `EXIFFI` → Similar to `EXIFFI+` but now the `direct` approach line does not have that strange V shape at the end. For this reason $AUC_{FS} = 1.682$, sligthly higher than the `EXIFFI+` one 
 			- `EIF_RandomForest` → Here we have the result correct but reverse. In the sense that, since in the Score plot of `EIF_RandomForest_2` we have `Ba` at the second to last place we should expect something similar to what we have seen in `EIF+_RandomForest` with the precision drops passing from 8 to 7 and from 2 to 1 features. This happens but, for some strange reason, the blue and red lines are switched. So apparently here the feature that causes the precision drop is the one that is `K` (the one that is in last position in the Score Plot). In any case `K` is the second most important feature in `EXIFFI+` and `EXIFFI` so it still makes sense. 
 		- `IF`
-			- `DIFFI` → $AUC_{FS} = 1.587$ Similar to `EXIFFI+` and `EXIFFI` but here the `direct` line has a significant decrease from 4 features onward and this increments the $AUC_{FS}$ value. The shape of the plot looks better but the $AUC_{FS}$ is lower because the Average Precision is lower. In fact in `EXIFFI+` and `EXIFFI` we have the last two points at 0.6 while here we have just the last point at 0.6. So in `EXIFFI+` and `EXIFFI` the first two features together have more or less the same performance as using only the most important one (that is the usual `Ba`). This happens because the first two features in `EXIFFI+` and `EXIFFI` are `Ba` and `K` while the first two in `DIFFI` are `Ba` and `Na`. But this happens because we are evaluating with `EIF+` (for which the most important features are `Ba` and `Na`) → what happens if I evaluate the precisions with `IF` ? 
+			- `DIFFI` → $AUC_{FS} = 1.587$ Similar to `EXIFFI+` and `EXIFFI` but here the `direct` line has a significant decrease from 4 features onward. The shape of the plot looks better but the $AUC_{FS}$ is lower because the Average Precision is lower. In fact in `EXIFFI+` and `EXIFFI` we have the last two points at 0.6 while here we have just the last point at 0.6. So in `EXIFFI+` and `EXIFFI` the first two features together have more or less the same performance as using only the most important one (that is the usual `Ba`). This happens because the first two features in `EXIFFI+` and `EXIFFI` are `Ba` and `K` while the first two in `DIFFI` are `Ba` and `Na`. But this happens because we are evaluating with `EIF+` (for which the most important features are `Ba` and `Na`) → what happens if I evaluate the Average Precision values with `IF` ? 
 			- `IF_RandomForest` → $AUC_{FS}=1.405$ In the Score Plot of `IF_RandomForest` `Ba` is the second most important feature and in fact we have a precision drop going from 8 to 7 and from 2 to 1 features in the Feature Selection Plot. This confirms the superiority of `DIFFI` with the respect to the surrogate `RandomForest` model. 
 
-In general in this dataset the Feature Selection plots are very similar for `EXIFFI+,EXIFFI` and `DIFFI`. `DIFFI` has a small advantage because the blue line of the `direct` approach is decreasing more (as it should happen). In any case the superiority of `DIFFI` on this particular dataset is clear also looking at the Importance Plots because in the Score Plot there is an huge margin between the importance score of `Ba` and the ones of the other features.
+Evaluating the Average Precision with the `IF` model the same trend is confirmed: the $AUC_{FS}$ values is high in `EXIFFI`, then `EXIFFI+` and `DIFFI` is still at the last place. For what concerns the last two points of the `inverse` line we still have similar values in `EXIFFI` and `EXIFFI+` and in `DIFFI` there is a slight increase passing from 2 to 1 feature, but the increase is not as significant as in the case of `EIF+` as an evaluation model. 
+
+To complete the analysis we should also look at what happens with `EIF` as the evaluation model. The $AUC_{FS}$ order is still the same, the strange fact is that, both in `EXIFFI` and `EXIFFI+` passing from 2 to 1 feature the precision sligthly decreases (in particular in the case of `EIF_EXIFFI+`). If we look at the Score Plots for `EXIFFI` and `EXIFFI+` the most important features are in both cases `Ba` and `K` → (in `EXIFFI+`: `Ba` → 2.578, `K` → 2.367; in `EXIFFI`: `Ba` → 3.325, `K` → 2.925). 
 
 - `scenario 1`
 	- `EIF+`
@@ -1113,16 +1141,130 @@ In general in this dataset the Feature Selection plots are very similar for `EXI
 		- `DIFFI` → As we saw in the Importance plot here `Ba` is still the most important feature so the Feature Selection plot is much better than the others → $AUC_{FS} = 1.535$. In the last two points the precision is around 0.6 → so having 2 features or 1 is pretty much the same. 
 		- `IF_RandomForest` → Here as we can see from the Importance plots the situation completely changes and also the most important features change a lot (`K` ends up in third place and `Ba` in the last place) so obviously the Feature Selection plot becomes very bad → $AUC_{FS} = -1.333$. There is a little drop in precision passing from 7 to 6 features in the blue line, so when we remove `K` (this makes sense because `K` is an important feature). In the red line instead there is a significant increase when we pass from 5 to 4, so when we remove `Na`. 
 
-> [!note] 
->  In the plots where the blue line is over the red one (so when the metric is negative) it means that the interpretation model has wrongly ranked the most important features in the last places. 
+- `EIF`
+	- `scenario 2`
+		- `EIF+` 
+			- `EXIFFI+` → $AUC_{FS} = 1.759$. The plot shows the expected shape a part for the passage from 2 to 1 feature where there is this little drop in precision that is a bit strange. 
+			- `EIF+_RandomForest` → $AUC_{FS} = 0.757$. In the Score Plot `Ba` is placed at third place and `K` at $8^{th}$. In fact passing from 8 to 7 features in the `direct` approach and from 3 to 2 features in the `inverse` approach the Average Precision has a significant decrease. 
+		- `EIF`
+			- `EXIFFI` → Similar to `EXIFFI+`, here the decrease passing from 2 to 1 features is less evident, in fact $AUC_{FS} = 1.934$ → better than `EXIFFI`. 
+			- `EIF_RandomForest` → $AUC_{FS} = -1.682$. In the Score Plot `Ba` and `K` are the last two features. So the fact that the two most important features are positioned in the last two places makes the $AUC_{FS}$ negative. As expected in the `direct` approach there is a decrease when we pass from 2 to 1 (i.e. when `Ba` is removed) and also when I remove `Ba` in the `inverse` approach passing from 8 to 7 features. 
+		- `IF`
+			- `DIFFI` → $AUC_{FS} = 1.771$ Similar to `EXIFFI` and `EXIFFI+`. The Average Precision values in the blue line start to decrease from 4 features onward (so from the moment in which `K` ($6^{th}$ place in the Score Plot) is removed). 
+			- `IF_RandomForest` → $AUC_{FS} = 1.405$. Here `Ba` is at the second place in the Score Plot so we have a drop in precision in the `direct` and `inverse` approaches passing from 8 to 7 and from 2 to 1 features respectively (so when `Ba` is removed from the feature space). 
 
-^136e06
-> [!question] 
-> May the fact that with 2 features the precision stays the same mean that these two features are containing very similar information? (highly correlated) So having both of them or only one of the them does not change a lot. Or maybe this happpen because  they have similar importance values? 
+
+	- `scenario 1`
+		 -  `EIF+`
+			- `EXIFFI+` → $AUC_{FS} = 0.437$ pretty zig zagging behavior. Drop in precision passing from 4 to 3 features (i.e. after removing `Ba`) and increase in precision passing from 2 to 1 (i.e. passing to just `K` in the feature space) in the `inverse` approach. In the `direct` approach instead there is a little drop when we remove `Ba` (passing from 6 to 5 features). 
+			- `EIF+_RandomForest` →  $AUC_{FS} = -1.436$ In the Score Plot `Ba` is in the last place and `K` at $5^{th}$, that's why the $AUC_{FS}$ metric is negative. There is a little drop in precision passing from 5 to 4 features in `direct` approach (i.e. when `K` is removed). In the `inverse` approach passing from 4 to 3 features the precision increase (so when we remove `Fe`) and than starts to decrease again until we get to the last point (only feature `Mg`) where it gets its lowest value. 
+		- `EIF`
+			- `EXIFFI` → $AUC_{FS} = 0.491$ There is a V shape in the last 3 steps in the `inverse` approach. In fact when we pass from 3 to 2 features we are removing `Ba` and when we pass from 2 to 1 we are removing `Ca` and leaving `K` alone. 
+			- `EIF_RandomForest` → $AUC_{FS} = -1.699$ `Ba` is at the last place in the Score Plot and `K` is at the third last place so $AUC_{FS}$ is negative. Also here the precision sligthly increases in the `inverse` approach passing from 4 to 3 features, so when `Fe` is removed. 
+		- `IF` 
+			- `DIFFI` → $AUC_{FS} = 1.584$ This is the best Feature Selection Plot in `scenario 1` because, as we saw in the Importance Plots, `DIFFI` is the only interpretation model that is able to recognize `Ba` as the most important feature also in `scenario 1`. In particolar in the `inverse` approach there is a significant increase in Average Precision as we pass from 3 to 2 features, so when `Ca` is removed to leave only `Ba` and `K` in the feature space. 
+			- `IF_RandomForest` → `Ba` at last place and `K` at third place in the Score Plot so $AUC_{FS} = -1.777$ (negative). Also here we have a little increase in precision when `Fe` is removed in the `inverse` approach (passing from 5 to 4 features). 
+
+### `annthhyroid`
+
+#### Importance Plots
+
+- `EIF+`
+	- `EXIFFI+, scenario=2`
+		- Bar Plot: Feature 1 most important feature almost 90% of the times. 
+		- Score Plot: Feature 1 on top, followed by Feature 3 and 2 (not by a huge margin). 
+	- `EXIFFI+, scenario=1`
+		- Bar Plot: Feature 1 now is the most important one only 50% of the times. 
+		- Score Plot: Feature 1 still on top but with very close values to all the other features except feature 1 that is at the last place with a significant margin. 
+	- `RandomForest, scenario=2`
+		- Bar Plot: `RandomForest` is good in detecting a single important feature so Feature 1 is first all the times and Feature 2 is second 90% of the times. 
+		- Score Plot: Feature 1 on top with a clear margin on Feature 3. 
+	- `RandomForest, scenario=1`
+		- Bar Plot: Here Feature 3 is the most important more than 90% of the times while Feature 1 is the least important more the 90% of the times. 
+		- Score Plot: Feature 3 most important feature with a clear margin on Feature 2 and Feature 1 is clearly at the last place. 
+- `EIF`
+	- `EXIFFI, scenario=2`
+		- Bar Plot: Feature 1 is at the first place in all the runs. 
+		- Score Plot: Feature 1 clearly on top, followed by Feature 2. 
+	- `EXIFFI, scenario=1`
+		- Bar Plot: Feature 1 at first place around 70% of the times. Feature 0 instead is at the last place in all the runs.
+		- Score Plot: Feature 1 stil at the first place but with a minimal margin on Feature 5 (that has the same importance value (2.721) as Feature 4). 
+	- `RandomForest, scenario=2`
+		- Bar Plot: Similar to `EIF+_RandomForest, scenario 2`. Feature 1 is clearly the most important, followed by Feature 3. 
+		- Score Plot: Similar to `EIF+_RandomForest, scenario 2`. First Feature 1, second Feature 3. 
+	- `RandomForest, scenario=1`
+		- Bar Plot: As in `EIF+_RandomForest, scenario 1` Feature 3 now becomes the most important. 
+		- Score Plot: Similar to `EIF+_RandomForest scenario 1` with the difference that now Feature 1 is at $5^{th}$ place. 
+- `IF`
+	-  `DIFFI, scenario=2`
+		- Bar Plot: Feature 1 first place in all the runs and Feature 0 at last place in all the runs. 
+		- Score Plot: Feature 1 at first place with a small margin on Feature 2. 
+	- `DIFFI, scenario=1`
+		- Bar Plot: Similar to `scenario 2`.
+		- Score Plot: Similar to `scenario 2` but there is an higher margin between Feature 1 and the rest. 
+	- `RandomForest, scenario=2`
+		- Bar Plot: Feature 1 always first and Feature 3 second almost in all the runs (there was probably 1 or 2 runs where Feature 2 was second).
+		- Score Plot: Feature 1 and 3 at the first two ranks. 
+	- `RandomForest, scenario=1`
+		- Bar Plot: As it already happened in `scenario 1` for `RandomForest` now Feature 3 becomes the most important but Feature 1 is at the second place 60% of the runs. 
+		- Score Plot: Feature 3 at first place, Feature 1 at second place. 
+
+#### Feature Selection Plots 
+
+- `EIF+`
+	- `scenario_2`
+		- `EIF+`
+			- `EXIFFI+` → $AUC_{FS} = 1.619$ Standard shape expect for the fact that there is an increase in precision passing from 2 to 1 feature in the `direct` approach (so removing Feature 4 to remain with just Feature 0). 
+			- `EIF+_RandomForest` → $AUC_{FS} = 1.516$ Here in the Score Plot `EIF+_RandomForest` is similar to the one of `EXIFFI+` so also the Feature Selection plots are similar. The $AUC_{FS}$ here is a bit smaller because in the `direct` approach there is an increase starting from 3 features onward (so after removing Feature 5 and 4). 
+		- `EIF`
+			- `EXIFFI` → $AUC_{FS} = 1.493$ Similar to the previous two. The metric value is smaller because also in this case from 3 to 1 features the Average Precision increases in the `direct` approach. 
+			- `EIF_RandomForest` → $AUC_{FS} = 1.513$ Very similar to `EXIFFI` (also the two Score Plots are similar), the higher value obtained may be just for some random effects. 
+		- `IF`
+			- `DIFFI` → Similar to the one of `EXIFFI`, $AUC_{FS} = 1.524$. Also in this case probably some random effects caused the $AUC_{FS}$ value to be sligthly higher than the `EXIFFI` one.
+			- `IF_RandomForest` → Very similar to `DIFFI` → $AUC_{FS} = 1.509$ 
+
+
+	- `scenario 1`
+		-  `EIF+`
+			- `EXIFFI+` → The shape is very similar to the one of `scenario 1` but the precision values in the `inverse` approach start from smaller values (from 0.2 instead than 0.4). The consequence is that the are between the red and blue line is smaller and thus $AUC_{FS} = 0.938$. The reason under this result is that, looking at the Score Plots, the feature orders in the two scenarios are similar but the importance values are closer in `scenario 1`  so it may happen that Feature 3 has an higher importance than Feature 5 just for some random effects and thus the precision may decrease a little bit in the first steps. When we reach the last step however both plots reach around 0.8 Average Precision. In all the plots seen up to now there is a significant jump in Precision passing from 2 to 1 feature (much higher than what we saw in [[GLOBAL FEATURE IMPORTANCE AND FEATURE SELECTION EXPERIMENTS#`glass_DIFFI`|`glass_DIFFI`]] for example) and this means that Feature 1 is really dominant in this dataset. 
+			- `EIF+_RandomForest` → Here there is a big change because Feature 1 is considered the least important feature so, as expected, $AUC_{FS} = -1.185$ (is negative). 
+		- `EIF`
+			- `EXIFFI` → Very similar to `EXIFFI, scenario 1` → $AUC_{FS} = 0.93$ 
+			- `EIF_RandomForest` → In the Score Plot Feature 1 is placed at the $5^{th}$ place so the plot presents a negative $AUC_{FS} = -0.705$ and in the `direct` approach plot a significant drop in Average Precision can be observed passing from 2 to 1 features (i.e. when Feature 1 is removed from the feature space).  
+		- `IF`
+			- `DIFFI` → Very similar to `EXIFFI` and `EXIFFI+` → $AUC_{FS} = 0.924$
+			- `IF_RandomForest` → Differently from the other cases with `RandomForest` in `scenario 1` here $AUC_{FS} = 0.426$ is positive because Feature 1 is placed at second place so we have a drop in precision passing from 5 to 4 features in the `direct` approach and from 2 to 1 feature in the `inverse` approach. 
+
+- `EIF`
+	- `scenario_2`
+		- `EIF+`
+			- `EXIFFI+` → $AUC_{FS} = 1.818$ → Very similar to `EIF+_EXIFFI+ scenario 2` but  the $AUC_{FS}$ value is higher because the Average Precision values are sligthly higher. Also in this case there is this strange increase from 2 to 1 features in the `direct` approach. 
+			- `EIF+_RandomForest` → $AUC_{FS} = 1.729$ → As in `EIF+_EIF+_RandomForest scenario 2` it is very similar to `EXIFFI+` but $AUC_{FS}$ is sligthly smaller because in the `direct` approach the precision starts to increase from 3 features to 1 features. 
+		- `EIF`
+			- `EXIFFI` → Similar to `EIF+_EXIFFI, scenario 2` → $AUC_{FS} = 1.72$ 
+			- `EIF_RandomForest` → Similar to `EXIFFI`.
+		- `IF`
+			- `DIFFI` → Also here very similar to the previous Feature Selection plots. → $AUC_{FS} = 1.6991$
+			- `IF_RandomForest` → $AUC_{FS} = 1.731$
+
+
+	- `scenario 1`
+		-  `EIF+`
+			- `EXIFFI+` → As in `EIF+` the plot is very similar in the shape to the corresponding one in `scenario 2` but $AUC_{FS} = 1.012$ is lower because the Average Precision values are lower. 
+			- `EIF+_RandomForest` → $AUC_{FS} = -1.211$. As in `EIF+`  $AUC_{FS}$ is negative because Feature 1 is wrongly considered the least important feature. 
+		- `EIF`
+			- `EXIFFI` → Same story → same shape as `EXIFFI scenario 2` but lower Average Precision values and thus $AUC_{FS} = 0.973$ is lower. 
+			- `EIF_RandomForest` → Here like in `EIF+_EIF_RandomForest`  Feature 1 is the $5^{th}$ feature in order of importance and thus there is a negative $AUC_{FS} = -0.707$ with a drop in Precision when we pass from 2 features to 1 (i.e. when Feature 1 is removed). 
+		- `IF` 
+			- `DIFFI` → Like `DIFFI, scenario 2` but with a smaller $AUC_{FS} = 0.963$
+			- `IF_RandomForest` → Here in the Score Plots Feature 1 is at the second place so we have a positive $AUC_{FS} = 0.451$ but we have the usual reduction in the precision values passing from 5 to 4 features for the `direct` approach and passing from 2 features to 1 in the `inverse` approach. 
 
 ## TO DO this weekend 
 
-- [ ] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
-- [ ] Do the same comments also for `annthyroid` and `moodify` 
+- [x] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
+- [x] Do the same comments also for `annthyroid` 
+	- [ ] and `moodify`
 - [ ] Do Feature Selection plots with `IF` as evaluating model for `annthyroid` and `moodify`
-- [ ] Go on with the contamination plots (for synthetic datasets and other real datasets)
+- [ ] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
+- [x] Go on with the contamination plots (for synthetic datasets)
+
