@@ -240,6 +240,7 @@ class Dataset:
         if self.X_train is None:
             self.X_train=copy.deepcopy(self.X)
             self.X_test=copy.deepcopy(self.X)
+            self.y_test=copy.deepcopy(self.y)
 
         scaler = StandardScaler()
         
