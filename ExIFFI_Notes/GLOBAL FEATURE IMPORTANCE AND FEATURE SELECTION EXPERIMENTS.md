@@ -480,6 +480,97 @@ $$
 
 # Final Experiments Global Feature Importance 
 
+## `Xaxis` → ==ok== 
+
+- `scenario=1`
+	- `EIF+`
+		- `random`
+		- Ad-hoc 
+			- `EXIFFI+` → ==ok==
+			- `EXIFFI` → ==ok==
+			- `DIFFI` → ==ok==
+		- Post-hoc (surrogate model)
+			- `EIF+_RandomForest` → ==ok==
+			- `EIF_RandomForest` → ==ok==
+			- `IF_RandomForest` → ==ok==
+	- `EIF`
+		- `random` → ==ok==
+			- Ad-hoc 
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok== 
+			- Post-hoc (surrogate model)
+				- `EIF+_RandomForest` → ==ok==
+				- `EIF_RandomForest` → ==ok== 
+				- `IF_RandomForest` → ==ok== 
+
+- `scenario=2`
+	- `EIF+`
+		- `random` → ==ok==
+		- Ad-hoc 
+			- `EXIFFI+` → ==ok== 
+			- `EXIFFI` → ==ok==
+			- `DIFFI` → ==ok==
+		- Post-hoc (surrogate model)
+			- `EIF+_RandomForest` → ==ok==
+			- `EIF_RandomForest` → ==ok==
+			- `IF_RandomForest` → ==ok==
+	- `EIF`
+		- `random` → ==ok==
+			- Ad-hoc 
+				- `EXIFFI+` → ==ok== 
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+_RandomForest` → ==ok==
+				- `EIF_RandomForest` → ==ok==
+				- `IF_RandomForest` → ==ok== 
+## `bisect` → ==ok==
+
+- `scenario=1`
+	- `EIF+`
+		- `random`
+		- Ad-hoc 
+			- `EXIFFI+` → ==ok==
+			- `EXIFFI` → ==ok==
+			- `DIFFI` → ==ok==
+		- Post-hoc (surrogate model)
+			- `EIF+_RandomForest` → ==ok==
+			- `EIF_RandomForest` → ==ok==
+			- `IF_RandomForest` → ==ok==
+	- `EIF`
+		- `random` → ==ok==
+			- Ad-hoc 
+				- `EXIFFI+` → ==ok==
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+_RandomForest` → ==ok==
+				- `EIF_RandomForest` → ==ok==
+				- `IF_RandomForest` → ==ok==
+
+- `scenario=2`
+	- `EIF+`
+		- `random` → ==ok==
+		- Ad-hoc 
+			- `EXIFFI+` → ==ok== 
+			- `EXIFFI` → ==ok==
+			- `DIFFI` → ==ok==
+		- Post-hoc (surrogate model)
+			- `EIF+_RandomForest` → ==ok==
+			- `EIF_RandomForest` → ==ok==
+			- `IF_RandomForest` → ==ok==
+	- `EIF`
+		- `random` → ==ok==
+			- Ad-hoc 
+				- `EXIFFI+` → ==ok== 
+				- `EXIFFI` → ==ok==
+				- `DIFFI` → ==ok==
+			- Post-hoc (surrogate model)
+				- `EIF+_RandomForest` → ==ok==
+				- `EIF_RandomForest` → ==ok==
+				- `IF_RandomForest` → ==ok==
+
 ## `glass` → ==ok== 
 
 - `scenario=1`
@@ -1259,12 +1350,113 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 			- `DIFFI` → Like `DIFFI, scenario 2` but with a smaller $AUC_{FS} = 0.963$
 			- `IF_RandomForest` → Here in the Score Plots Feature 1 is at the second place so we have a positive $AUC_{FS} = 0.451$ but we have the usual reduction in the precision values passing from 5 to 4 features for the `direct` approach and passing from 2 features to 1 in the `inverse` approach. 
 
+### `moodify`
+
+#### Importance Plots
+
+- `EIF+`
+	- `EXIFFI+, scenario 2`
+		- Bar Plot: The `loudness` feature is the most important one around 60% of the times (probably in the first version of the paper there was some errors in the numerical order of the features and their names because this corresponds to Feature 3 (like the one we identified in the paper) but it is not `energy` as we wrote). In any case it makes sense also semantically that `loudness` is the most important feature to separate `energy` songs from `calm` songs. 
+		- Score Plot: `loudness` is the first in the ranking with a clear advantage on `spec. rate` and `speechiness`. In any case all the features except `loudness` have really close importance values. 
+	- `EXIFFI+, scenario 1`
+		- Bar Plot: As usual in `scenario 1` there are several features appearing as the most important one in different runs.
+		- Score Plot: Graphically we can see a gap in the importance scores of `speechiness`, `duration (ms)`, `liveness` and `spec_rate` with the respect to the others. `loudness` is at position 5. 
+	- `RandomForest, scenario 2`
+		- Bar Plot: `loudness` is at first place in all the runs.
+		- Score Plot: `loudness` clearly on top, followed by `instrumentalness`, `speechiness`. `spec_rate` is at position 7. 
+	- `RandomForest, scenario 1`
+		- Bar Plot: `spec_rate`  is at the first place more than 50% of the times with `loudness` getting good percentages in position 2 and 3.
+		- Score Plot: The first two features, with a visible margin over the others, are `spec_rate` and `liveness`. `loudness` is in position 7. 
+- `EIF`
+	- `EXIFFI, scenario 2`
+		- Bar Plot: 
+		- Score Plot
+	- `EXIFFI, scenario 1`
+		- Bar Plot:
+		- Score Plot
+	- `RandomForest, scenario 2`
+		- Bar Plot:
+		- Score Plot
+	- `RandomForest, scenario 1`
+		- Bar Plot:
+		- Score Plot
+- `IF`
+	- `DIFFI, scenario 2`
+		- Bar Plot:
+		- Score Plot
+	- `DIFFI, scenario 1`
+		- Bar Plot:
+		- Score Plot
+	- `RandomForest, scenario 2`
+		- Bar Plot:
+		- Score Plot
+	- `RandomForest, scenario 1`
+		- Bar Plot:
+		- Score Plot
+
+#### Feature Selection Plots 
+
+- `EIF+`
+	- `scenario 2`
+		- `EIF+`
+			- `EXIFFI+` → 
+			- `EIF+_RandomForest` →
+		- `EIF`
+			- `EXIFFI` →
+			- `EIF_RandomForest` → 
+		- `IF`
+			- `DIFFI` → 
+			- `IF_RandomForest` → 
+
+	- `scenario 1`
+		- `EIF+`
+			- `EXIFFI+` → 
+			- `EIF+_RandomForest` → 
+		- `EIF`
+			- `EXIFFI` → 
+			- `EIF_RandomForest` → 
+		- `IF`
+			- `DIFFI` → 
+			- `IF_RandomForest` → 
+
+- `EIF`
+	- `scenario 2`
+		- `EIF+`
+			- `EXIFFI+` → 
+			- `EIF+_RandomForest` → 
+		- `EIF`
+			- `EXIFFI` → 
+			- `EIF_RandomForest` → 
+		- `IF`
+			- `DIFFI` → 
+			- `IF_RandomForest` → 
+
+	- `scenario 1`
+		- `EIF+`
+			- `EXIFFI+` → 
+			- `EIF+_RandomForest` → 
+		- `EIF`
+			- `EXIFFI` → 
+			- `EIF_RandomForest` → 
+		- `IF`
+			- `DIFFI` → 
+			- `IF_RandomForest` → 
+
+
+> [!important] Particular Results in Synthetic Datasets
+>  In most of the cases the Feature Selection plots done on `Xaxis` are almost full red and with very high values of $AUC_{FS}$ and so are pretty different from the ones I obtained in the first set of tests. The main difference is that now I am using `EIF+` to evaluate the Average Precision values while in the first version of the tests I always used the same model used for the interpretation to compute the Average Precisions (i.e. `EIF+` for `EXIFFI+`, `EIF` for `EXIFFI` and `IF` for `DIFFI`) . As we showed in the first version of the paper (in the Violin Plots) `EIF+` and `EIF` are very good with synthetic datasets (both in `scenario 1` and in `scenario 2`) while `IF` is very bad, in particular in `Xaxis` and `Yaxis` (while with the `bisect` datasets the performances are comparable with the ones of `EIF+` and `EIF`). 
+>  We can see this effect mainly on the plot of `IF_RandomForest`. In the Score Plot of this configuration Feature 1 and Feature 0 have essentially the same importance but Feature 1 is sligthly above (and this does not follow the ground truth (that we know since we are working with a synthetic dataset) saying that Feature 0 is the most important feature). So we expect to have not a very good Feature Importance plot in terms of $AUC_{FS}$. In the first run of the tests in fact $AUC_{FS} = 1.523$ and there is a huge drop in precision (from about 0.7 to about 0.1) passing from 2 to 1 features (i.e. when Feature 0 is removed). However using `EIF+` as an evaluation model the result is $AUC_{FS} = 3.999$. We can see the fact that Feature 0 is wrongly at the second place because in the `direct` approach we have an increase in Average Precision passing from 6 to 5 features (i.e. when Feature 1 is removed) and in the `inverse` approach we have an even wider drop (from 0.9 to 0.1) passing from 2 to 1 features (i.e. when Feature 0 is removed). The reason why $AUC_{FS}$ is so high it's because in the `inverse` approach the Average Precision are all almost 1 while Feature 0 is part of the Feature Space. 
+
+> [!warning] 
+> The only doubt I have is that in configurations like `EIF+_EXIFFI+, scenario 1` and `EIF+_RandomForest, scenario 1` (that were evaluated with `EIF+` also in the first set of tests) the plots are very different. In the first set of tests in fact these plots were "half red" and the shape was more or less the one of a rectangular triangle (triangolo rettangolo), but now, in this second run of tests, they are full red with a rectangular shape like most of the ones done up to now. 
+> Looking at all the Score Plots of these configurations there is always Feature 0 on top, the difference is the margin from the importance score of Feature 1 (that in some cases is high and some other is smaller). So essentially it seems that while Feature 0 is in the mix (and so in all the steps for the `inverse` approach if it is the first feature) the Average Precision (in `Xaxis`, and probably also on `Yaxis`) is always very close to 1. 
+
 ## TO DO this weekend 
 
 - [x] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
 - [x] Do the same comments also for `annthyroid` 
 	- [ ] and `moodify`
 - [ ] Do Feature Selection plots with `IF` as evaluating model for `annthyroid` and `moodify`
-- [ ] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
+- [x] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
 - [x] Go on with the contamination plots (for synthetic datasets)
 
