@@ -1356,7 +1356,7 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 
 - `EIF+`
 	- `EXIFFI+, scenario 2`
-		- Bar Plot: The `loudness` feature is the most important one around 60% of the times (probably in the first version of the paper there was some errors in the numerical order of the features and their names because this corresponds to Feature 3 (like the one we identified in the paper) but it is not `energy` as we wrote). In any case it makes sense also semantically that `loudness` is the most important feature to separate `energy` songs from `calm` songs. 
+		- Bar Plot: The `loudness` feature is the most important one around 60% of the times (probably in the first version of the paper there were some errors in the numerical order of the features and their names because this corresponds to Feature 3 (like the one we identified in the paper) but it is not `energy` as we wrote). In any case it makes sense also semantically that `loudness` is the most important feature to separate `energy` songs from `calm` songs. 
 		- Score Plot: `loudness` is the first in the ranking with a clear advantage on `spec. rate` and `speechiness`. In any case all the features except `loudness` have really close importance values. 
 	- `EXIFFI+, scenario 1`
 		- Bar Plot: As usual in `scenario 1` there are several features appearing as the most important one in different runs.
@@ -1369,78 +1369,108 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 		- Score Plot: The first two features, with a visible margin over the others, are `spec_rate` and `liveness`. `loudness` is in position 7. 
 - `EIF`
 	- `EXIFFI, scenario 2`
-		- Bar Plot: 
-		- Score Plot
+		- Bar Plot: `loudness` is at first place almost in all the runs (probably there were 1/2 runs were `danceability` was at first place). 
+		- Score Plot: `loudness` on top with a visible margin on `spec_rate`, `speechiness` and the other features. 
 	- `EXIFFI, scenario 1`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: Similar to `EXIFFI+, scenario 1`
+		- Score Plot: Like in `EXIFFI+, scenario 1` there are 4 features with a slight higher importance scores than the others. These 4 features are the same encountered in `EXIFFI+, scenario 1` but in a different order: `liveness,speechiness,spec_rate, duration(ms)`. `loudness` is at position 5. 
 	- `RandomForest, scenario 2`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: Similar to `EIF+_RandomForest, scenario 2` with `loudness` at rank 1 in all the runs. 
+		- Score Plot: Like in `EIF+_RandomForest, scenario 2` `loudness` is by far the most important feature, followed by `instrumentalness` and `speechiness`. 
 	- `RandomForest, scenario 1`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: `speechiness` is at rank 1 about 90% of the times.
+		- Score Plot: `speechiness` at first place followed by `liveness` and `loudness`. 
 - `IF`
 	- `DIFFI, scenario 2`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: A lot of variability in the first two ranks, `spec_rate` is the feature with the highest percentages.
+		- Score Plot: `spec_rate` at first place followed by `duration(ms)` and `speechiness`. 
 	- `DIFFI, scenario 1`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: Similar to `scenario 2`
+		- Score Plot: Similar to `scenario 2`
 	- `RandomForest, scenario 2`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: Here we have a perfect division between `loudness` and `instrumentalness` in the first two ranks (90% `loudness` and 10% `instrumnetalness` in rank 1 and viceversa in rank 2).
+		- Score Plot: `loudness` at first place followed by `instrumentalness`. 
 	- `RandomForest, scenario 1`
-		- Bar Plot:
-		- Score Plot
+		- Bar Plot: Similar to `scenario 1` but now the first rank of the Bar Plot is divided by `spec_rate` and `instrumetalness`
+		- Score Plot: `spec_rate` and `instrumentalness` at the first two places. 
 
 #### Feature Selection Plots 
 
 - `EIF+`
 	- `scenario 2`
 		- `EIF+`
-			- `EXIFFI+` → 
-			- `EIF+_RandomForest` →
+			- `EXIFFI+` → $AUC_{FS} = 0.389$ not very good. There is an alternation between red and blue lines to be on top. In particular the blue line passes on top switching from 9 to 8 features (i.e. so when we remove `speechiness`) then the `direct` approach decreases in Average Precision when we pass from 6 to 4 features so when we remove `energy` and `instrumentalness`. On the other hand in the red line (i.e. `inverse` approach) it starts with a decreasing trend and then it start to increase from 6 to 4 features (i.e. when `energy` and `liveness` are removed), then it continues to increase. The higher jump is registered from 2 to 1 feature, this justifies the important of `loudness`. 
+			- `EIF+_RandomForest` → $AUC_{FS} = 0.741$ sligthly better (probably because in the Score Plot there is a wider margin, in terms of importance, between `instrumentalness` and `speechiness`). In the `inverse` approach the Average Precision starts to increase from 4 features onward (i.e. in fact looking at the Score Plot the first 4 features have some margin on the others). In the `direct` approach instead there is a zig zag trend between 5 and 3 features.
+				- Decrease between 6 and 5 → remove `danceability`
+				- Increase between 5 and 4 → remove `spec_rate`
+				- Decrease between 4 and 3 → remove `tempo`
+			 This makes sense because we have seen `spec_rate` in high positions in the Score Plots of many configurations while `danceability` and `tempo` were never mentioned in the first positions. 
 		- `EIF`
-			- `EXIFFI` →
-			- `EIF_RandomForest` → 
+			- `EXIFFI` → $AUC_{FS} = 0.77$ Here we have the `inverse` approach always at higher precision than the `direct` one (as it should be). There is something like a U shape in `inverse` between 10 and 6 features. 
+				- Decrease between 10 and 9 → remove `tempo`
+				- Between 9 and 7 (i.e. remove `acousticness` and `danceability`) more or less constant
+				- Increase between 7 and 6 → remove  `instrumentalness`
+			 On the other hand in `direct` there is:
+				- Increase between 5 and 4 → remove `instrumentalness`
+				- Decrease between 4 and 2 → remove `danceability` and `acousticness`
+			- `EIF_RandomForest` → $AUC_{FS} = 0.733$ More or less similar to `EXIFFI` but the $AUC_{FS}$ value is a bit lower because there is a point where the Average Precision of `direct` overcomes the `inverse` one. This point is at 5 features. The increase in precision going from 6 to 5 corresponds to the removal of `duration (ms)`. At the same time going from 6 to 5 a decrease is observed in the `inverse` approach, always for the removal of `duration (ms)`
 		- `IF`
-			- `DIFFI` → 
-			- `IF_RandomForest` → 
+			- `DIFFI` → $AUC_{FS} = -1.037$ Negative value because `direct` is always at higher Average Precision values than `inverse`. In `direct` there is a peak in Average Precision that starts to decrease passing to 6 features, so when `loudness` is removed. The same happens in `inverse` where the precision drops passing from 5 to 4 features (always because of the removal of `loudness`). 
+			- `IF_RandomForest` → $AUC_{FS} = 0.812$ Here in the Score Plot `loudness` is clearly the most important feature so now we still get a result that makes sense. Actually this is the highest $AUC_{FS}$ value found up to now. There is an increase in `direct` approach passing from 7 to 6 features (so removing `liveness`). At the same time when `liveness` is removed the increasing trend of the `inverse` approach starts. 
 
 	- `scenario 1`
 		- `EIF+`
-			- `EXIFFI+` → 
-			- `EIF+_RandomForest` → 
+			- `EXIFFI+` → $AUC_{FS} = -0.952$ Very similar to `IF_DIFFI, scenario 2`. In fact in both the Score Plots of these configurations `loudness` was placed at position 5. 
+			- `EIF+_RandomForest` → In the Score Plot `loudness` is at position 7 so we have a negative $AUC_{FS} = -1.5$ and there is an Average Precision decrease going from 5 to 4 features (so when `loudness` is removed) in the `direct` approach. 
 		- `EIF`
-			- `EXIFFI` → 
-			- `EIF_RandomForest` → 
+			- `EXIFFI` → $AUC_{FS} = -1.375$ Also here, like in `EXIFFI+, scenario 1` and `DIFFI, scenario 2`, feature `loudness` is at position 5 and so the final shape of the plot is similar to the ones already seen, although here the Average Precision values are a bit lower and so there is not a clear peak in the `direct` approach. 
+			- `EIF_RandomForest` → $AUC_{FS} = -0.765$ In the Score Plot `loudness` is at the third rank so the $AUC_{FS}$ is negative and we have a decrease going from 9 to 8 features in `direct` approach and going from 3 to 2 in the `inverse` approach (i.e. when `loudness` is removed). 
 		- `IF`
-			- `DIFFI` → 
-			- `IF_RandomForest` → 
+			- `DIFFI` → $AUC_{FS} = -1.019$ Same thing as `DIFFI, scenario 2`, `EXIFFI+/EXIFFI, scenario 1`
+			- `IF_RandomForest` → Also here very similar to `scenario 1` (because, as it frequently happens, `loudness` is in $5^{th}$ place for importance values). However other than the usual decrease between 7 and 6 for `direct` and between 5 and 4 for `inverse` there are in `inverse` :
+				- Increase between 3 and 2 → remove `liveness`
+				- Decrease between 2 and 1 → remove `instrumentalness`
 
 - `EIF`
 	- `scenario 2`
 		- `EIF+`
-			- `EXIFFI+` → 
-			- `EIF+_RandomForest` → 
+			- `EXIFFI+` → $AUC_{FS} = 0.353$ Very up and down trend. Let's analyse the main ups and down in both approaches. 
+				- `direct`
+					- Increase between 9 and 8 → remove `speechiness`
+					- Increase between 7 and 6 → remove `liveness`
+					- Decrease between 5 and 4 → remove `instrumentalness`
+					- Increase between 2 and 1 → remove `tempo`
+				- `inverse` → Here the trend start to be increasing (after a constant/sligthly decreasing trend) when we pass from 5 to 4 features → when `liveness` is removed. 
+			- `EIF+_RandomForest` → $AUC_{FS} = 1.164$ Pretty standard Feature Selection plot. There are some ups and downs in the `direct` part. 
 		- `EIF`
-			- `EXIFFI` → 
-			- `EIF_RandomForest` → 
+			- `EXIFFI` → $AUC_{FS} = 0.965$ Similar to `EIF+_RandomForest`. There is a V shape between 9 and 6 features in `inverse`: 
+				- Decrease from 9 to 7 → remove `acousticness` and `instrumentalness`
+				- Increase from 7 to 6 → remove `liveness`
+			 On the other hand in `direct` we have: 
+				 - Increase from 5 to 4 → remove `liveness`
+				 - Decrease from 4 to 2 → remove `instruumentalness` and `acousticness`
+				 - Increase from 2 to 1 → remove `tempo`
+			- `EIF_RandomForest` → $AUC_{FS} = 0.91$ Between 6 and 4 features the `direct` approach is higher than the `inverse` one. V shape at the beginning in `direct`:
+				- Decrease from 11 to 9 → remove `valence` and `acousticness`
+				- Increase from 9 to 6 → remove `energy,tempo,danceability`
+			On the other hand in `direct` the increasing trend starts from 4 features onward, we when `liveness` is removed. 
 		- `IF`
-			- `DIFFI` → 
-			- `IF_RandomForest` → 
+			- `DIFFI` → As in `EIF+` here we are in the situation in which `loudness` is in position 5, so usual scenario → $AUC_{FS} = -1.22$
+			- `IF_RandomForest` → $AUC_{FS} = 1.132$. Actually this is the highest $AUC_{FS}$ value seen up to now. It has the standard shape, with some oscillations in the `direct` approach. 
 
 	- `scenario 1`
 		- `EIF+`
-			- `EXIFFI+` → 
-			- `EIF+_RandomForest` → 
+			- `EXIFFI+` → Similar to `EIF+, EXIFFI+, scenario 1` → $AUC_{FS} = -1.642$
+			- `EIF+_RandomForest` → Similar to `EIF+, EIF+_RandomForest, scenario 1` → $AUC_{FS} = -1.89$
 		- `EIF`
-			- `EXIFFI` → 
-			- `EIF_RandomForest` → 
+			- `EXIFFI` → Similar to `EIF+, EXIFFI, scenario 1` → $AUC_{FS} = -1.83$
+			- `EIF_RandomForest` → Similar to `EIF+, EIF_RandomForest, scenario 1` → $AUC_{FS} = -1.189$
 		- `IF`
-			- `DIFFI` → 
-			- `IF_RandomForest` → 
+			- `DIFFI` → Similar to `EIF+, DIFFI, scenario 1` → $AUC_{FS} = -1.54$ 
+			- `IF_RandomForest` → Similar to `EIF+, IF_RandomForest, scenario 1` → $AUC_{FS} = -0.844$
+
+> [!note] 
+> In `moodify` multiple times it happened that removing feature `liveness` increased a little bit the Average Precision. This suggests us that probably `liveness` is not a very important feature. 
 
 
 > [!important] Particular Results in Synthetic Datasets
@@ -1455,7 +1485,7 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 
 - [x] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
 - [x] Do the same comments also for `annthyroid` 
-	- [ ] and `moodify`
+	- [x] and `moodify`
 - [ ] Do Feature Selection plots with `IF` as evaluating model for `annthyroid` and `moodify`
 - [x] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
 - [x] Go on with the contamination plots (for synthetic datasets)
