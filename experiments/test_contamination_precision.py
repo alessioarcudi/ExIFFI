@@ -35,7 +35,7 @@ parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feat
 
 parser.add_argument('--model', type=str, default="IF", help='Name of the model')
 parser.add_argument('--interpretation', type=str, default="NA", help='Name of the interpretation algorithm')
-parser.add_argument('--pre_process', type=bool, default=True, help='If set, preprocess the dataset')
+parser.add_argument('--pre_process', type=bool, default=False, help='If set, preprocess the dataset')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -80,7 +80,13 @@ dataset.drop_duplicates()
 if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
 
-dataset.pre_process()
+if pre_process:
+    print("Preprocessing dataset...")
+    dataset.pre_process()
+
+print("#"*50)
+print("Dataset not preprocessed")
+print("#"*50)
 
 if model == "EIF+":
     I = ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
@@ -146,11 +152,11 @@ if GFI:
     if not os.path.exists(path_experiment_global_importances_model_interpretation):
         os.makedirs(path_experiment_global_importances_model_interpretation)
 
-    precisions, importances = contamination_in_training_precision_evaluation(I, dataset, n_runs, train_size=train_size, contamination_values=contamination, compute_GFI=GFI, interpretation = interpretation)
+    precisions, importances = contamination_in_training_precision_evaluation(I, dataset, n_runs, train_size=train_size, contamination_values=contamination, compute_GFI=GFI, interpretation = interpretation, pre_process=pre_process) 
     save_element((importances,contamination), path_experiment_global_importances_model_interpretation, filetype="pickle")
     save_element((precisions,contamination), path_experiment_contamination_model, filetype="pickle")
 else:
-    precisions = contamination_in_training_precision_evaluation(I, dataset, n_runs, train_size=train_size, contamination_values=contamination, compute_GFI=GFI, interpretation = interpretation)
+    precisions = contamination_in_training_precision_evaluation(I, dataset, n_runs, train_size=train_size, contamination_values=contamination, compute_GFI=GFI, interpretation = interpretation, pre_process=pre_process)
     save_element((precisions,contamination), path_experiment_contamination_model, filetype="pickle")
 
 #plot contamination evaluation
