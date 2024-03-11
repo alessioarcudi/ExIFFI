@@ -206,3 +206,13 @@ In any case the common trends are the following:
 - In general `DIF` is the better model followed by `EIF+` and the others. This makes sense from a theoretical point of view. `DIF` is in fact able to isolate anomalies distributed also in non linear shapes. However from our results probably we can say that `EIF+` is the best one if we also include the time efficiency in the evaluation. In fact `EIF+` is much faster than `DIF`. Moreover in the paper we are presenting a way of interpreting the results of `EIF+` while, up to now, there are no interpretability methods for the `DIF` model. 
 - Saturation in the Precision values in the plots depends on the contamination factor of the dataset (i.e. the percentage of outliers in the dataset). There are several datasets with a contamination factor lower than 0.1. So after their contamination level is passed the function `dataset.split_dataset(contamination=c)` will produce the same `X_train` independently on the value `c`. So the Precision values for all the values of `c` higher than `p` (contamination level  of the dataset) will be more or less the same (there will be some differences due to the randomness of the model). 
 - The `AutoEncoder` model is most of the time the worst model by a significant margin. It may be because of the hyper parameters used? (in particular the `hidden_neurons` one)? Moreover, as we changed the parameters for `DIF` (because using `n_estimators` equal to the number of trees used in the forests does not make sense since in `DIF` `n_estimators` indicates the number of forests used) and we performed experiments on much bigger datasets, `AutoEncoder` is by far the slowest model. In fact it is a Neural Network like `DIF` but, differently from `DIF`, the layers here are trained (for 100 epochs). So maybe we can try to reduce the number of `hidden_neurons` or reduce the number of epochs to make it a little bit faster. In fact I do not think that the performances will change a lot if we decrease the epochs from 100 to 50. 
+
+# Performance Experiments 
+
+- `Xaxis` → ==ok== 
+	- Re do using the new version (10 executions to compute the Average Precision)
+- `glass_DIFFI` → ==ok== 
+- `annthyroid` → ==ok== 
+	- Re do using the new version (10 executions to compute the Average Precision)
+- `moodify`
+	- Do from `EIF` onward using the new version (10 executions to compute the Average Precision)
