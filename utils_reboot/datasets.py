@@ -141,6 +141,10 @@ class Dataset:
                     self.y = T.loc[:,"Target"].to_numpy(float)
                 except:
                     raise Exception("The dataset name is not valid") from e
+                
+        self.X_train=copy.deepcopy(self.X)
+        self.X_test=copy.deepcopy(self.X)
+        self.y_test=copy.deepcopy(self.y)
 
     def __repr__(self) -> str:
         return f"[{self.name}][{self.shape}][{self.n_outliers}]"
