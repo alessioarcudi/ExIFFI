@@ -68,44 +68,6 @@ def open_element(file_path, filetype="pickle"):
         element = np.load(file_path)['element']
     return element
 
-def performance(y_pred:np.array,
-                y_true:np.array,
-                model_name:str,
-                dataset_name:str,
-                contamination:float=0.1,
-                train_size:float=0.8,
-                filename:str="",
-                path:str="/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments"
-                ) -> pd.DataFrame: 
-    
-    # In path insert the local put up to the experiments folder:
-    # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
-    # For Alessio → /Users/alessio/Documents/ExIFFI
-
-    
-    df=pd.DataFrame({
-        "Model": model_name,
-        "Dataset": dataset_name,
-        "Contamination": contamination,
-        "Train Size": train_size,
-        "Precision": precision_score(y_true, y_pred),
-        "Recall": recall_score(y_true, y_pred),
-        "f1 score": f1_score(y_true, y_pred),
-        "Accuracy": accuracy_score(y_true, y_pred),
-        "Balanced Accuracy": balanced_accuracy_score(y_true, y_pred),
-        "Average Precision": average_precision_score(y_true, y_pred),
-        "ROC AUC Score": roc_auc_score(y_true, y_pred)
-    }, index=[pd.Timestamp.now()])
-
-    path=path + f"/results/{dataset_name}/experiments/metrics/{model_name}/"
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-    
-    save_element(df, path, filename)
-    
-    return df
-
 def fix_fs_file(dataset,model,interpretation,scenario):
     path=os.path.join(os.getcwd(),dataset.name,'experiments','feature_selection',model,interpretation,f'scenario_{str(scenario)}')
     file_path=get_most_recent_file(path)

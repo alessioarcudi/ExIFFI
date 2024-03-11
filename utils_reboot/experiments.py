@@ -9,25 +9,31 @@ cwd = os.getcwd()
 os.chdir("experiments")
 import numpy as np
 import numpy.typing as npt
-from tqdm import tqdm
+from tqdm import tqdm,trange
 import copy
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from model_reboot.interpretability_module import *
 from utils_reboot.datasets import Dataset
+from utils_reboot.utils import save_element
 import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
 import pickle
 import time
+import pandas as pd
 
-filename = cwd + "/utils_reboot/new_time.pickle"
+filename = cwd + "/utils_reboot/new_time_scenario.pickle"
 
 if not os.path.exists(filename):
-    dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+    dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
             "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
-            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}},
+            2:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+            "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}}
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
                
@@ -59,7 +65,8 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                n_runs:int = 10, 
                                p = 0.1,
                                model = "EIF+",
-                               interpretation="EXIFFI") -> tuple[np.array,dict,str,str]:
+                               interpretation="EXIFFI",
+                               scenario=2) -> tuple[np.array,dict,str,str]:
 
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
@@ -72,7 +79,7 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                         model = model)
         gfi_time = time.time() - start_time
         if i>3:
-            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+            dict_time[scenario]["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
             #print(f'Added time {str(gfi_time)} to time dict')
     
     with open(filename, "wb") as file:
@@ -110,7 +117,8 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       importances_indexes: npt.NDArray,
                       n_runs: int = 10, 
                       inverse: bool = True,
-                      random: bool = False
+                      random: bool = False,
+                      scenario:int=2
                       ) -> tuple[np.array,dict,str,str]:
 
         dataset_shrinking = copy.deepcopy(dataset)
@@ -132,13 +140,13 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                         fit_time = time.time() - start_time
                         
                         if run >3:
-                            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                            dict_time[scenario]["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                         start_time = time.time()
                         score = I.predict(dataset_shrinking.X_test)
                         predict_time = time.time() - start_time
                         
                         if run >3:                        
-                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                            dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                     else:
                         I.fit(dataset_shrinking.X_test)
                         score = I.predict(dataset_shrinking.X_test)
@@ -159,7 +167,9 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    train_size = 0.8,
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_GFI:bool=False,
-                                                   interpretation:str="EXIFFI"
+                                                   interpretation:str="EXIFFI",
+                                                   pre_process:bool=True, # in the synthetic datasets the dataset should not be pre processed
+                                                   scenario:int=1 # in the contamination experiments we only use scenario 1
                                                    ) -> tuple[np.array,dict,str,str]:
 
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
@@ -168,7 +178,8 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     for i,contamination in tqdm(enumerate(contamination_values)):
         for j in range(n_runs):
             dataset.split_dataset(train_size,contamination)
-            dataset.pre_process()
+            if pre_process:
+                dataset.pre_process()
             
             start_time = time.time()
             I.fit(dataset.X_train)
@@ -176,10 +187,10 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             
             if j>3:
                 try:
-                    dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                    dict_time[scenario]["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                 except:
                     print('Model not recognized: creating a new key in the dict_time for the new model')
-                    dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
+                    dict_time[scenario]["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
             
             if compute_GFI:
                 for k,c in enumerate(contamination_values):
@@ -191,17 +202,17 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                                     fit_model=False)
                     gfi_time = time.time() - start_time
                     if k>3: 
-                        dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+                        dict_time[scenario]["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
                     
             start_time = time.time()
             score = I.predict(dataset.X_test)
             predict_time = time.time() - start_time
             if j>3:
                 try:
-                    dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                    dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                 except:
                     print('Model not recognized: creating a new key in the dict_time for the new model')
-                    dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
+                    dict_time[scenario]["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y_test,score)
             precisions[i,j] = avg_prec
@@ -211,5 +222,60 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     if compute_GFI:
         return precisions,importances
     return precisions
+
+def performance(y_pred:np.array,
+                y_true:np.array,
+                score:np.array,
+                I:Type[ExtendedIsolationForest],
+                model_name:str,
+                dataset:Type[Dataset],
+                contamination:float=0.1,
+                train_size:float=0.8,
+                scenario:int=2,
+                n_runs:int=10,
+                filename:str="",
+                path:str=""
+                ) -> pd.DataFrame: 
+    
+    # In path insert the local put up to the experiments folder:
+    # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
+    # For Alessio → /Users/alessio/Documents/ExIFFI
+
+    y_pred=y_pred.astype(int)
+    y_true=y_true.astype(int)
+
+    if dataset.X.shape[0]>7500:
+        dataset.downsample(max_samples=7500)
+
+    precisions=[]
+    for i in trange(n_runs):
+        I.fit(dataset.X_train)
+        score = I.predict(dataset.X_test)
+        precisions.append(average_precision_score(y_true, score))
+    
+    df=pd.DataFrame({
+        "Model": model_name,
+        "Dataset": dataset.name,
+        "Contamination": contamination,
+        "Train Size": train_size,
+        "Precision": precision_score(y_true, y_pred),
+        "Recall": recall_score(y_true, y_pred),
+        "f1 score": f1_score(y_true, y_pred),
+        "Accuracy": accuracy_score(y_true, y_pred),
+        "Balanced Accuracy": balanced_accuracy_score(y_true, y_pred),
+        "Average Precision": np.mean(precisions),
+        "ROC AUC Score": roc_auc_score(y_true, y_pred)
+    }, index=[pd.Timestamp.now()])
+
+    path=path + f"/experiments/results/{dataset.name}/experiments/metrics/{model_name}/" + f"scenario_{str(scenario)}/"
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    filename=f"perf_{dataset.name}_{model_name}_{scenario}"
+
+    save_element(df, path, filename)
+    
+    return df,path
 
 
