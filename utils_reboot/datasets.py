@@ -160,6 +160,9 @@ class Dataset:
             sss = SSS(n_splits=1, test_size=1 - max_samples / len(self.X))
             index = list(sss.split(self.X, self.y))[0][0]
             self.X, self.y = self.X[index, :], self.y[index]
+            self.X_train=copy.deepcopy(self.X)
+            self.X_test=copy.deepcopy(self.X)
+            self.y_test=copy.deepcopy(self.y)
     
     def partition_data(self,X,y) -> tuple:
 
