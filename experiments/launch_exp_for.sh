@@ -6,12 +6,13 @@ SCRIPT_PATH="test_feature_selection.py"
 #SCRIPT_PATH="test_metrics.py"
 #SCRIPT_PATH="test_GFI_FS.py"
 #SCRIPT_PATH="test_local_importances.py"
+#SCRIPT_PATH="test_time_scaling.py"
 
 # List of datasets
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="Xaxis"
+DATASETS="bisect_3d"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -29,7 +30,6 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --model_interpretation "IF" \
         --interpretation "RandomForest" \
         --scenario 1
-
 done
 
 # For local scoremaps experiments 
