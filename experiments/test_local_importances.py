@@ -64,8 +64,16 @@ if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
+# Preprocess the dataset
 if pre_process:
+    print("#"*50)
+    print("Preprocessing the dataset...")
+    print("#"*50)
     dataset.pre_process()
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    print("#"*50)
 
 assert model in ["IF", "EIF", "EIF+"], "Interpretable AD model not recognized"
 assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"

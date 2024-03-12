@@ -61,7 +61,6 @@ dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
 
-
 # Downsample datasets with more than 7500 samples
 if dataset.shape[0] > 7500:
     dataset.downsample(max_samples=7500)
@@ -136,7 +135,7 @@ if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
     
 #Compute global importances
-full_importances = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, scenario=scenario)    
+full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, scenario=scenario)    
 save_element(full_importances, path_experiment_model_interpretation_scenario, filetype="npz")
 
 # plot global importances
