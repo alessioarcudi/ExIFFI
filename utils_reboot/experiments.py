@@ -25,15 +25,21 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/new_time_scenario.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test.pickle"
+
+# dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+#         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
+#         "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}},
+#         2:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+#         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
+#         "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}}
 
 if not os.path.exists(filename):
-    dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+
+    dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
             "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
-            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}},
-            2:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
-            "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
-            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}}
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+    
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
                
@@ -49,7 +55,7 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
                         model = "EIF+",
                         fit_model = True) -> np.array: 
     if fit_model:
-        I.fit(dataset.X_train)             
+        I.fit(dataset.X_train)        
     if interpretation=="DIFFI":
         fi,_=diffi_ib(I,dataset.X_test)
     elif interpretation=="EXIFFI" or interpretation=='EXIFFI+':
@@ -59,6 +65,38 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
         rf.fit(dataset.X_test, I.predict(dataset.X_test))
         fi = rf.feature_importances_
     return fi
+
+def fit_predict_experiment(I: Type[ExtendedIsolationForest],
+                            dataset: Type[Dataset],
+                            n_runs:int = 40,
+                            model='EIF+'):
+    fit_times = []
+    predict_times = []
+    
+    for i in trange(n_runs):
+        start_time = time.time()
+        I.fit(dataset.X_train)
+        fit_time = time.time() - start_time
+        if i>3:  
+            fit_times.append(fit_time)
+            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time) 
+        
+        start_time = time.time()
+        if model in ['EIF','IF','EIF+']:
+            _=I._predict(dataset.X_test,p=dataset.perc_outliers)
+            predict_time = time.time() - start_time
+        elif model in ['sklearn_IF','DIF','AnomalyAutoencoder']:
+            _=I.predict(dataset.X_test)
+            predict_time = time.time() - start_time
+
+        if i>3:
+            predict_times.append(predict_time)
+            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+
+    with open(filename, "wb") as file:
+        pickle.dump(dict_time, file)
+
+    return np.mean(fit_times), np.mean(predict_times)
                         
 def experiment_global_importances(I: Type[ExtendedIsolationForest],
                                dataset: Type[Dataset],
@@ -70,6 +108,7 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
 
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
+    imp_times=[]
     for i in tqdm(range(n_runs)):
         start_time = time.time()
         fi[i,:]=compute_global_importances(I,
@@ -79,12 +118,13 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
                         model = model)
         gfi_time = time.time() - start_time
         if i>3:
-            dict_time[scenario]["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+            imp_times.append(gfi_time)
+            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
             #print(f'Added time {str(gfi_time)} to time dict')
     
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
-    return fi
+    return fi,np.mean(imp_times)
 
 def compute_plt_data(imp_path):
 
@@ -140,13 +180,13 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                         fit_time = time.time() - start_time
                         
                         if run >3:
-                            dict_time[scenario]["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                         start_time = time.time()
                         score = I.predict(dataset_shrinking.X_test)
                         predict_time = time.time() - start_time
                         
                         if run >3:                        
-                            dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                     else:
                         I.fit(dataset_shrinking.X_test)
                         score = I.predict(dataset_shrinking.X_test)
@@ -187,10 +227,10 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             
             if j>3:
                 try:
-                    dict_time[scenario]["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                    dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
                 except:
                     print('Model not recognized: creating a new key in the dict_time for the new model')
-                    dict_time[scenario]["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
+                    dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
             
             if compute_GFI:
                 for k,c in enumerate(contamination_values):
@@ -202,17 +242,17 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                                     fit_model=False)
                     gfi_time = time.time() - start_time
                     if k>3: 
-                        dict_time[scenario]["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+                        dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
                     
             start_time = time.time()
             score = I.predict(dataset.X_test)
             predict_time = time.time() - start_time
             if j>3:
                 try:
-                    dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                    dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
                 except:
                     print('Model not recognized: creating a new key in the dict_time for the new model')
-                    dict_time[scenario]["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
+                    dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y_test,score)
             precisions[i,j] = avg_prec
