@@ -61,12 +61,27 @@ dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
 
+
+# Downsample datasets with more than 7500 samples
+if dataset.shape[0] > 7500:
+    dataset.downsample(max_samples=7500)
+
+
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
+# Preprocess the dataset
 if pre_process:
+    print("#"*50)
+    print("Preprocessing the dataset...")
+    print("#"*50)
     dataset.pre_process()
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    print("#"*50)
+
 
 if model == "IF":
     if interpretation == "EXIFFI":
