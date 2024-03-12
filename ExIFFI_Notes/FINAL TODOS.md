@@ -1,0 +1,22 @@
+- [ ] Put new Feature Selection Plots (obtained without scaling the data) of `Xaxis` in the paper 
+	- [ ] Update the $AUC_{FS}$ values of `Xaxis`
+- [ ] Produce the contamination plot plotting just `EIF` and`EIF+`
+- [ ] Finish Experiments `bisect_3d` (without rescaling) and put the result on the paper 
+	- [x] Importance Plots
+	- [x] Feature Selection Plots
+	- [ ] Contamination Plots
+	- [ ] Local Scoremaps
+- [ ] Experiments `bisect_6d` (without rescaling) and put the result on the paper 
+	- [ ] Performance Metrics
+	- [ ] Importance Plots
+	- [ ] Feature Selection Plots
+	- [ ] Contamination Plots
+	- [ ] Local Scoremaps
+- [ ] Do Time Scaling Experiment Samples vs Dimensions
+- [ ] Take the `Xaxis` dataset and see how the fit predict and importances times changes as we
+	- [x] Fix dimensions (e.g. 6) and increase the sample size
+	- [ ] Fix the sample size (e.g. 1000) and increase the number of dimensions
+
+- Sample size values → 100-250-500-1000-2500-5000-10000-25000-50000-100000-250000-300000 
+- Features values → 6-8-10-12-14-16-18-20 
+- Importances - -Dimensioni -> stoppare oltre i 300 sec.

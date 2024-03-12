@@ -161,6 +161,7 @@ Recommendation: Major Revision
 - ***Evaluation of post-hoc interpretability methods in time-series classification*** → This paper introduces some new metrics to evaluate interpretability models. The paper works on Time Series data and the interpretability methods evaluate the relevance of different time stamps -> we are working with tabular data and for use the time stamps will be the features. 
 - ***On the evaluation of unsupervised outlier detection: measures, datasets, and an empirical study*** → This dataset contains a section that describes some datasets with semantic outliers -> this is what we need, some outliers with a semantic meaning so that we can see if the interpretation done by ExIFFI aligns with the domain knowledge. 
 -  ***The precision-recall plot is more informative than the roc plot when evaluating binary classifiers on imbalanced datasets*** by T. Saito, M. Rehmsmeier: Cite this paper to support our decision of using the Average Precision as the metric to compare the performances of different models in the Ablation studies, Feature Selection and Contamination Plots. 
+- ***The inadequacy of Shapley Values for Explainability*** → We can use this paper to justify the reason why we did not use SHAP as an interpretability method to compare to `EXIFFI,EXIFFI+`. 
 
 ## Benchmark Datasets 
 

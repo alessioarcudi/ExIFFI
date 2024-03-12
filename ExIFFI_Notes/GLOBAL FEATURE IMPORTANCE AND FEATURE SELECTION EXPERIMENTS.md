@@ -1481,12 +1481,17 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 > The only doubt I have is that in configurations like `EIF+_EXIFFI+, scenario 1` and `EIF+_RandomForest, scenario 1` (that were evaluated with `EIF+` also in the first set of tests) the plots are very different. In the first set of tests in fact these plots were "half red" and the shape was more or less the one of a rectangular triangle (triangolo rettangolo), but now, in this second run of tests, they are full red with a rectangular shape like most of the ones done up to now. 
 > Looking at all the Score Plots of these configurations there is always Feature 0 on top, the difference is the margin from the importance score of Feature 1 (that in some cases is high and some other is smaller). So essentially it seems that while Feature 0 is in the mix (and so in all the steps for the `inverse` approach if it is the first feature) the Average Precision (in `Xaxis`, and probably also on `Yaxis`) is always very close to 1. 
 
-## TO DO this weekend 
+## TO DO today 12/3
 
-- [x] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
-- [x] Do the same comments also for `annthyroid` 
-	- [x] and `moodify`
-- [ ] Do Feature Selection plots with `IF` as evaluating model for `annthyroid` and `moodify`
-- [x] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
-- [x] Go on with the contamination plots (for synthetic datasets)
+- [ ] Finish the re doing experiments on `Xaxis` without pre processing the data 
+	- [ ] Feature Selection Plots
+	- [ ] Local Scoremaps
+- [ ] Re do the experiments also on `bisect_3d` without pre processing the data 
+	- [ ] Global Importances
+	- [ ] Feature Selection Plots
+	- [ ] Contamination Plots
+	- [ ] Local Scoremaps
+- [ ] Do the Performance Report experiments on `bisect_3d` (DO NOT PRE PROCESS THE DATA)
+
+
 
