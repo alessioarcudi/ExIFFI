@@ -29,7 +29,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --model "EIF" \
         --model_interpretation "IF" \
         --interpretation "RandomForest" \
-        --scenario 1
+        --scenario 
 done
 
 # For local scoremaps experiments 
