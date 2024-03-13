@@ -2,10 +2,10 @@
 
 # Path to the Python script to execute
 #SCRIPT_PATH="test_global_importancies.py"
-SCRIPT_PATH="test_feature_selection.py"
+#SCRIPT_PATH="test_feature_selection.py"
 #SCRIPT_PATH="test_metrics.py"
 #SCRIPT_PATH="test_GFI_FS.py"
-#SCRIPT_PATH="test_local_importances.py"
+SCRIPT_PATH="test_local_importances.py"
 #SCRIPT_PATH="test_time_scaling.py"
 
 # List of datasets
@@ -26,10 +26,10 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
-        --model "EIF" \
-        --model_interpretation "IF" \
-        --interpretation "RandomForest" \
-        --scenario 
+        --model "IF" \
+        --interpretation "DIFFI" \
+        --feats_plot "(0,1)" \
+        --scenario 1
 done
 
 # For local scoremaps experiments 
