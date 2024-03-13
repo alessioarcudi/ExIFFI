@@ -5,37 +5,37 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="bisect_3d"
+DATASETS="bisect_6d"
 
 # Path to the datasets
 DATASET_PATHS="../data/syn/"
 
 # Experiment EIF+
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "EIF+" \
-    --interpretation "EXIFFI+" \
-    --compute_GFI 1 
+# python $SCRIPT_PATH \
+#     --dataset_name $DATASETS \
+#     --dataset_path $DATASET_PATHS \
+#     --model "EIF+" \
+#     --interpretation "EXIFFI+" \
+#     --compute_GFI 1 
 
 # Experiment EIF
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "EIF" \
-    --interpretation "EXIFFI" \
-    --compute_GFI 1 \
+# python $SCRIPT_PATH \
+#     --dataset_name $DATASETS \
+#     --dataset_path $DATASET_PATHS \
+#     --model "EIF" \
+#     --interpretation "EXIFFI" \
+#     --compute_GFI 1 \
 
 # Experiment IF
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "IF" \
-    --interpretation "DIFFI" \
-    --compute_GFI 1 \
+# python $SCRIPT_PATH \
+#     --dataset_name $DATASETS \
+#     --dataset_path $DATASET_PATHS \
+#     --model "IF" \
+#     --interpretation "DIFFI" \
+#     --compute_GFI 1 \
 
 # Experiment DIF
 
