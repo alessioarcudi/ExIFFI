@@ -82,7 +82,7 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
             dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time) 
         
         start_time = time.time()
-        if model in ['EIF','IF','EIF+']:
+        if model in ['EIF','EIF+']:
             _=I._predict(dataset.X_test,p=dataset.perc_outliers)
             predict_time = time.time() - start_time
         elif model in ['sklearn_IF','DIF','AnomalyAutoencoder']:

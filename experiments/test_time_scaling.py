@@ -15,6 +15,11 @@ from model_reboot.EIF_reboot import ExtendedIsolationForest, IsolationForest
 from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
 import argparse
 
+class sklearn_IF(sklearn_IsolationForest):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "sklearn_IF"
+
 # Create the argument parser
 parser = argparse.ArgumentParser(description='Test Time Scaling')
 
@@ -35,8 +40,8 @@ parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feat
 # Parse the arguments
 args = parser.parse_args()
 
-assert args.model in ["IF", "EIF", "EIF+","sklearn_IF","DIF","AnomalyAutoencoder"], "Model not recognized"
-assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert args.model in ["IF", "EIF", "EIF+","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16"], "Model not recognized"
+assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
     assert args.model=="EIF+", "DIFFI can only be used with the EIF+ model"
@@ -84,7 +89,7 @@ if model == "IF":
     if interpretation == "EXIFFI":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
     elif interpretation == "DIFFI" or interpretation == "RandomForest" or model=="sklearn_IF":
-        I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
+        I = sklearn_IF(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
@@ -93,10 +98,12 @@ elif model == "DIF":
     I = DIF(max_samples=max_samples)
 elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+elif model == "AnomalyAutoencoder_16":
+    I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 16, 16, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
 
 if model == "DIF" and GFI:
     raise ValueError("DIF model does not support global feature importances")
-if model == "AnomalyAutoencoder" and GFI:
+if (model == "AnomalyAutoencoder" or model == "AnomalyAutoencoder_16")  and GFI:
     raise ValueError("AnomalyAutoencoder model does not support global feature importances")
 
 print('#'*50)
@@ -137,8 +144,8 @@ if not os.path.exists(path_experiment_model_fit_predict):
     os.makedirs(path_experiment_model_fit_predict)
 
 # Fit Predict Experiment 
-
 fit_time,predict_time=fit_predict_experiment(I=I,dataset=dataset,n_runs=n_runs,model=I.name)
+
 print(f'Mean Fit Time: {fit_time}')
 print(f'Mean Predict Time: {predict_time}')
 
