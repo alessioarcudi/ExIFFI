@@ -32,7 +32,7 @@ parser.add_argument('--max_samples', type=str, default='auto', help='EIF paramet
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
-parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
+parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+,EIF+_RF,DIF,AnomalyAutoencoder,AnomalyAutoencoder_16')
 parser.add_argument('--interpretation', type=str, default="NA", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
@@ -40,7 +40,7 @@ parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feat
 # Parse the arguments
 args = parser.parse_args()
 
-assert args.model in ["IF", "EIF", "EIF+","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16"], "Model not recognized"
+assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16"], "Model not recognized"
 assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
@@ -51,6 +51,9 @@ if args.interpretation == "EXIFFI":
 
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "RandomForest":
+    assert args.model=='EIF+_RF', "For the time scaling experiments only EIF+_RF model is accepted for the RandomForest interpretation"
 
 # Access the arguments
 dataset_name = args.dataset_name
@@ -92,7 +95,7 @@ if model == "IF":
         I = sklearn_IF(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-elif model == "EIF+":
+elif model == "EIF+" or model=='EIF+_RF':
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "DIF":
     I = DIF(max_samples=max_samples)
