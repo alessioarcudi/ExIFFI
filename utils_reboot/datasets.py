@@ -153,6 +153,9 @@ class Dataset:
         S = np.c_[self.X, self.y]
         S = pd.DataFrame(S).drop_duplicates().to_numpy()
         self.X, self.y = S[:, :-1], S[:, -1]
+        self.X_train=copy.deepcopy(self.X)
+        self.X_test=copy.deepcopy(self.X)
+        self.y_test=copy.deepcopy(self.y)
         
     def downsample(self, max_samples: int = 2500) -> None:
         if len(self.X) > max_samples:
