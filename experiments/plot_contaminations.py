@@ -18,7 +18,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Global Importances')
+parser = argparse.ArgumentParser(description='Plot Contaminations')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')

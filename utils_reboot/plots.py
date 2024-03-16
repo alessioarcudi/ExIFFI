@@ -6,12 +6,14 @@ from typing import Type, Optional, List
 
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns 
+sns.set()
 import pandas as pd
 import pickle
 from collections import namedtuple
 
 from utils_reboot.datasets import Dataset
-from utils_reboot.utils import open_element
+from utils_reboot.utils import open_element,get_most_recent_file
 from utils_reboot.experiments import compute_plt_data
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from matplotlib import colors, cm
@@ -385,9 +387,9 @@ def importance_map(dataset: Type[Dataset],
         fig,ax : plt.figure  and plt.axes objects used to create the plot 
         """
         
-        mins = dataset.X.min(axis=0)[list(feats_plot)]
-        maxs = dataset.X.max(axis=0)[list(feats_plot)]  
-        mean = dataset.X.mean(axis = 0)
+        mins = dataset.X_test.min(axis=0)[list(feats_plot)]
+        maxs = dataset.X_test.max(axis=0)[list(feats_plot)]  
+        mean = dataset.X_test.mean(axis = 0)
         mins = list(mins-(maxs-mins)*factor/10)
         maxs = list(maxs+(maxs-mins)*factor/10)
         xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[1], maxs[1], resolution))
@@ -405,8 +407,8 @@ def importance_map(dataset: Type[Dataset],
         
         sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
         Score = sign*((sign>0)*importance_matrix[:,feats_plot[0]]+(sign<0)*importance_matrix[:,feats_plot[1]])
-        x = dataset.X[:,feats_plot[0]].squeeze()
-        y = dataset.X[:,feats_plot[1]].squeeze()
+        x = dataset.X_test[:,feats_plot[0]].squeeze()
+        y = dataset.X_test[:,feats_plot[1]].squeeze()
         
         Score = Score.reshape(xx.shape)
 
@@ -419,12 +421,12 @@ def importance_map(dataset: Type[Dataset],
         ax.contour(xx, yy, (importance_matrix[:, feats_plot[0]] + importance_matrix[:, feats_plot[1]]).reshape(xx.shape), levels=7, cmap=cm.Greys, alpha=0.7)
 
         try:
-            ax.scatter(x[dataset.y == 0], y[dataset.y == 0], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
-            ax.scatter(x[dataset.y == 1], y[dataset.y == 1], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
+            ax.scatter(x[dataset.y_test == 0], y[dataset.y_test == 0], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
+            ax.scatter(x[dataset.y_test == 1], y[dataset.y_test == 1], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
         except IndexError:
             print('Handling the IndexError Exception...')
-            ax.scatter(x[(dataset.y == 0)[:, 0]], y[(dataset.y == 0)[:, 0]], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
-            ax.scatter(x[(dataset.y == 1)[:, 0]], y[(dataset.y == 1)[:, 0]], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
+            ax.scatter(x[(dataset.y_test == 0)[:, 0]], y[(dataset.y_test == 0)[:, 0]], s=40, c="tab:blue", marker="o", edgecolors="k", label="inliers")
+            ax.scatter(x[(dataset.y_test == 1)[:, 0]], y[(dataset.y_test == 1)[:, 0]], s=60, c="tab:orange", marker="*", edgecolors="k", label="outliers")
         
         if (isinstance(col_names, np.ndarray)) or (col_names is None):
             ax.set_xlabel(f'Feature {feats_plot[0]}',fontsize=20)
@@ -476,6 +478,93 @@ def gfi_over_contamination(importances, contamination, model_index, plot_path,co
         plt.savefig(plot_path + '/'+ current_time + 'gfi_over_contamination_model_contamination=' +str(contamination[model_index]) + '.pdf', bbox_inches='tight')
     if show_plot:
         plt.show()
+
+
+def get_time_scaling_files(dataset: Type[Dataset],
+                           model: Type[ExtendedIsolationForest],
+                           experiment_path: str=os.getcwd(),
+                           interpretation:str='NA'):    
+    path_fit_predict=os.path.join(experiment_path,dataset.name,'experiments','time_scaling',model,'fit_predict')
+    fit_pred_times=open_element(get_most_recent_file(path_fit_predict),filetype='pickle')
+    if interpretation == "NA":
+        return fit_pred_times
+    else: 
+        path_imp=os.path.join(experiment_path,dataset.name,'experiments','time_scaling',model,interpretation)
+        imp_time=open_element(get_most_recent_file(path_imp),filetype='pickle')
+        return fit_pred_times,imp_time
+    
+
+def get_vals(model: str, 
+            dataset_names: List[str],
+            type:str='predict') -> tuple[List,List,List]:
+    
+    assert type in ['predict','fit','importances'], "Type not valid"
+    
+    os.chdir('../utils_reboot')
+    with open(os.getcwd() + "/time_scaling_test.pickle", "rb") as file:
+        dict_time = pickle.load(file)
+
+    val_times=[]
+    for d_name in dataset_names:
+        time=np.array(dict_time[type][model][d_name])
+        val_times.append(time)
+
+    median_val_times=[np.percentile(x,50) for x in val_times]
+    five_val_times=[np.percentile(x,5) for x in val_times]
+    ninefive_val_times=[np.percentile(x,95) for x in val_times]
+
+    return median_val_times,five_val_times,ninefive_val_times
+
+def plot_time_scaling(model_names:List[str],
+                              dataset_names:List[str],
+                              data_path:str,
+                              type:str='predict',
+                              plot_type:str='samples',
+                              show_plot:Optional[bool]=False) -> tuple[plt.figure,plt.axes]:
+    
+    assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
+
+    assert plot_type in ['samples','features'], "Plot Type not valid. Accepted values: ['samples','features']"
+
+    datasets=[Dataset(name,path=data_path) for name in dataset_names]
+
+    if plot_type == "samples":
+        sample_sizes=[data.shape[0] for data in datasets]
+    elif plot_type == "features":
+        sample_sizes=[data.shape[1] for data in datasets]
+
+    fig, ax = plt.subplots()
+    plt.style.use('default')
+    plt.rcParams['axes.facecolor'] = '#F2F2F2'
+    plt.grid(alpha = 0.7)
+    colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
+
+    for i,model in enumerate(model_names):
+        median_times,five_times,ninefive_times=get_vals(model,dataset_names,type=type)
+
+        if plot_type == "samples":
+            plt.plot(np.log(sample_sizes),median_times,alpha=0.5,c=colors[i],marker="o",label=model)
+            plt.fill_between(np.log(sample_sizes),five_times,ninefive_times,alpha=0.1,color=colors[i])
+        elif plot_type == "features":
+            plt.plot(sample_sizes,median_times,alpha=0.5,c=colors[i],marker="o",label=model)
+            plt.fill_between(sample_sizes,five_times,ninefive_times,alpha=0.1,color=colors[i])
+        
+    
+    plt.xlabel('Sample Size')
+    plt.ylabel(f'{type} Time (s)')
+
+    if plot_type == "samples":
+        plt.xticks(np.log(sample_sizes),sample_sizes)
+    elif plot_type == "features":
+        plt.xticks(sample_sizes,sample_sizes)
+
+    plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
+    plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    
+    if show_plot:
+        plt.show()
+
+    return fig,ax
 
 
 
