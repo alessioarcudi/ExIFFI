@@ -28,7 +28,9 @@
 - `EIF+`
 	- `fit_predict` → ==ok==
 	- `EXIFFI+` → ==ok== 
-	- `RandomForest` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
 - `EIF`
 	- `fit_predict` → ==ok==
 	- `EXIFFI` → ==ok== 
@@ -45,7 +47,9 @@
 - `EIF+`
 	- `fit_predict` → ==ok==
 	- `EXIFFI+` → ==ok== 
-	- `RandomForest` → ==ok==
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
 - `EIF`
 	- `fit_predict` → ==ok==
 	- `EXIFFI` →  ==ok==
@@ -62,7 +66,9 @@
 - `EIF+`
 	- `fit_predict` → ==ok== 
 	- `EXIFFI+` → ==ok== 
-	- `RandomForest` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
 - `EIF`
 	- `fit_predict` → ==ok==
 	- `EXIFFI` →  ==ok==
@@ -79,6 +85,8 @@
 - `EIF+`
 	- `fit_predict` → ==ok==
 	- `EXIFFI+` → ==ok==
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
 	- `RandomForest` → ==ok==
 - `EIF`
 	- `fit_predict` → ==ok==
@@ -96,7 +104,9 @@
 - `EIF+`
 	- `fit_predict` → ==ok==
 	- `EXIFFI+` → ==ok==
-	- `RandomForest` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
 - `EIF`
 	- `fit_predict` → ==ok==
 	- `EXIFFI` → ==ok==
@@ -108,88 +118,98 @@
 - `AE`
 	- `fit_predict` → ==ok==
 
-## `Xaxis_5000_6`
+## `Xaxis_5000_6` → ==ok== 
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
-	- `RandomForest` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok==
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → ==ok==
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → ==ok== 
 
-## `Xaxis_10000_6`
+## `Xaxis_10000_6` → ==ok== 
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
-	- `RandomForest` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → ==ok== 
 
-## `Xaxis_25000_6`
+## `Xaxis_25000_6` → ==ok== 
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
-	- `RandomForest` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok==
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → ==ok== 
+	- `DIFFI` → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → ==ok== 
 
-## `Xaxis_50000_6`
+## `Xaxis_50000_6` → ==ok== 
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
-	- `RandomForest` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → ==ok==
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → ==ok== 
 
 ## `Xaxis_100000_6`
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
-	- `RandomForest` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → ==ok== 
+	- `DIFFI` → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → ==ok== 
 - `AE`
 	- `fit_predict` → 
 
@@ -198,6 +218,8 @@
 - `EIF+`
 	- `fit_predict` → 
 	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
 	- `RandomForest` → 
 - `EIF`
 	- `fit_predict` → 
@@ -215,6 +237,8 @@
 - `EIF+`
 	- `fit_predict` → 
 	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
 	- `RandomForest` → 
 - `EIF`
 	- `fit_predict` → 
