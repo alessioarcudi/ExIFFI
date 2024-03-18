@@ -290,7 +290,10 @@ def performance(y_pred:np.array,
     precisions=[]
     for i in trange(n_runs):
         I.fit(dataset.X_train)
-        score = I.predict(dataset.X_test)
+        if model_name in ['DIF','AnomalyAutoencoder']:
+            score = I.decision_function(dataset.X_test)
+        else:
+            score = I.predict(dataset.X_test)
         precisions.append(average_precision_score(y_true, score))
     
     df=pd.DataFrame({
