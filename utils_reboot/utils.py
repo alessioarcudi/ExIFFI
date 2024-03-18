@@ -40,6 +40,10 @@ class AutoEncoder(oldAutoEncoder):
         super().__init__(**kwargs)
         self.name = "AnomalyAutoencoder"
     
+    def predict(self, X):
+        score=self.decision_function(X)
+        return score
+    
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"
