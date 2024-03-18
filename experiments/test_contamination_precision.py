@@ -83,10 +83,10 @@ if dataset.shape[0]>7500:
 if pre_process:
     print("Preprocessing dataset...")
     dataset.pre_process()
-
-print("#"*50)
-print("Dataset not preprocessed")
-print("#"*50)
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    print("#"*50)
 
 if model == "EIF+":
     I = ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)

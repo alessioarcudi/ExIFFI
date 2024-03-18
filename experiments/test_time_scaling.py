@@ -44,10 +44,10 @@ assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyA
 assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
-    assert args.model=="EIF+", "DIFFI can only be used with the EIF+ model"
+    assert args.model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 if args.interpretation == "EXIFFI":
-    assert args.model=="EIF", "DIFFI can only be used with the EIF model"
+    assert args.model=="EIF", "EXIFFI can only be used with the EIF model"
 
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"

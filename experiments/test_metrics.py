@@ -10,6 +10,18 @@ from utils_reboot.datasets import *
 from utils_reboot.plots import *
 from utils_reboot.utils import *
 
+from pyod.models.dif import DIF as DIF_original
+from pyod.models.auto_encoder import AutoEncoder as AutoEncoder_original
+
+class DIF_metrics(DIF_original):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "DIF"
+
+class AutoEncoder_metrics(AutoEncoder_original):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "AnomalyAutoencoder"
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from model_reboot.EIF_reboot import IsolationForest as EIF_IsolationForest
@@ -78,9 +90,9 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "DIF":
-    I = DIF(max_samples=max_samples)
+    I = DIF_metrics(max_samples=max_samples)
 elif model == "AnomalyAutoencoder":
-    I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+    I = AutoEncoder_metrics(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
 
 os.chdir('../')
 cwd=os.getcwd()
