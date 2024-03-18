@@ -23,7 +23,9 @@
 
 # Time Scaling Plots 
 
-## `Xaxis` → ==ok==
+## Sample Size
+
+### `Xaxis` → ==ok==
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -42,7 +44,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_100_6` → ==ok== 
+### `Xaxis_100_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -61,7 +63,7 @@
 - `AE`
 	- `fit_predict` → ==ok==
 
-## `Xaxis_250_6` → ==ok== 
+### `Xaxis_250_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok== 
@@ -80,7 +82,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_500_6` → ==ok== 
+### `Xaxis_500_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -99,7 +101,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_2500_6` → ==ok== 
+### `Xaxis_2500_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -118,7 +120,7 @@
 - `AE`
 	- `fit_predict` → ==ok==
 
-## `Xaxis_5000_6` → ==ok== 
+### `Xaxis_5000_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -137,7 +139,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_10000_6` → ==ok== 
+### `Xaxis_10000_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -156,7 +158,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_25000_6` → ==ok== 
+### `Xaxis_25000_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -175,7 +177,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_50000_6` → ==ok== 
+### `Xaxis_50000_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -194,7 +196,7 @@
 - `AE`
 	- `fit_predict` → ==ok== 
 
-## `Xaxis_100000_6`
+### `Xaxis_100000_6` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok==
@@ -211,9 +213,125 @@
 - `DIF`
 	- `fit_predict` → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → Job 1461439 → ==ok== 
 
-## `Xaxis_250000_6`
+### `Xaxis_250000_6`
+
+- `EIF+`
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → Job 1461486
+	- `RandomForest` → Job 1461486
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
+- `IF`
+	- `fit_predict` → ==ok== 
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → Job on ClusterDEI
+- `AE`
+	- `fit_predict` → Job on ClusterDEI
+
+### `Xaxis_300000_6`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → Job on ClusterDEI
+	- `RandomForest` → Job on ClusterDEI
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → Job on ClusterDEI
+- `AE`
+	- `fit_predict` → Job on ClusterDEI
+
+## Features 
+
+### `Xaxis_1000_6` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → Job 1461433  → ==ok== 
+	- `EXIFFI+` → Job 1461433  → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_1000_8` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok==
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_1000_10` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok==
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok==
+- `DIF`
+	- `fit_predict` → ==ok==
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_1000_12` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok==
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok==
+- `DIF`
+	- `fit_predict` → ==ok==
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_1000_14`
 
 - `EIF+`
 	- `fit_predict` → 
@@ -225,14 +343,14 @@
 	- `fit_predict` → 
 	- `EXIFFI` → 
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → 
+	- `DIFFI` →
 - `DIF`
 	- `fit_predict` →
 - `AE`
 	- `fit_predict` → 
 
-## `Xaxis_300000_6`
+###  `Xaxis_1000_16`
 
 - `EIF+`
 	- `fit_predict` → 
@@ -244,9 +362,56 @@
 	- `fit_predict` → 
 	- `EXIFFI` → 
 - `IF`
-	- `fit_predict` →
-	- `DIFFI` → 
+	- `fit_predict` → 
+	- `DIFFI` →
 - `DIF`
 	- `fit_predict` →
 - `AE`
 	- `fit_predict` → 
+
+###  `Xaxis_1000_18`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+###  `Xaxis_1000_20`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → 
+
+`Xaxis_1000_40` 
+
+- `DIF` → ==ok== 
+
+`Xaxis_1000_80`
+
+- `DIF` → ==ok==
+
