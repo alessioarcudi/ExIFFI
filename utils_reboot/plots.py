@@ -317,24 +317,26 @@ def plot_precision_over_contamination(precisions,
                                       contamination=np.linspace(0.0,0.1,10),
                                       save_image=True,
                                       plot_image=False,
-                                      change_ylim=False):
+                                      ylim=(0,1),
+                                      box_loc=(0.04,0.2),
+                                      box_text='EIF+ - EIF'):
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     
     plt.style.use('default')
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
-    plt.plot(contamination,precisions.mean(axis=1),marker="o",c="tab:blue",alpha=0.5)
+    plt.plot(contamination,precisions.mean(axis=1),marker="o",c="tab:blue",alpha=0.5,label=model_name)
     plt.fill_between(contamination, [np.percentile(x, 10) for x in precisions], [np.percentile(x, 90) for x in precisions],alpha=0.1, color="tab:blue")
     
-    if change_ylim:
-        plt.ylim(0,1.1)
-    else:
-        plt.ylim(0,1)
+    plt.ylim(ylim)
+
+    text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
+    plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
+         verticalalignment='top', horizontalalignment='right')
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
-    
 
     namefile = current_time + "_" + dataset_name + '_' + model_name + "_precision_over_contamination.pdf"
     
@@ -343,7 +345,20 @@ def plot_precision_over_contamination(precisions,
     
     if plot_image:
         plt.show()
+
+def get_contamination_comparison(model1,
+                            model2,
+                            dataset_name,
+                            path=os.getcwd()):
     
+    path_model1=path+'/results/'+ dataset_name +'/experiments/contamination/'+model1
+    path_model2=path+'/results/'+ dataset_name +'/experiments/contamination/'+model2
+
+    precisions_model1=open_element(get_most_recent_file(path_model1),filetype='pickle')[0]
+    precisions_model2=open_element(get_most_recent_file(path_model2),filetype='pickle')[0]
+    precisions=precisions_model1-precisions_model2
+
+    return precisions
 
 def importance_map(dataset: Type[Dataset],
                    model: Type[ExtendedIsolationForest],
@@ -520,7 +535,9 @@ def plot_time_scaling(model_names:List[str],
                               data_path:str,
                               type:str='predict',
                               plot_type:str='samples',
-                              show_plot:Optional[bool]=False) -> tuple[plt.figure,plt.axes]:
+                              plot_path:Optional[str]=os.getcwd(),
+                              show_plot:Optional[bool]=False,
+                              save_plot:Optional[bool]=True) -> tuple[plt.figure,plt.axes]:
     
     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
 
@@ -539,8 +556,12 @@ def plot_time_scaling(model_names:List[str],
     plt.grid(alpha = 0.7)
     colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
 
+    maxs=[]
+    mins=[]
     for i,model in enumerate(model_names):
         median_times,five_times,ninefive_times=get_vals(model,dataset_names,type=type)
+        maxs.append(np.max(median_times))
+        mins.append(np.min(median_times))
 
         if plot_type == "samples":
             plt.plot(np.log(sample_sizes),median_times,alpha=0.5,c=colors[i],marker="o",label=model)
@@ -552,18 +573,25 @@ def plot_time_scaling(model_names:List[str],
     
     plt.xlabel('Sample Size')
     plt.ylabel(f'{type} Time (s)')
+    #plt.ylim(np.min(mins)-0.2*np.min(mins),np.max(maxs)+0.2*np.max(maxs))
 
     if plot_type == "samples":
-        plt.xticks(np.log(sample_sizes),sample_sizes)
+        plt.xticks(np.log(sample_sizes),sample_sizes,rotation=45)
     elif plot_type == "features":
-        plt.xticks(sample_sizes,sample_sizes)
+        plt.xticks(sample_sizes,sample_sizes,rotation=45)
 
     plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
     
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+
+    if save_plot:
+        plt.savefig(f'{plot_path}/{current_time}_time_scaling_plot_{plot_type}_{type}.pdf',bbox_inches='tight')
+
     if show_plot:
         plt.show()
-
+    
     return fig,ax
 
 
