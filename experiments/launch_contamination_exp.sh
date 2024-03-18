@@ -5,10 +5,10 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="bisect_6d"
+DATASETS="moodify"
 
 # Path to the datasets
-DATASET_PATHS="../data/syn/"
+DATASET_PATHS="../data/real/"
 
 # Experiment EIF+
 
@@ -39,10 +39,10 @@ DATASET_PATHS="../data/syn/"
 
 # Experiment DIF
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "DIF" \
+# python $SCRIPT_PATH \
+#     --dataset_name $DATASETS \
+#     --dataset_path $DATASET_PATHS \
+#     --model "DIF" \
 
 # Experiment AnomalyAutoencoder
 
@@ -50,3 +50,4 @@ python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "AnomalyAutoencoder" \
+    --pre_process 1 
