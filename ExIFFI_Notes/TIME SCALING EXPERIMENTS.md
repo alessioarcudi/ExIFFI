@@ -415,3 +415,179 @@
 
 - `DIF` → ==ok==
 
+The execution times are not scaling up. Also in the plots in the `DIF` paper it doesn't seem to change a lot the execution time as we increase the number of features. In any case in `DIF` they used datasets of 5000 samples and the number of features ranges between 16 and 4096 → so that we have the number of features in a logarithmic scale and we can easily represent the plot in log scale. 
+
+Probably I should have used a similar strategy in choosing the number of samples to use for the experiments where we varied the number of samples. In the `DIF` paper they went from 1000 to 256000 samples. 
+
+## Features new
+
+### `Xaxis_5000_16` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok== 
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok==
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_5000_32` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok==  → redo
+	- `EXIFFI+` → ==ok== → redo 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok==
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → ==ok==
+
+### `Xaxis_5000_64` → ==ok== 
+
+- `EIF+`
+	- `fit_predict` → ==ok== 
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → ==ok==
+	- `RandomForest` → ==ok== 
+- `EIF`
+	- `fit_predict` → ==ok==
+	- `EXIFFI` → ==ok== 
+- `IF`
+	- `fit_predict` → ==ok==
+	- `DIFFI` → ==ok== 
+- `DIF`
+	- `fit_predict` → ==ok== 
+- `AE`
+	- `fit_predict` → ==ok== 
+
+### `Xaxis_5000_128`
+
+- `EIF+`
+	- `fit_predict` → ==ok== 
+	- `EXIFFI+` → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+### `Xaxis_5000_256`
+
+- `EIF+`
+	- `fit_predict` → Job 1461686 → ==ok== 
+	- `EXIFFI+` → Job 1461694 → ==ok== 
+- `EIF+_RF`
+	- `fit_predict` → Job 1461715 → ==ok== 
+	- `RandomForest` → Job 1461715 → ==ok== 
+- `EIF`
+	- `fit_predict` → Job 1461715 → ==ok== 
+	- `EXIFFI` → Job 1461715 → ==ok== 
+- `IF`
+	- `fit_predict` → Job 1461715 → ==ok== 
+	- `DIFFI` → Job 1461715 → ==ok== 
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+### `Xaxis_5000_512`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+### `Xaxis_5000_1024`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+### `Xaxis_5000_2048`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
+
+### `Xaxis_5000_4096`
+
+- `EIF+`
+	- `fit_predict` → 
+	- `EXIFFI+` → 
+- `EIF+_RF`
+	- `fit_predict` → 
+	- `RandomForest` → 
+- `EIF`
+	- `fit_predict` → 
+	- `EXIFFI` → 
+- `IF`
+	- `fit_predict` → 
+	- `DIFFI` →
+- `DIF`
+	- `fit_predict` →
+- `AE`
+	- `fit_predict` → 
