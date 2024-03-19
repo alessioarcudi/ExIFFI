@@ -318,6 +318,7 @@ def plot_precision_over_contamination(precisions,
                                       save_image=True,
                                       plot_image=False,
                                       ylim=(0,1),
+                                      insert_box_loc=False,
                                       box_loc=(0.04,0.2),
                                       box_text='EIF+ - EIF'):
     t = time.localtime()
@@ -331,9 +332,10 @@ def plot_precision_over_contamination(precisions,
     
     plt.ylim(ylim)
 
-    text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
-    plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
-         verticalalignment='top', horizontalalignment='right')
+    if insert_box_loc:
+        text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
+        plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
+            verticalalignment='top', horizontalalignment='right')
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
@@ -584,7 +586,7 @@ def plot_time_scaling(model_names:List[str],
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
     
     t = time.localtime()
-    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+    current_time = time.strtime("%d-%m-%Y_%H-%M-%S", t)
 
     if save_plot:
         plt.savefig(f'{plot_path}/{current_time}_time_scaling_plot_{plot_type}_{type}.pdf',bbox_inches='tight')

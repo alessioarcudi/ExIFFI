@@ -141,10 +141,7 @@ class Dataset:
                     self.y = T.loc[:,"Target"].to_numpy(float)
                 except:
                     raise Exception("The dataset name is not valid") from e
-                
-        self.X_train=copy.deepcopy(self.X)
-        self.X_test=copy.deepcopy(self.X)
-        self.y_test=copy.deepcopy(self.y)
+
 
     def __repr__(self) -> str:
         return f"[{self.name}][{self.shape}][{self.n_outliers}]"
@@ -153,9 +150,6 @@ class Dataset:
         S = np.c_[self.X, self.y]
         S = pd.DataFrame(S).drop_duplicates().to_numpy()
         self.X, self.y = S[:, :-1], S[:, -1]
-        self.X_train=copy.deepcopy(self.X)
-        self.X_test=copy.deepcopy(self.X)
-        self.y_test=copy.deepcopy(self.y)
         
     def downsample(self, max_samples: int = 2500) -> None:
         if len(self.X) > max_samples:
@@ -163,9 +157,6 @@ class Dataset:
             sss = SSS(n_splits=1, test_size=1 - max_samples / len(self.X))
             index = list(sss.split(self.X, self.y))[0][0]
             self.X, self.y = self.X[index, :], self.y[index]
-            self.X_train=copy.deepcopy(self.X)
-            self.X_test=copy.deepcopy(self.X)
-            self.y_test=copy.deepcopy(self.y)
     
     def partition_data(self,X,y) -> tuple:
 
@@ -239,8 +230,6 @@ class Dataset:
                 index = indexes_inliers.pop()
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
-        self.X_test = copy.deepcopy(self.X)
-        self.y_test = copy.deepcopy(self.y)
 
     def pre_process(self) -> None:
         # Ensure that X and y are not None
@@ -248,14 +237,33 @@ class Dataset:
             print("Dataset not loaded.")
             return
         if self.X_train is None:
-            self.X_train=copy.deepcopy(self.X)
+            self.initialize_train_test()
+        if self.X_test is None:
             self.X_test=copy.deepcopy(self.X)
-            self.y_test=copy.deepcopy(self.y)
 
         scaler = StandardScaler()
         
         self.X_train=scaler.fit_transform(self.X_train)
         self.X_test=scaler.transform(self.X_test)
+
+    def initialize_train_test(self) -> None:
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        if self.X_train is None:
+            self.initialize_train()
+        if self.X_test is None:
+            self.initialize_test()
+
+    def initialize_test(self) ->None:
+        self.X_test=copy.deepcopy(self.X)
+        self.y_test=copy.deepcopy(self.y)
+    
+    def initialize_train(self) ->None:
+        self.X_train=copy.deepcopy(self.X)
+        self.y_train=copy.deepcopy(self.y)
+
         
 
  

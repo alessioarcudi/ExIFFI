@@ -79,7 +79,11 @@ if pre_process:
 else:
     print("#"*50)
     print("Dataset not preprocessed")
+    dataset.initialize_train_test()
     print("#"*50)
+
+# import ipdb;
+# ipdb.set_trace()
 
 assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
 assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
