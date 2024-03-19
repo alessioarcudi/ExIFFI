@@ -79,6 +79,9 @@ else:
     print("Dataset not preprocessed")
     print("#"*50)
 
+print(dataset.X_test)
+quit()
+
 assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
 
 if model == "sklearn_IF":
