@@ -12,7 +12,7 @@ SCRIPT_PATH="test_time_scaling.py"
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="Xaxis_1000_80"
+DATASETS="Xaxis_5000_128"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -26,7 +26,9 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
-        --model "DIF" 
+        --model "EIF+_RF" \
+        --interpretation "RandomForest" \
+        --compute_GFI 1 
 done
 
 # --interpretation "DIFFI" \
