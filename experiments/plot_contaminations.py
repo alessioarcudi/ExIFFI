@@ -1,6 +1,7 @@
 import sys
 import os
-os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
+cwd = os.getcwd()
+#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 #os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
@@ -17,12 +18,13 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Global Importances')
+parser = argparse.ArgumentParser(description='Plot Contaminations')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
 parser.add_argument("--change_ylim",action="store_true",help="If set, change the ylim of the plot")
+parser.add_argument('--models', nargs='+', type=str, default=["DIF","EIF","EIF+","IF","AnomalyAutoencoder"],help='List of models to use for the full contamination plot')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -30,6 +32,7 @@ args = parser.parse_args()
 dataset_name = args.dataset_name
 dataset_path = args.dataset_path
 change_ylim = args.change_ylim
+models = args.models
 
 dataset = Dataset(name=dataset_name, path=dataset_path)
 
@@ -39,8 +42,10 @@ colors = ["tab:green","tab:blue","tab:orange","tab:red","tab:purple"]
 plt.style.use('default')
 plt.rcParams['axes.facecolor'] = '#F2F2F2'
 plt.grid(alpha = 0.7)
-for i,model in enumerate(["DIF","EIF","EIF+","IF","AnomalyAutoencoder"]):
+cont_name='_contamination'
+for i,model in enumerate(models):
     path_contamination_model = path_contamination + model 
+    cont_name = cont_name + "_" + model
     file = get_most_recent_file(path_contamination_model)
     with open(file, "rb") as file:
         df = pickle.load(file)
@@ -58,7 +63,10 @@ plt.legend()
 
 t = time.localtime()
 current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-nameplot = current_time+"_"+dataset.name+"_contamination_full_plot.pdf"
+if models == ["DIF","EIF","EIF+","IF","AnomalyAutoencoder"]:
+    nameplot = current_time+"_"+dataset.name+"_contamination_full_plot.pdf"
+else:
+    nameplot = current_time+"_"+dataset.name+cont_name+".pdf"
 
 plt.savefig(path_plots+"/"+nameplot)
     

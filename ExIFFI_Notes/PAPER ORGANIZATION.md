@@ -5,7 +5,7 @@ We will start from the structure of the first version of the paper and re adapt 
 # Paper Outline
 
 0.  **Abstract**
-1. **Introduction**: Introduce the problem of Anomaly Detection and the need for interpretability and at the end report the structure of the paper saying what will appear in each different section 
+1. **Introduction**: Introduce the problem of Anomaly Detection and the need for interpretability and at the end report the structure of the paper saying what will appear in each different section. 
 
 > [!missing] 
 > In the first version of the paper Section 2 is used to present the Isolation Based Approaches for Anomaly Detection: IF, EIF and DIFFI but we did not insert a Related Work section presenting other anomaly detection and interpretability methods for unsupervised learning. See [[ExIFFI PAPER REVIEW#Papers for Related Work|here]] for some papers that we may cite in the Related Work section.  

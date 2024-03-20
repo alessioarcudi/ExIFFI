@@ -7,3 +7,5 @@ src/test_std
 notebooks/trial.ipynb
 old staff/
 data/data_DIFFI/
+data/syn/syn_feat
+exiffi_env.yml

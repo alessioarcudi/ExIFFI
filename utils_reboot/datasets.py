@@ -142,6 +142,7 @@ class Dataset:
                 except:
                     raise Exception("The dataset name is not valid") from e
 
+
     def __repr__(self) -> str:
         return f"[{self.name}][{self.shape}][{self.n_outliers}]"
 
@@ -229,8 +230,6 @@ class Dataset:
                 index = indexes_inliers.pop()
             self.X_train[i] = self.X[index]
             self.y_train[i] = self.y[index]
-        self.X_test = copy.deepcopy(self.X)
-        self.y_test = copy.deepcopy(self.y)
 
     def pre_process(self) -> None:
         # Ensure that X and y are not None
@@ -238,14 +237,33 @@ class Dataset:
             print("Dataset not loaded.")
             return
         if self.X_train is None:
-            self.X_train=copy.deepcopy(self.X)
+            self.initialize_train_test()
+        if self.X_test is None:
             self.X_test=copy.deepcopy(self.X)
-            self.y_test=copy.deepcopy(self.y)
 
         scaler = StandardScaler()
         
         self.X_train=scaler.fit_transform(self.X_train)
         self.X_test=scaler.transform(self.X_test)
+
+    def initialize_train_test(self) -> None:
+        # Ensure that X and y are not None
+        if self.X is None or self.y is None:
+            print("Dataset not loaded.")
+            return
+        if self.X_train is None:
+            self.initialize_train()
+        if self.X_test is None:
+            self.initialize_test()
+
+    def initialize_test(self) ->None:
+        self.X_test=copy.deepcopy(self.X)
+        self.y_test=copy.deepcopy(self.y)
+    
+    def initialize_train(self) ->None:
+        self.X_train=copy.deepcopy(self.X)
+        self.y_train=copy.deepcopy(self.y)
+
         
 
  

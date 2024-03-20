@@ -61,12 +61,27 @@ dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
 
+# Downsample datasets with more than 7500 samples
+if dataset.shape[0] > 7500:
+    dataset.downsample(max_samples=7500)
+
+
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
+# Preprocess the dataset
 if pre_process:
+    print("#"*50)
+    print("Preprocessing the dataset...")
+    print("#"*50)
     dataset.pre_process()
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    dataset.initialize_train_test()
+    print("#"*50)
+
 
 if model == "IF":
     if interpretation == "EXIFFI":
@@ -121,7 +136,7 @@ if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
     
 #Compute global importances
-full_importances = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)    
+full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, scenario=scenario)    
 save_element(full_importances, path_experiment_model_interpretation_scenario, filetype="npz")
 
 # plot global importances

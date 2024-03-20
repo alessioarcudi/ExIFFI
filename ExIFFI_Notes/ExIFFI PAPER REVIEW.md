@@ -3,7 +3,7 @@ Created: 31 January 2024
 Class: Anomaly Detection
 Type: Notes
 ---
-Annotate here the main comments contained in the review of the [[DIFFI and EXIFFI - Interpretability on the Isolation Forest model|ExIFFI]] paper and write down the things to do to organize the re writing process of the paper. 
+Annotate here the main comments contained in the review of the EXIFFI paper and write down the things to do to organize the re writing process of the paper. 
 
 > [!warning] 
 > Deadline for submitting the reviewed paper -> 31 March 2024  
@@ -12,7 +12,15 @@ Annotate here the main comments contained in the review of the [[DIFFI and EXIFF
 1. Address concerns regarding the superiority of ExIFFI over distilling feature importance from traditional isolation-based anomaly detection methods like iForest and EIF. Provide a more detailed explanation of why the proposed method is advantageous.
 
 > [!todo] 
-> Expand the explanation and intuition under the EIF+ model and why it is better than IF and EIF. 
+> Expand the explanation and intuition under the EIF+ model and why it is better than IF and EIF
+
+> [!done] 
+> Using the contamination plots we can show that EIF+ is better than the other models. 
+> 
+
+> [!todo] 
+> - Add the performance metrics for the final table (e.g. Precision, Recall, Average Precision,....)
+> - Justify the superiority of  `EIF+` commenting the results in the paper. 
 
 2.  Expand the discussion of related work on interpretation methods for unsupervised models. Include recent studies. Additionally, conduct more ablation studies to analyze the impact of design choices in EIF+ and ExIFFI. Perform performance comparisons with state-of-the-art baselines published more recently to strengthen justification.
 
@@ -21,11 +29,26 @@ Annotate here the main comments contained in the review of the [[DIFFI and EXIFF
 > - Ablation study on EIF+ and ExIFFI → Try to see what happens removing some of the design choices we made in the model 
 > - Comparison with state of the art baselines recently published -> We already have the comparison with DIFFI. Search other models to compare ExIFFI to → **Deep Isolation Forest (DIF),** **ECOD**. 
 
+> [!done] 
+> - Comparison of `EIF+` to `IF,EIF,DIF,AutoEncoder` in the contamination plots
+> - Add this comparison also on the final performance table 
+> - `EIF+` Ablation Study:
+> 	- Contamination plots done 
+
+> [!todo] 
+> - Include references to other interpretation methods in the Related Work section 
+> - `EIF+` Ablation Study 
+> 	- Try to see what happens with different values of $\eta$ ? For example do a plot `Average Precision vs eta` 
+
 3. Acknowledge concerns about the assumption that labeled anomalies truly deviate from the distribution in real datasets. Consider discussing the time complexity of EIF+ and its scalability to larger datasets. Introduce user studies to assess whether ExIFFI explanations align well with human interpretations, addressing concerns about evaluations limited to datasets without ground truth anomalies. 
 
 > [!todo] 
 > - Time analysis to see how ExIFFI scales (in terms of execution time) on larger datasets -> find these larger datasets. Here we can use the Parallelized version of ExIFFI I am working on with Francesco
 > - Introduce User Studies to see how ExIFFI aligns with human explanations -> so we need to find some datasets where there are ground truth anomalies 
+
+> [!done] 
+> - Time Analysis → We computed the `fit`, `predict` and `importances` time on all the different datasets and we will report all the times in a final table. We do not have industrial datasets but some of the ones we used are pretty large → so probably we need to do a run on the complete version of `moodify` or find an industrial dataset. 
+> - Explain why User Study cannot be done and that we do Feature Selection Proxy Task instead 
 
 - Time comparison with Tree SHAP. 
 
@@ -51,6 +74,8 @@ I have the following concerns,
 
 > [!todo] 
 > Essentially he/she is saying that the Introduction can be written better. It is suggesting again to explain further why EIF+ is better.  
+> - Check weather the papers in [[ExIFFI PAPER REVIEW#Papers for Related Work|Papers to cite]] are in top-tier venues (check how much citations they have). 
+> - Obviously include DIF in the cited papers. 
 
 4. Some recent studies on isolation-based anomaly detection like [1] should be discussed → **Deep Isolation Forest (DIF)**
 # Reviewer 2 Comments
@@ -93,7 +118,8 @@ Recommendation: Major Revision
 5. Lack of discussions on the time complexity of EIF+ and whether it can scale to industrial-sized datasets. 
 
 > [!todo] 
-> Same as point 3 of [[ExIFFI PAPER REVIEW#Editor Comments|Editor Comments]]. Use Parallel ExIFFI and find larger datasets. 
+> Same as point 3 of [[ExIFFI PAPER REVIEW#Editor Comments|Editor Comments]]. Use Parallel ExIFFI and find larger datasets.
+> - Do experiments on `moodify` with different sized of the `downsample` function (7500,10000,15000,30000,50000,100000,200000,300000) 
 
 6. Evaluations are limited to real-world datasets without ground truth anomalies. It is unclear whether ExIFFI explanations align well with human interpretations. User studies would provide a better evaluation of interpretability.
 
@@ -135,6 +161,7 @@ Recommendation: Major Revision
 - ***Evaluation of post-hoc interpretability methods in time-series classification*** → This paper introduces some new metrics to evaluate interpretability models. The paper works on Time Series data and the interpretability methods evaluate the relevance of different time stamps -> we are working with tabular data and for use the time stamps will be the features. 
 - ***On the evaluation of unsupervised outlier detection: measures, datasets, and an empirical study*** → This dataset contains a section that describes some datasets with semantic outliers -> this is what we need, some outliers with a semantic meaning so that we can see if the interpretation done by ExIFFI aligns with the domain knowledge. 
 -  ***The precision-recall plot is more informative than the roc plot when evaluating binary classifiers on imbalanced datasets*** by T. Saito, M. Rehmsmeier: Cite this paper to support our decision of using the Average Precision as the metric to compare the performances of different models in the Ablation studies, Feature Selection and Contamination Plots. 
+- ***The inadequacy of Shapley Values for Explainability*** → We can use this paper to justify the reason why we did not use SHAP as an interpretability method to compare to `EXIFFI,EXIFFI+`. 
 
 ## Benchmark Datasets 
 

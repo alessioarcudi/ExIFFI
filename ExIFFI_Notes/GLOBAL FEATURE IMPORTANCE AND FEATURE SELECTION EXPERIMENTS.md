@@ -1477,16 +1477,26 @@ To complete the analysis we should also look at what happens with `EIF` as the e
 >  In most of the cases the Feature Selection plots done on `Xaxis` are almost full red and with very high values of $AUC_{FS}$ and so are pretty different from the ones I obtained in the first set of tests. The main difference is that now I am using `EIF+` to evaluate the Average Precision values while in the first version of the tests I always used the same model used for the interpretation to compute the Average Precisions (i.e. `EIF+` for `EXIFFI+`, `EIF` for `EXIFFI` and `IF` for `DIFFI`) . As we showed in the first version of the paper (in the Violin Plots) `EIF+` and `EIF` are very good with synthetic datasets (both in `scenario 1` and in `scenario 2`) while `IF` is very bad, in particular in `Xaxis` and `Yaxis` (while with the `bisect` datasets the performances are comparable with the ones of `EIF+` and `EIF`). 
 >  We can see this effect mainly on the plot of `IF_RandomForest`. In the Score Plot of this configuration Feature 1 and Feature 0 have essentially the same importance but Feature 1 is sligthly above (and this does not follow the ground truth (that we know since we are working with a synthetic dataset) saying that Feature 0 is the most important feature). So we expect to have not a very good Feature Importance plot in terms of $AUC_{FS}$. In the first run of the tests in fact $AUC_{FS} = 1.523$ and there is a huge drop in precision (from about 0.7 to about 0.1) passing from 2 to 1 features (i.e. when Feature 0 is removed). However using `EIF+` as an evaluation model the result is $AUC_{FS} = 3.999$. We can see the fact that Feature 0 is wrongly at the second place because in the `direct` approach we have an increase in Average Precision passing from 6 to 5 features (i.e. when Feature 1 is removed) and in the `inverse` approach we have an even wider drop (from 0.9 to 0.1) passing from 2 to 1 features (i.e. when Feature 0 is removed). The reason why $AUC_{FS}$ is so high it's because in the `inverse` approach the Average Precision are all almost 1 while Feature 0 is part of the Feature Space. 
 
+> [!important] Particular results in `bisect_6d`
+> In the synthetic dataset `bisect_6d` anomalies are synthetically distributed along all features so essentially every feature has more or less the same importance score. This means that the feature ranking is dictated by the randomness of the experiments and there is no ground thruth on what is the most important feature. So in the Feature Selection plots the $AUC_{FS}$ values should all be very similar and low and **the `direct` and `inverse` approach should have the same trend (both decreasing or both increasing)** differently from the other datasets. 
+> In `EIF+_EXIFFI+, scenario 1 and 2` we see that both `direct` and `inverse` have a decreasing Average Precision except for the last step in which, passing from 2 features to 1, the Average Precision increases. This probably happens because it is better to use a single feature (where the anomalies are distributed) than 2 or more features all with the same importance. The same shape is found in all the other plots. 
+
 > [!warning] 
 > The only doubt I have is that in configurations like `EIF+_EXIFFI+, scenario 1` and `EIF+_RandomForest, scenario 1` (that were evaluated with `EIF+` also in the first set of tests) the plots are very different. In the first set of tests in fact these plots were "half red" and the shape was more or less the one of a rectangular triangle (triangolo rettangolo), but now, in this second run of tests, they are full red with a rectangular shape like most of the ones done up to now. 
 > Looking at all the Score Plots of these configurations there is always Feature 0 on top, the difference is the margin from the importance score of Feature 1 (that in some cases is high and some other is smaller). So essentially it seems that while Feature 0 is in the mix (and so in all the steps for the `inverse` approach if it is the first feature) the Average Precision (in `Xaxis`, and probably also on `Yaxis`) is always very close to 1. 
 
-## TO DO this weekend 
 
-- [x] Finish the comments on `EIF` as evaluation model for `glass_DIFFI`
-- [x] Do the same comments also for `annthyroid` 
-	- [x] and `moodify`
-- [ ] Do Feature Selection plots with `IF` as evaluating model for `annthyroid` and `moodify`
-- [x] Feature Selection Plots on synthetic datasets (some of the synthetic datasets have to be shown for sure in the paper)
-- [x] Go on with the contamination plots (for synthetic datasets)
+## TO DO today 12/3
+
+- [ ] Finish the re doing experiments on `Xaxis` without pre processing the data 
+	- [ ] Feature Selection Plots
+	- [ ] Local Scoremaps
+- [ ] Re do the experiments also on `bisect_3d` without pre processing the data 
+	- [ ] Global Importances
+	- [ ] Feature Selection Plots
+	- [ ] Contamination Plots
+	- [ ] Local Scoremaps
+- [ ] Do the Performance Report experiments on `bisect_3d` (DO NOT PRE PROCESS THE DATA)
+
+
 

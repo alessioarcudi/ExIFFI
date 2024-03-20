@@ -31,7 +31,7 @@ parser.add_argument('--n_runs', type=int, default=10, help='Global feature impor
 parser.add_argument('--model', type=str, default="EIF+", help='Name of the interpretable AD model. Accepted values are: [IF,EIF,EIF+]')
 parser.add_argument('--interpretation', type=str, default="EXIFFI+", help='Name of the interpretation model. Accepted values are: [EXIFFI+,EXIFFI,DIFFI,RandomForest]')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
-parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
+parser.add_argument('--pre_process',type=bool,default=False, help='If set, preprocess the dataset')
 parser.add_argument('--feats_plot',type=str,default=(0,1),help='Pair of features to plot in the importance map')
 
 # Parse the arguments
@@ -60,12 +60,25 @@ dataset.drop_duplicates()
 if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
 
+print(f'Range X_train before splitting:\n\n{dataset.X_train[:,1].min(),dataset.X_train[:,1].max()}')
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
+print(f'Range X_train after splitting:\n\n{dataset.X_train[:,1].min(),dataset.X_train[:,1].max()}')
+
+print(f'Range X_test on most important feature before pre process:\n\n{dataset.X_test[:,1].min(),dataset.X_test[:,1].max()}')
+
+# Preprocess the dataset
 if pre_process:
+    print("#"*50)
+    print("Preprocessing the dataset...")
+    print("#"*50)
     dataset.pre_process()
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    print("#"*50)
 
 assert model in ["IF", "EIF", "EIF+"], "Interpretable AD model not recognized"
 assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
@@ -99,9 +112,17 @@ print(f'Scenario: {scenario}')
 print(f'Features to plot: {dataset.feature_names[feats_plot[0]]}, {dataset.feature_names[feats_plot[1]]}')
 print('#'*50)
 
+# print(f'y shape: {dataset.y.shape}')
+# print(f'y_test shape: {dataset.y_test.shape}')
+# print(f'X_test shape: {dataset.X_test.shape}')
+# print(f'X_train shape: {dataset.X_train.shape}')
+# quit()
 
 #cwd = '/Users/alessio/Documents/ExIFFI'
 #cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
+
+print(f'Range X_test on most important feature after pre process:\n\n{dataset.X_test[:,1].min(),dataset.X_test[:,1].max()}')
+quit()
 
 os.chdir('../')
 cwd=os.getcwd()

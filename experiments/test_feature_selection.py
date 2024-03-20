@@ -70,8 +70,20 @@ if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
+# Preprocess the dataset
 if pre_process:
+    print("#"*50)
+    print("Preprocessing the dataset...")
+    print("#"*50)
     dataset.pre_process()
+else:
+    print("#"*50)
+    print("Dataset not preprocessed")
+    dataset.initialize_train_test()
+    print("#"*50)
+
+# import ipdb;
+# ipdb.set_trace()
 
 assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
 assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
@@ -154,8 +166,8 @@ most_recent_file = get_most_recent_file(path_experiment_feats)
 matrix = open_element(most_recent_file,filetype="npz")
 feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
-direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False)
-inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False)
+direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False, scenario=scenario)
+inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False, scenario=scenario)
 value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
 data = Precisions(direct, inverse, dataset.name, model, value)
 save_fs_prec(data, path_experiment_model_interpretation_scenario)
@@ -163,7 +175,7 @@ save_fs_prec(data, path_experiment_model_interpretation_scenario)
 # random feature selection
 if compute_random:
     Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
-    random = feature_selection(I, dataset, feat_order, 10, inverse=True, random=True)
+    random = feature_selection(I, dataset, feat_order, 10, inverse=True, random=True, scenario=scenario)
     data_random = Precisions_random(random, dataset.name, model)
     save_fs_prec_random(data_random, path_experiment_model_interpretation_random_scenario)
 
