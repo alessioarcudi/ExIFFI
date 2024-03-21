@@ -421,7 +421,7 @@ Probably I should have used a similar strategy in choosing the number of samples
 
 ## Features new
 
-### `Xaxis_5000_16` → ==ok== 
+### `Xaxis_5000_16` → ==ok==  → save these values in the pickle coming from ClusterDEI
 
 - `EIF+`
 	- `fit_predict` → ==ok== 
@@ -441,24 +441,6 @@ Probably I should have used a similar strategy in choosing the number of samples
 	- `fit_predict` → ==ok== 
 
 ### `Xaxis_5000_32` → ==ok== 
-
-- `EIF+`
-	- `fit_predict` → ==ok==  → redo
-	- `EXIFFI+` → ==ok== → redo 
-- `EIF+_RF`
-	- `fit_predict` → ==ok==
-	- `RandomForest` → ==ok== 
-- `EIF`
-	- `fit_predict` → ==ok==
-	- `EXIFFI` → ==ok==
-- `IF`
-	- `fit_predict` → ==ok==
-	- `DIFFI` → ==ok== 
-- `DIF`
-	- `fit_predict` → ==ok== 
-- `AE`
-	- `fit_predict` → ==ok==
-
 ### `Xaxis_5000_64` → ==ok== 
 
 - `EIF+`
@@ -478,26 +460,26 @@ Probably I should have used a similar strategy in choosing the number of samples
 - `AE`
 	- `fit_predict` → ==ok== 
 
-### `Xaxis_5000_128`
+### `Xaxis_5000_128` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → ==ok== 
 	- `EXIFFI+` → ==ok== 
 - `EIF+_RF`
-	- `fit_predict` → 
-	- `RandomForest` → 
+	- `fit_predict` → Job 1461910 → ==ok== 
+	- `RandomForest` → Job 1461910 → ==ok== 
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → Job 1461910 → ==ok== 
+	- `EXIFFI` → Job 1461910 → ==ok== 
 - `IF`
-	- `fit_predict` → 
-	- `DIFFI` →
+	- `fit_predict` → Job 1461910 → ==ok== 
+	- `DIFFI` → Job 1461910 → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → Job 1461910 → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → Job 1461910 → ==ok== 
 
-### `Xaxis_5000_256`
+### `Xaxis_5000_256` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → Job 1461686 → ==ok== 
@@ -512,47 +494,47 @@ Probably I should have used a similar strategy in choosing the number of samples
 	- `fit_predict` → Job 1461715 → ==ok== 
 	- `DIFFI` → Job 1461715 → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → Job 1461892 → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → Job 1461892 → ==ok== 
 
 ### `Xaxis_5000_512`
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
+	- `fit_predict` → Job 1461937 → ==ok== 
+	- `EXIFFI+` → Job 1461937 → ==ok==
 - `EIF+_RF`
-	- `fit_predict` → 
-	- `RandomForest` → 
+	- `fit_predict` → Job 1462327
+	- `RandomForest` → Job 1462327
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → Job 1462327
+	- `EXIFFI` → Job 1462327
 - `IF`
-	- `fit_predict` → 
-	- `DIFFI` →
+	- `fit_predict` → Job 1461914 → ==ok==
+	- `DIFFI` → Job 1461914 → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → Job 1461914 → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → Job 1461914 → ==ok== 
 
 ### `Xaxis_5000_1024`
 
 - `EIF+`
-	- `fit_predict` → 
-	- `EXIFFI+` → 
+	- `fit_predict` → Job 1462249
+	- `EXIFFI+` → Job 1462249
 - `EIF+_RF`
-	- `fit_predict` → 
-	- `RandomForest` → 
+	- `fit_predict` → Job 1462239
+	- `RandomForest` → Job 1462239
 - `EIF`
-	- `fit_predict` → 
-	- `EXIFFI` → 
+	- `fit_predict` → Job 1462239
+	- `EXIFFI` → Job 1462239
 - `IF`
-	- `fit_predict` → 
-	- `DIFFI` →
+	- `fit_predict` → Job 1461960 → ==ok==
+	- `DIFFI` → Job 1461960 → ==ok== 
 - `DIF`
-	- `fit_predict` →
+	- `fit_predict` → Job 1461960 → ==ok== 
 - `AE`
-	- `fit_predict` → 
+	- `fit_predict` → Job 1462239
 
 ### `Xaxis_5000_2048`
 

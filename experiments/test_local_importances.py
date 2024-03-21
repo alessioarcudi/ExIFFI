@@ -60,14 +60,9 @@ dataset.drop_duplicates()
 if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
 
-print(f'Range X_train before splitting:\n\n{dataset.X_train[:,1].min(),dataset.X_train[:,1].max()}')
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
-
-print(f'Range X_train after splitting:\n\n{dataset.X_train[:,1].min(),dataset.X_train[:,1].max()}')
-
-print(f'Range X_test on most important feature before pre process:\n\n{dataset.X_test[:,1].min(),dataset.X_test[:,1].max()}')
 
 # Preprocess the dataset
 if pre_process:
@@ -78,6 +73,7 @@ if pre_process:
 else:
     print("#"*50)
     print("Dataset not preprocessed")
+    dataset.initialize_train_test()
     print("#"*50)
 
 assert model in ["IF", "EIF", "EIF+"], "Interpretable AD model not recognized"
@@ -120,9 +116,6 @@ print('#'*50)
 
 #cwd = '/Users/alessio/Documents/ExIFFI'
 #cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
-
-print(f'Range X_test on most important feature after pre process:\n\n{dataset.X_test[:,1].min(),dataset.X_test[:,1].max()}')
-quit()
 
 os.chdir('../')
 cwd=os.getcwd()

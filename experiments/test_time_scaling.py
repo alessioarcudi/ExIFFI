@@ -86,6 +86,7 @@ if pre_process:
 else:
     print("#"*50)
     print("Dataset not preprocessed")
+    dataset.initialize_train_test()
     print("#"*50)
 
 if model == "IF":

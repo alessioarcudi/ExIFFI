@@ -518,7 +518,7 @@ def get_vals(model: str,
     assert type in ['predict','fit','importances'], "Type not valid"
     
     os.chdir('../utils_reboot')
-    with open(os.getcwd() + "/time_scaling_test.pickle", "rb") as file:
+    with open(os.getcwd() + "/time_scaling_test_dei.pickle", "rb") as file:
         dict_time = pickle.load(file)
 
     val_times=[]
@@ -586,7 +586,7 @@ def plot_time_scaling(model_names:List[str],
     plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
     
     t = time.localtime()
-    current_time = time.strtime("%d-%m-%Y_%H-%M-%S", t)
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
 
     if save_plot:
         plt.savefig(f'{plot_path}/{current_time}_time_scaling_plot_{plot_type}_{type}.pdf',bbox_inches='tight')

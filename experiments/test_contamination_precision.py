@@ -86,7 +86,10 @@ if pre_process:
 else:
     print("#"*50)
     print("Dataset not preprocessed")
+    dataset.initialize_train_test()
     print("#"*50)
+
+#import ipdb; ipdb.set_trace()
 
 if model == "EIF+":
     I = ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
