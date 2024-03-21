@@ -332,4 +332,19 @@ def performance(y_pred:np.array,
     
     return df,path
 
+def ablation_EIF_plus(I, dataset, eta_list, nruns = 10):
+    precisions = []
+    for eta in tqdm(eta_list):
+        precision = []
+        for run in range(nruns):
+            I.eta = eta
+            I.fit(dataset.X_train)
+            score = I.predict(dataset.X_test)
+            precision.append(average_precision_score(dataset.y_test, score))
+        precisions.append(precision)
+    return precisions
+        
+        
+    
+
 

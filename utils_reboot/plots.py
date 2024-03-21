@@ -532,19 +532,18 @@ def get_vals(model: str,
 
     return median_val_times,five_val_times,ninefive_val_times
 
-def plot_time_scaling(model_names:List[str],
-                              dataset_names:List[str],
-                              data_path:str,
-                              type:str='predict',
-                              plot_type:str='samples',
-                              plot_path:Optional[str]=os.getcwd(),
-                              show_plot:Optional[bool]=False,
-                              save_plot:Optional[bool]=True) -> tuple[plt.figure,plt.axes]:
-    
+def plot_time_scaling(model_names,
+                        dataset_names,
+                        data_path,
+                        type='predict',
+                        plot_type='samples',
+                        plot_path=os.getcwd(),
+                        show_plot=True,
+                        save_plot=True):
+
     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
-
     assert plot_type in ['samples','features'], "Plot Type not valid. Accepted values: ['samples','features']"
-
+    
     datasets=[Dataset(name,path=data_path) for name in dataset_names]
 
     if plot_type == "samples":
@@ -565,31 +564,70 @@ def plot_time_scaling(model_names:List[str],
         maxs.append(np.max(median_times))
         mins.append(np.min(median_times))
 
-        if plot_type == "samples":
-            plt.plot(np.log(sample_sizes),median_times,alpha=0.5,c=colors[i],marker="o",label=model)
-            plt.fill_between(np.log(sample_sizes),five_times,ninefive_times,alpha=0.1,color=colors[i])
-        elif plot_type == "features":
-            plt.plot(sample_sizes,median_times,alpha=0.5,c=colors[i],marker="o",label=model)
-            plt.fill_between(sample_sizes,five_times,ninefive_times,alpha=0.1,color=colors[i])
-        
+        ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",label=model)
+        ax.fill_between(sample_sizes,five_times,ninefive_times,alpha=0.1,color=colors[i])
     
-    plt.xlabel('Sample Size')
-    plt.ylabel(f'{type} Time (s)')
+    if plot_type == "samples":
+        ax.set_yscale('log')
+        ax.set_xscale("log")
+        ax.yaxis.set_major_locator(AutoLocator())
+        ax.yaxis.set_major_formatter(ScalarFormatter())
+        ax.minorticks_off()
+        ax.set_xticks(sample_sizes,sample_sizes,rotation=45,fontsize = 12)
+        ax.set_yticks([1,10,25,100,250],fontsize = 14)
+        
+    ax.set_xlabel('Sample Size',fontsize = 20)
+    ax.set_ylabel(f'{type} Time (s)',fontsize = 20)
     #plt.ylim(np.min(mins)-0.2*np.min(mins),np.max(maxs)+0.2*np.max(maxs))
 
-    if plot_type == "samples":
-        plt.xticks(np.log(sample_sizes),sample_sizes,rotation=45)
-    elif plot_type == "features":
-        plt.xticks(sample_sizes,sample_sizes,rotation=45)
-
-    plt.legend(bbox_to_anchor = (1.05,0.95),loc="upper left")
-    plt.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    
+    ax.legend()
+    ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
     
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
 
     if save_plot:
         plt.savefig(f'{plot_path}/{current_time}_time_scaling_plot_{plot_type}_{type}.pdf',bbox_inches='tight')
+
+    if show_plot:
+        plt.show()
+    
+    return fig,ax
+
+def plot_ablation(eta_list,results,
+                        dataset_name,
+                        plot_path=os.getcwd(),
+                        show_plot=False,
+                        save_plot=True):
+
+    fig, ax = plt.subplots()
+    plt.style.use('default')
+    plt.rcParams['axes.facecolor'] = '#F2F2F2'
+    plt.grid(alpha = 0.7)
+    colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
+
+
+    median_values=[np.mean(x) for x in results]
+    five_values=[np.percentile(x,5) for x in results]
+    ninefive_values=[np.percentile(x,95) for x in results]
+
+    ax.plot(eta_list,median_values,alpha=0.85,c=colors[0],marker="o",label=dataset_name)
+    ax.fill_between(eta_list,five_values,ninefive_values,alpha=0.1,color=colors[0])
+
+        
+    ax.set_xlabel('Avg Prec',fontsize = 20)
+    ax.set_ylabel("Eta",fontsize = 20)
+
+    
+    ax.legend()
+    ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    
+    t = time.localtime()
+    current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+
+    if save_plot:
+        plt.savefig(f'{plot_path}/{current_time}_EIF+_ablation_{dataset_name}.pdf',bbox_inches='tight')
 
     if show_plot:
         plt.show()
