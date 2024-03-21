@@ -18,7 +18,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Test Performance Metrics')
 
 # Add the arguments
-parser.add_argument('--dataset_name', type=str, default='glass', help='Name of the dataset')
+parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
 parser.add_argument('--n_estimators', type=int, default=200, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
@@ -88,8 +88,6 @@ cwd=os.getcwd()
 
 eta_list = np.linspace(0.5,5,25)
 avg_prec = ablation_EIF_plus(I,dataset,eta_list)
-
-import ipdb; ipdb.set_trace()
 
 
 path_ablation = cwd+"/experiments/results/"+dataset.name+"/experiments/ablationEIF+"

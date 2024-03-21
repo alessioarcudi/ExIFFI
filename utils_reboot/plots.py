@@ -616,8 +616,8 @@ def plot_ablation(eta_list,results,
     ax.fill_between(eta_list,five_values,ninefive_values,alpha=0.1,color=colors[0])
 
         
-    ax.set_xlabel('Avg Prec',fontsize = 20)
-    ax.set_ylabel("Eta",fontsize = 20)
+    ax.set_xlabel("Eta",fontsize = 20)
+    ax.set_ylabel('Avg Prec',fontsize = 20)
 
     
     ax.legend()
