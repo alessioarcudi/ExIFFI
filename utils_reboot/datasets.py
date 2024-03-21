@@ -239,7 +239,7 @@ class Dataset:
         if self.X_train is None:
             self.initialize_train_test()
         if self.X_test is None:
-            self.X_test=copy.deepcopy(self.X)
+            self.initialize_test()
 
         scaler = StandardScaler()
         
