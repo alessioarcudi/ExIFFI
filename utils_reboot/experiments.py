@@ -25,7 +25,7 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/time_scaling_test.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_dei.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
@@ -226,6 +226,8 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     for i,contamination in tqdm(enumerate(contamination_values)):
         for j in range(n_runs):
             dataset.split_dataset(train_size,contamination)
+            dataset.initialize_test()
+
             if pre_process:
                 dataset.pre_process()
             
@@ -263,6 +265,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                     dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y_test,score)
+            #import ipdb; ipdb.set_trace()
             precisions[i,j] = avg_prec
     
     with open(filename, "wb") as file:
