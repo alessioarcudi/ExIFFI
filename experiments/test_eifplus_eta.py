@@ -18,7 +18,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Test Performance Metrics')
 
 # Add the arguments
-parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
+parser.add_argument('--dataset_name', type=str, default='ionosphere', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
 parser.add_argument('--n_estimators', type=int, default=200, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
