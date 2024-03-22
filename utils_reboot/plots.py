@@ -240,7 +240,9 @@ def plot_feature_selection(
         save_image:bool=True,
         plot_image:bool=False,
         box_loc:tuple=None,
-        rotation:bool=False):
+        change_box_loc:float=0.9,
+        rotation:bool=False,
+        change_ylim:bool=False):
     
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
     if model is None:
@@ -284,13 +286,17 @@ def plot_feature_selection(
         plt.xticks(range(dim),range(dim,0,-1))    
     
     if box_loc is None:
-       box_loc = (len(precision.direct)/2,0.9)
+       box_loc = (len(precision.direct)/2,change_box_loc)
 
     text_box_content = r'${}'.format("AUC") + r'_{FS}$' + " = " + str(np.round(aucfs,3))
     plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
          verticalalignment='top', horizontalalignment='right')
     
-    plt.ylim(0,1)
+    if change_ylim:
+        plt.ylim(0,1.1)
+    else:
+        plt.ylim(0,1)
+
     plt.fill_between(np.arange(dim),five_direct, ninetyfive_direct,alpha=0.1, color="k")
     plt.fill_between(np.arange(dim),five_inverse, ninetyfive_inverse,alpha=0.1, color="k")
     plt.fill_between(np.arange(dim),median_direct, median_inverse,alpha=0.7, color=colors[color])

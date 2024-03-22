@@ -498,17 +498,17 @@ Probably I should have used a similar strategy in choosing the number of samples
 - `AE`
 	- `fit_predict` → Job 1461892 → ==ok== 
 
-### `Xaxis_5000_512`
+### `Xaxis_5000_512` → ==ok== 
 
 - `EIF+`
 	- `fit_predict` → Job 1461937 → ==ok== 
 	- `EXIFFI+` → Job 1461937 → ==ok==
 - `EIF+_RF`
-	- `fit_predict` → Job 1462327
-	- `RandomForest` → Job 1462327
+	- `fit_predict` → Job 1462327 → ==ok==
+	- `RandomForest` → Job 1462327 → ==ok== 
 - `EIF`
-	- `fit_predict` → Job 1462327
-	- `EXIFFI` → Job 1462327
+	- `fit_predict` → Job 1462327 → ==ok==
+	- `EXIFFI` → Job 1462327 → ==ok== 
 - `IF`
 	- `fit_predict` → Job 1461914 → ==ok==
 	- `DIFFI` → Job 1461914 → ==ok== 
@@ -520,7 +520,10 @@ Probably I should have used a similar strategy in choosing the number of samples
 ### `Xaxis_5000_1024`
 
 - `EIF+`
-	- `fit_predict` → Job 1462249
+	- `fit_predict` → Job 1462249  geom_text(aes(
+            x=0.6,
+            y=labelpos-0.5*pop,
+            label=str_c(as.integer(pop/1000000),"M")))
 	- `EXIFFI+` → Job 1462249
 - `EIF+_RF`
 	- `fit_predict` → Job 1462239
