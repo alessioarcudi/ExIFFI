@@ -12,7 +12,7 @@ SCRIPT_PATH="test_metrics.py"
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="diabetes"
+DATASETS="shuttle"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
