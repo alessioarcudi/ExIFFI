@@ -36,6 +36,7 @@ parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, 
 parser.add_argument('--interpretation', type=str, default="NA", help='Interpretation method to use: EXIFFI, DIFFI, RandomForest')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
+parser.add_argument('--compute_fit_predict', type=bool, default=False, help='Weather to compute fit_predict experiment')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -69,9 +70,13 @@ model = args.model
 interpretation = args.interpretation
 scenario = args.scenario
 GFI = args.compute_GFI
+fit_predict = args.compute_fit_predict 
 
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
+
+if dataset.shape[0]>7500:
+    dataset.downsample(max_samples=7500)
 
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
@@ -148,13 +153,14 @@ if not os.path.exists(path_experiment_model_fit_predict):
     os.makedirs(path_experiment_model_fit_predict)
 
 # Fit Predict Experiment 
-fit_time,predict_time=fit_predict_experiment(I=I,dataset=dataset,n_runs=n_runs,model=I.name)
+if fit_predict:
+    fit_time,predict_time=fit_predict_experiment(I=I,dataset=dataset,n_runs=n_runs,model=I.name)
 
-print(f'Mean Fit Time: {fit_time}')
-print(f'Mean Predict Time: {predict_time}')
+    print(f'Mean Fit Time: {fit_time}')
+    print(f'Mean Predict Time: {predict_time}')
 
-time_dict={"fit_time":fit_time,"predict_time":predict_time}
-save_element(time_dict, path_experiment_model_fit_predict, filetype="pickle")
+    time_dict={"fit_time":fit_time,"predict_time":predict_time}
+    save_element(time_dict, path_experiment_model_fit_predict, filetype="pickle")
 
 # Importances Experiment
 
