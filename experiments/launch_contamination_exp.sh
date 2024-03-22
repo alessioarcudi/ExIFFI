@@ -5,20 +5,20 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="wine"
+DATASETS="diabetes"
 
 # Path to the datasets
 DATASET_PATHS="../data/real/"
 
 # Experiment EIF+
 
-# python $SCRIPT_PATH \
-#     --dataset_name $DATASETS \
-#     --dataset_path $DATASET_PATHS \
-#     --model "EIF+" \
-#     --interpretation "EXIFFI+" \
-#     --pre_process 1 \
-#     --compute_GFI 1 
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "EIF+" \
+    --interpretation "EXIFFI+" \
+    --pre_process 1 \
+    --compute_GFI 1 
 
 # Experiment EIF
 
