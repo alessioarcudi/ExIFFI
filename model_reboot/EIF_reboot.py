@@ -132,12 +132,13 @@ tree_spec = [
     ("depth", int64[:]),          
     ("corrected_depth", float64[:]),
     ("importances_right", float64[:, :]),
-    ("importances_left", float64[:, :])
+    ("importances_left", float64[:, :]),
+    ("eta", float64)
 ]
 
 @jitclass(tree_spec)
 class ExtendedTree:
-    def __init__(self, n, d, max_depth, locked_dims=0, min_sample=1, plus=True, max_nodes=10000):
+    def __init__(self, n, d, max_depth, locked_dims=0, min_sample=1, plus=True, max_nodes=10000, eta: float = 1.5):
         self.plus = plus
         self.locked_dims = locked_dims 
         self.max_depth = max_depth
@@ -146,7 +147,7 @@ class ExtendedTree:
         self.d = d
         self.node_count = 1
         self.max_nodes = max_nodes
-        #self.eta = eta
+        self.eta = eta
 
         self.path_to = -np.ones((max_nodes, max_depth+1), dtype=np.int64)
         self.path_to_Right_Left = np.zeros((max_nodes, max_depth+1), dtype=np.int64)
@@ -195,7 +196,7 @@ class ExtendedTree:
         
             if self.plus:
                 #self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*self.eta)
-                self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*1.5)
+                self.intercepts[node_id] = np.random.normal(np.mean(dist),np.std(dist)*self.eta)
             else:
                 self.intercepts[node_id] = np.random.uniform(np.min(dist),np.max(dist))
             mask = dist <= self.intercepts[node_id]  
@@ -242,7 +243,7 @@ class ExtendedTree:
 
 
 class ExtendedIsolationForest():
-    def __init__(self, plus, n_estimators=400, max_depth="auto", max_samples="auto"):
+    def __init__(self, plus, n_estimators=400, max_depth="auto", max_samples="auto", eta: float = 1.5):
         self.n_estimators = n_estimators
         self.max_samples = 256 if max_samples == "auto" else max_samples
         self.max_depth = max_depth
@@ -250,7 +251,7 @@ class ExtendedIsolationForest():
         self.name="EIF"+"+"*int(plus)
         self.ids=None
         self.X=None
-        #self.eta=eta
+        self.eta=eta
     
     @property
     def avg_number_of_nodes(self):
@@ -264,7 +265,7 @@ class ExtendedIsolationForest():
         if self.max_depth == "auto":
             self.max_depth = int(np.ceil(np.log2(self.max_samples)))
         subsample_size = np.min((self.max_samples, len(X)))
-        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims, plus=self.plus)
+        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims, plus=self.plus, eta=self.eta)
                       for _ in range(self.n_estimators)]
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
