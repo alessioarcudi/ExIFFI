@@ -86,7 +86,8 @@ def fix_fs_file(dataset,model,interpretation,scenario):
     save_element(new_precs, path, filetype="pickle")
 
 def save_fs_prec(precs,path):
-    aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    #aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    aucfs=np.nansum(np.nanmean(precs.inverse,axis=1)-np.nanmean(precs.direct,axis=1))
     new_precs = NewPrecisions(direct=precs.direct,
                             inverse=precs.inverse,
                             dataset=precs.dataset,
