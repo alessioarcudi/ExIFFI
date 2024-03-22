@@ -25,7 +25,7 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/time_scaling_test_dei.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
@@ -178,29 +178,31 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                 else:
                     dataset_shrinking.initialize_train()
                     dataset_shrinking.initialize_test()
-                
-                # import ipdb;
-                # ipdb.set_trace()
 
-                if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
-                    
-                    start_time = time.time()
-                    I.fit(dataset_shrinking.X_train)
-                    fit_time = time.time() - start_time
-                    
-                    if run >3:
-                        dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
-                    start_time = time.time()
-                    score = I.predict(dataset_shrinking.X_test)
-                    predict_time = time.time() - start_time
-                    
-                    if run >3:                        
-                        dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
-                else:
-                    I.fit(dataset_shrinking.X_train)
-                    score = I.predict(dataset_shrinking.X_test)
-                avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y,score)
-                runs[run] = avg_prec
+                try:
+                    if dataset.X.shape[1] == dataset_shrinking.X.shape[1]:
+                        
+                        start_time = time.time()
+                        I.fit(dataset_shrinking.X_train)
+                        fit_time = time.time() - start_time
+                        
+                        if run >3:
+                            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+                        start_time = time.time()
+                        score = I.predict(dataset_shrinking.X_test)
+                        predict_time = time.time() - start_time
+                        
+                        if run >3:                        
+                            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+                    else:
+                        I.fit(dataset_shrinking.X_train)
+                        score = I.predict(dataset_shrinking.X_test)
+                    avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y,score)
+                    # import ipdb;
+                    # ipdb.set_trace()
+                    runs[run] = avg_prec
+                except:
+                    runs[run] = np.nan
 
             precisions[number_of_features_dropped] = runs
 

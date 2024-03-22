@@ -524,7 +524,7 @@ def get_vals(model: str,
     assert type in ['predict','fit','importances'], "Type not valid"
     
     os.chdir('../utils_reboot')
-    with open(os.getcwd() + "/time_scaling_test_dei.pickle", "rb") as file:
+    with open(os.getcwd() + "/time_scaling_test_dei_new.pickle", "rb") as file:
         dict_time = pickle.load(file)
 
     val_times=[]
