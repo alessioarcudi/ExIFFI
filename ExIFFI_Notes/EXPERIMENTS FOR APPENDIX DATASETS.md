@@ -51,55 +51,60 @@
 	- [x] Put on paper 
 - [x] Local Scoremaps
 	- [x] Put on paper
-# `ionosphere`
+# `ionosphere` → ==ok== 
 
-- [ ] Feature Selection Plots → The execution blocks in `EIF_EIF_RandomForest` and `EIF_IF_RandomForest` for a `ZeroDivisionError`
-	- [ ] Put on paper 
-- [ ] Contamination Plots 
-	- [ ] Put on paper 
-- [ ] Performance Metrics Table 
-	- [ ] Time Scaling experiment on importances of `RandomForest`
-	- [ ] Put on paper 
-- [x] Importance Plots 
-	- [ ] Put on paper 
-- [ ] Local Scoremaps
-	- [ ] Put on paper
-# `pendigits`
-
-- [ ] Feature Selection Plots 
-	- [ ] Put on paper 
-- [ ] Contamination Plots 
-	- [ ] Put on paper 
-- [ ] Performance Metrics Table 
-	- [ ] Time Scaling experiment on importances of `RandomForest`
-	- [ ] Put on paper 
-- [x] Importance Plots 
-	- [ ] Put on paper 
-- [ ] Local Scoremaps
-	- [ ] Put on paper
-# `shuttle`
-
-- [ ] Feature Selection Plots 
-	- [ ] Put on paper 
-- [ ] Contamination Plots 
-	- [ ] Put on paper 
-- [ ] Performance Metrics Table 
-	- [ ] Time Scaling experiment on importances of `RandomForest`
-	- [ ] Put on paper 
-- [x] Importance Plots 
-	- [ ] Put on paper 
-- [ ] Local Scoremaps
-	- [ ] Put on paper
-# `diabetes`
-
-- [x] Feature Selection Plots 
-	- [ ] Put on paper 
+- [x] Feature Selection Plots → The execution blocks in `EIF_EIF_RandomForest` and `EIF_IF_RandomForest` for a `ZeroDivisionError`.
+	- [x] Missing:
+		- [x] `random` scenario 2 both in `EIF` and `EIF+`
+		- [x] `IF_DIFFI` scenario 2 both in `EIF` and `EIF+`
+		- [x] `IF_RandomForest` scenario 2 both in `EIF` and `EIF+`
+		- [x] `EIF_RandomForest` scenario 2 both in `EIF` and `EIF+`
+	- [x] Put on paper 
 - [x] Contamination Plots 
-	- [ ] Put on paper 
+	- [x] Put on paper 
 - [x] Performance Metrics Table 
-	- [ ] Time Scaling experiment on importances of `RandomForest`
-	- [ ] Put on paper 
+	- [x] Time Scaling experiment on importances of `RandomForest`
+	- [x] Put on paper 
 - [x] Importance Plots 
 	- [x] Put on paper 
 - [x] Local Scoremaps
+	- [x] Put on paper
+# `pendigits` → ==ok== 
+
+- [x] Feature Selection Plots 
+	- [x] Put on paper 
+- [x] Contamination Plots 
+	- [x] Put on paper 
+- [x] Performance Metrics Table 
+	- [x] Time Scaling experiment on importances of `RandomForest`
+	- [x] Put on paper 
+- [x] Importance Plots 
+	- [x] Put on paper 
+- [x] Local Scoremaps
+	- [x] Put on paper
+# `shuttle`
+
+- [x] Feature Selection Plots 
+	- [x] Put on paper 
+- [x] Contamination Plots 
+	- [x] Put on paper 
+- [x] Performance Metrics Table 
+	- [x] Time Scaling experiment on importances of `RandomForest`
+	- [x] Put on paper 
+- [x] Importance Plots 
+	- [x] Put on paper 
+- [ ] Local Scoremaps → Re check the scoremap (there is something wrong in the scales)
 	- [ ] Put on paper
+# `diabetes` → ==ok== 
+
+- [x] Feature Selection Plots 
+	- [x] Put on paper 
+- [x] Contamination Plots 
+	- [x] Put on paper 
+- [x] Performance Metrics Table 
+	- [x] Time Scaling experiment on importances of `RandomForest`
+	- [x] Put on paper 
+- [x] Importance Plots 
+	- [x] Put on paper 
+- [x] Local Scoremaps
+	- [x] Put on paper
