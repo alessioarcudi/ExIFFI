@@ -51,6 +51,31 @@
 	- [x] Put on paper 
 - [x] Local Scoremaps
 	- [x] Put on paper
+
+List of feature names for `cardio` (found [here](https://archive.ics.uci.edu/dataset/193/cardiotocography)):
+
+- LB - FHR baseline (beats per minute)
+- AC - # of accelerations per second
+- FM - # of fetal movements per second
+- UC - # of uterine contractions per second
+- DL - # of light decelerations per second
+- DS - # of severe decelerations per second
+- DP - # of prolongued decelerations per second
+- ASTV - percentage of time with abnormal short term variability
+- MSTV - mean value of short term variability
+- ALTV - percentage of time with abnormal long term variability
+- MLTV - mean value of long term variability
+- Width - width of FHR histogram
+- Min - minimum of FHR histogram
+- Max - Maximum of FHR histogram
+- Nmax - # of histogram peaks
+- Nzeros - # of histogram zeros
+- Mode - histogram mode
+- Mean - histogram mean
+- Median - histogram median
+- Variance - histogram variance
+- Tendency - histogram tendency
+- CLASS - FHR pattern class code (1 to 10)
 # `ionosphere` → ==ok== 
 
 - [x] Feature Selection Plots → The execution blocks in `EIF_EIF_RandomForest` and `EIF_IF_RandomForest` for a `ZeroDivisionError`.
@@ -82,7 +107,7 @@
 	- [x] Put on paper 
 - [x] Local Scoremaps
 	- [x] Put on paper
-# `shuttle`
+# `shuttle` → ==ok== 
 
 - [x] Feature Selection Plots 
 	- [x] Put on paper 
@@ -93,8 +118,11 @@
 	- [x] Put on paper 
 - [x] Importance Plots 
 	- [x] Put on paper 
-- [ ] Local Scoremaps → Re check the scoremap (there is something wrong in the scales)
-	- [ ] Put on paper
+- [x] Local Scoremaps 
+	- [x] Put on papertab:fs-tab-Wine
+
+> [!note] 
+>  The scales in the Local Scoremaps are different from the ones used in the previous version of the paper because in that case we down sampled big datasets to 2500 samples, now instead we downsample to 7500 samples so the scales are obviously different. Actually since we are taking more samples from the complete dataset the scales will be similar to the scales of the entire dataset. The same holds for `moodify`. 
 # `diabetes` → ==ok== 
 
 - [x] Feature Selection Plots 
