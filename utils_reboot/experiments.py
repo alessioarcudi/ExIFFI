@@ -307,6 +307,8 @@ def performance(y_pred:np.array,
             score = I.decision_function(dataset.X_test)
         else:
             score = I.predict(dataset.X_test)
+            # import ipdb; 
+            # ipdb.set_trace()
         precisions.append(average_precision_score(y_true, score))
     
     df=pd.DataFrame({
