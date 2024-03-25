@@ -1,3 +1,18 @@
+In case we have to add also `bisect` and `Yaxis`
+
+# `Yaxis` → ==ok== 
+
+- [x] Performance Metrics Table
+	- [x] Put on paper
+- [x] Feature Selection Plots
+	- [x] Put $AUC_{FS}$ Table on paper
+
+# `bisect`
+
+- [x] Performance Metrics Table
+	- [x] Put on paper
+- [x] $AUC_{FS}$ Table 
+
 # `wine` → ==ok== 
 
 - [x] Feature Selection Plots 
