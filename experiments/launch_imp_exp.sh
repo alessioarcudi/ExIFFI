@@ -2,14 +2,54 @@
 
 SCRIPT_PATH="test_global_importancies.py"
 
-DATASETS="breastw"
+DATASETS="bisect"
 
-DATASET_PATHS="../data/real/"
+DATASET_PATH="../data/syn/"
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "IF" \
-    --interpretation "DIFFI" \
-    --pre_process \
-    --scenario 2
+SCENARIOS=(1 2)
+
+for scenario in "${SCENARIOS[@]}"; do
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --interpretation "EXIFFI+" \
+        --scenario "$scenario" 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --interpretation "EXIFFI" \
+        --scenario "$scenario" 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "IF" \
+        --interpretation "DIFFI" \
+        --scenario "$scenario" 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --interpretation "RandomForest" \
+        --scenario "$scenario"
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --interpretation "RandomForest" \
+        --scenario "$scenario" 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "IF" \
+        --interpretation "RandomForest" \
+        --scenario "$scenario"
+
+done
