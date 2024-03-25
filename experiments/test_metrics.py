@@ -61,15 +61,15 @@ scenario = args.scenario
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
+# import ipdb; 
+# ipdb.set_trace()
+
 # Downsample datasets with more than 7500 samples
 if dataset.shape[0] > 7500:
     dataset.downsample(max_samples=7500)
 
 if scenario==2:
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
-
-# import ipdb; 
-# ipdb.set_trace()
 
 # Preprocess the dataset
 if pre_process:
@@ -88,6 +88,7 @@ elif scenario==1 and not pre_process:
     print("Dataset not preprocessed")
     dataset.initialize_train_test()
     print("#"*50)
+
 
 assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
 
