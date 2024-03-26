@@ -290,7 +290,7 @@ def performance(y_pred:np.array,
                 path:str=""
                 ) -> pd.DataFrame: 
     
-    # In path insert the local put up to the experiments folder:
+    # In path insert the local path up to the experiments folder:
     # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
     # For Alessio → /Users/alessio/Documents/ExIFFI
 
