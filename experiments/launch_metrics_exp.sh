@@ -12,54 +12,53 @@ SCRIPT_PATH="test_metrics.py"
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="bisect"
+DATASETS="annthyroid"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
 # Iterate over the datasets and call the Python command for each dataset
 for dataset in "${DATASET_ARRAY[@]}"; do
  
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF+" \
-        --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF+" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF+" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF+" \
+    #     --scenario 1
 
 
-    python $SCRIPT_PATH \
-            --dataset_name "$dataset" \
-            --dataset_path "$DATASET_PATH" \
-            --model "EIF" \
+    # python $SCRIPT_PATH \
+    #         --dataset_name "$dataset" \
+    #         --dataset_path "$DATASET_PATH" \
+    #         --model "EIF" \
+    #         --scenario 2
 
-            --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF" \
+    #     --scenario 1
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "IF" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "IF" \
-        --scenario 2
-
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "IF" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "IF" \
+    #     --scenario 1
 
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \

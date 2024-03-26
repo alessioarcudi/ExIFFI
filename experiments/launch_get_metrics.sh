@@ -2,7 +2,7 @@
 
 SCRIPT_PATH="get_metrics.py"
 
-DATASETS="glass_DIFFI"
+DATASETS="wine"
 
 DATASET_PATH="../data/real/"
 
@@ -26,4 +26,26 @@ python $SCRIPT_PATH \
             --dataset_name $DATASETS \
             --dataset_path $DATASET_PATH \
             --model "DIF" \
+            --pre_process \
             --scenario 2
+
+python $SCRIPT_PATH \
+            --dataset_name $DATASETS \
+            --dataset_path $DATASET_PATH \
+            --model "DIF" \
+            --pre_process \
+            --scenario 1
+
+python $SCRIPT_PATH \
+            --dataset_name $DATASETS \
+            --dataset_path $DATASET_PATH \
+            --model "AnomalyAutoencoder" \
+            --pre_process \
+            --scenario 2
+
+python $SCRIPT_PATH \
+            --dataset_name $DATASETS \
+            --dataset_path $DATASET_PATH \
+            --model "AnomalyAutoencoder" \
+            --pre_process \
+            --scenario 1
