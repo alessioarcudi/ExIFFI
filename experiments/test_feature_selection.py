@@ -36,6 +36,8 @@ parser.add_argument('--split',action='store_true', help='If set, split the datas
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--rotation',action='store_true', help='If set, rotate the xticks labels by 45 degrees in the feature selection plot (for ionosphere)')
 parser.add_argument('--compute_random',action='store_true', help='If set, shows also the random precisions in the feature selection plot')
+parser.add_argument('--change_ylim',action='store_true', help='If set, increase the ylim from 1 to 1.1 (for breastw)')
+parser.add_argument('--change_box_loc', default=0.9, help='If set, change y coordinate of box_loc (for breastw)')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -57,6 +59,8 @@ split = args.split
 scenario = args.scenario
 rotation = args.rotation
 compute_random = args.compute_random
+change_ylim = args.change_ylim 
+change_box_loc=args.change_box_loc
 
 
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -168,7 +172,8 @@ feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
 direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False, scenario=scenario)
 inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False, scenario=scenario)
-value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+#value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
+value = abs(np.nansum(np.nanmean(direct,axis=1)-np.nanmean(inverse,axis=1)))
 data = Precisions(direct, inverse, dataset.name, model, value)
 save_fs_prec(data, path_experiment_model_interpretation_scenario)
 
@@ -182,6 +187,16 @@ if compute_random:
 #plot feature selection
 fs_prec = get_most_recent_file(path_experiment_model_interpretation_scenario)
 fs_prec_random = get_most_recent_file(path_experiment_model_interpretation_random_scenario)
-plot_feature_selection(fs_prec, path_plots, fs_prec_random, model=model_interpretation, eval_model=model, interpretation=interpretation, scenario=scenario, plot_image=False,rotation=rotation)
+plot_feature_selection(fs_prec,
+                        path_plots, 
+                        fs_prec_random, 
+                        model=model_interpretation, 
+                        eval_model=model, 
+                        interpretation=interpretation, 
+                        scenario=scenario, 
+                        plot_image=False,
+                        rotation=rotation,
+                        change_ylim=change_ylim,
+                        change_box_loc=change_box_loc)
 
 

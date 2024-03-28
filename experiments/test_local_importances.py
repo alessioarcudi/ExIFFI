@@ -108,15 +108,6 @@ print(f'Scenario: {scenario}')
 print(f'Features to plot: {dataset.feature_names[feats_plot[0]]}, {dataset.feature_names[feats_plot[1]]}')
 print('#'*50)
 
-# print(f'y shape: {dataset.y.shape}')
-# print(f'y_test shape: {dataset.y_test.shape}')
-# print(f'X_test shape: {dataset.X_test.shape}')
-# print(f'X_train shape: {dataset.X_train.shape}')
-# quit()
-
-#cwd = '/Users/alessio/Documents/ExIFFI'
-#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
-
 os.chdir('../')
 cwd=os.getcwd()
 
@@ -125,7 +116,6 @@ if not os.path.exists(path_plots):
     os.makedirs(path_plots)
 
 #----------------- LOCAL SCOREMAP -----------------#
-    
 # Compute local scoremap
 I.fit(dataset.X_train)  
 #print(I.avg_number_of_nodes)

@@ -10,18 +10,18 @@ from utils_reboot.datasets import *
 from utils_reboot.plots import *
 from utils_reboot.utils import *
 
-from pyod.models.dif import DIF as DIF_original
-from pyod.models.auto_encoder import AutoEncoder as AutoEncoder_original
+# from pyod.models.dif import DIF as DIF_original
+# from pyod.models.auto_encoder import AutoEncoder as AutoEncoder_original
 
-class DIF_metrics(DIF_original):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.name = "DIF"
+# class DIF_metrics(DIF_original):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#         self.name = "DIF"
 
-class AutoEncoder_metrics(AutoEncoder_original):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.name = "AnomalyAutoencoder"
+# class AutoEncoder_metrics(AutoEncoder_original):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#         self.name = "AnomalyAutoencoder"
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from model_reboot.EIF_reboot import IsolationForest as EIF_IsolationForest
@@ -61,15 +61,15 @@ scenario = args.scenario
 dataset = Dataset(dataset_name, path = dataset_path)
 dataset.drop_duplicates()
 
+# import ipdb; 
+# ipdb.set_trace()
+
 # Downsample datasets with more than 7500 samples
 if dataset.shape[0] > 7500:
     dataset.downsample(max_samples=7500)
 
 if scenario==2:
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
-
-# import ipdb; 
-# ipdb.set_trace()
 
 # Preprocess the dataset
 if pre_process:
@@ -89,6 +89,7 @@ elif scenario==1 and not pre_process:
     dataset.initialize_train_test()
     print("#"*50)
 
+
 assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
 
 if model == "sklearn_IF":
@@ -100,9 +101,9 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "DIF":
-    I = DIF_metrics(max_samples=max_samples)
+    I = DIF(max_samples=max_samples)
 elif model == "AnomalyAutoencoder":
-    I = AutoEncoder_metrics(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+    I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
 
 os.chdir('../')
 cwd=os.getcwd()
@@ -140,22 +141,15 @@ except:
     print('Model not recognized: creating a new key in the dict_time for the new model')
     dict_time[scenario]["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
 
-if model in ['EIF','IF','EIF+']:
-    start_time = time.time()
-    score=I.predict(dataset.X_test)
-    y_pred=I._predict(dataset.X_test,p=dataset.perc_outliers)
-    predict_time = time.time() - start_time
+start_time = time.time()
+score=I.predict(dataset.X_test)
+y_pred=I._predict(dataset.X_test,p=dataset.perc_outliers)
+predict_time = time.time() - start_time
+try:
     dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
-else:
-    start_time = time.time()
-    score=I.decision_function(dataset.X_test)
-    y_pred=I.predict(dataset.X_test)
-    predict_time = time.time() - start_time
-    try:
-        dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
-    except:
-        print('Model not recognized: creating a new key in the dict_time for the new model')
-        dict_time[scenario]["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
+except:
+    print('Model not recognized: creating a new key in the dict_time for the new model')
+    dict_time[scenario]["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
 
 with open(filename, "wb") as file:
     pickle.dump(dict_time, file)

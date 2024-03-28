@@ -35,6 +35,12 @@ class DIF(oldDIF):
         score=self.decision_function(X)
         return score
     
+    def _predict(self,X,p):
+        An_score = self.predict(X)
+        y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
+        return y_hat
+
+    
 class AutoEncoder(oldAutoEncoder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -43,6 +49,11 @@ class AutoEncoder(oldAutoEncoder):
     def predict(self, X):
         score=self.decision_function(X)
         return score
+    
+    def _predict(self,X,p):
+        An_score = self.predict(X)
+        y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
+        return y_hat
     
 
 def save_element(element, directory_path, filename="", filetype="pickle"):
@@ -86,7 +97,8 @@ def fix_fs_file(dataset,model,interpretation,scenario):
     save_element(new_precs, path, filetype="pickle")
 
 def save_fs_prec(precs,path):
-    aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    #aucfs=sum(precs.inverse.mean(axis=1)-precs.direct.mean(axis=1))
+    aucfs=np.nansum(np.nanmean(precs.inverse,axis=1)-np.nanmean(precs.direct,axis=1))
     new_precs = NewPrecisions(direct=precs.direct,
                             inverse=precs.inverse,
                             dataset=precs.dataset,

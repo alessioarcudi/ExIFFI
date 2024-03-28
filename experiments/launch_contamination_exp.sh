@@ -5,20 +5,19 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="wine"
+DATASETS="bisect"
 
 # Path to the datasets
-DATASET_PATHS="../data/real/"
+DATASET_PATHS="../data/syn/"
 
 # Experiment EIF+
 
-# python $SCRIPT_PATH \
-#     --dataset_name $DATASETS \
-#     --dataset_path $DATASET_PATHS \
-#     --model "EIF+" \
-#     --interpretation "EXIFFI+" \
-#     --pre_process 1 \
-#     --compute_GFI 1 
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "EIF+" \
+    --interpretation "EXIFFI+" \
+    --compute_GFI 1 
 
 # Experiment EIF
 
@@ -27,31 +26,27 @@ python $SCRIPT_PATH \
     --dataset_path $DATASET_PATHS \
     --model "EIF" \
     --interpretation "EXIFFI" \
-    --pre_process 1 \
     --compute_GFI 1 
 
-# # Experiment IF
+# Experiment IF
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "IF" \
     --interpretation "DIFFI" \
-    --pre_process 1 \
     --compute_GFI 1 
 
-# # Experiment DIF
+# Experiment DIF
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
-    --pre_process 1 \
     --model "DIF" 
 
-# # Experiment AnomalyAutoencoder
+# Experiment AnomalyAutoencoder
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
-    --pre_process 1 \
     --model "AnomalyAutoencoder" 
