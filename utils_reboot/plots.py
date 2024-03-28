@@ -628,14 +628,14 @@ def plot_ablation(eta_list,results,
     ax.set_xlabel("Eta",fontsize = 20)
     ax.set_ylabel('Avg Prec',fontsize = 20)
 
-    if change_ylim:
-        plt.ylim(0,1.1)
-    else:
-        plt.ylim(0,1)
-
     
     ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
-    ax.set_ylim([0,1])
+    
+    if change_ylim:
+        ax.set_ylim([0,1.1])
+    else:
+        ax.set_ylim([0,1])
+
     plt.legend()
     
     t = time.localtime()

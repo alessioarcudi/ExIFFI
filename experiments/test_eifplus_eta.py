@@ -1,7 +1,6 @@
 import sys
 import os
 cwd = os.getcwd()
-os.chdir("experiments")
 sys.path.append("..")
 from collections import namedtuple
 
@@ -28,7 +27,7 @@ parser.add_argument('--n_runs', type=int, default=40, help='Global feature impor
 parser.add_argument('--pre_process',type=bool, default=False, help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
-parser.add_argument('--change_ylim',action='store_true', help='If set, change the ylim of the plot from 1 to 1.1')
+parser.add_argument('--change_ylim',type=bool,default=False, help='If set, change the ylim of the plot from 1 to 1.1')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -45,6 +44,8 @@ pre_process = args.pre_process
 model = args.model
 scenario = args.scenario
 change_ylim = args.change_ylim
+
+#import ipdb; ipdb.set_trace()
 
 # Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -78,14 +79,12 @@ elif scenario==1 and not pre_process:
     dataset.initialize_train_test()
     print("#"*50)
 
-assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
-
-
-
-I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-
 os.chdir('../')
 cwd=os.getcwd()
+
+assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
+
+I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
 
 names = [
