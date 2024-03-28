@@ -605,7 +605,8 @@ def plot_ablation(eta_list,results,
                         dataset_name,
                         plot_path=os.getcwd(),
                         show_plot=False,
-                        save_plot=True):
+                        save_plot=True,
+                        change_ylim=False):
 
     fig, ax = plt.subplots()
     plt.style.use('default')
@@ -624,6 +625,11 @@ def plot_ablation(eta_list,results,
         
     ax.set_xlabel("Eta",fontsize = 20)
     ax.set_ylabel('Avg Prec',fontsize = 20)
+
+    if change_ylim:
+        plt.ylim(0,1.1)
+    else:
+        plt.ylim(0,1)
 
     
     ax.legend()

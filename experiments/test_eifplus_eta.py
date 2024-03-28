@@ -25,9 +25,10 @@ parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
-parser.add_argument('--pre_process',type=bool, default=True, help='If set, preprocess the dataset')
+parser.add_argument('--pre_process',type=bool, default=False, help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
+parser.add_argument('--change_ylim',action='store_true', help='If set, change the ylim of the plot from 1 to 1.1')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -43,6 +44,7 @@ n_runs = args.n_runs
 pre_process = args.pre_process
 model = args.model
 scenario = args.scenario
+change_ylim = args.change_ylim
 
 # Load the dataset
 dataset = Dataset(dataset_name, path = dataset_path)
@@ -106,4 +108,5 @@ avg_prec = open_element(avg_prec_file, filetype="pickle")
 
 plot_ablation(eta_list,avg_prec,
                         dataset_name,
-                        plot_path=plot_path)
+                        plot_path=plot_path,
+                        change_ylim=change_ylim)
