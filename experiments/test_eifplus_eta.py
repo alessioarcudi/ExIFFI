@@ -18,8 +18,8 @@ import argparse
 parser = argparse.ArgumentParser(description='Test Performance Metrics')
 
 # Add the arguments
-parser.add_argument('--dataset_name', type=str, default='ionosphere', help='Name of the dataset')
-parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
+parser.add_argument('--dataset_name', type=str, default='Xaxis', help='Name of the dataset')
+parser.add_argument('--dataset_path', type=str, default='../data/syn/', help='Path to the dataset')
 parser.add_argument('--n_estimators', type=int, default=200, help='EIF parameter: n_estimators')
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
@@ -86,8 +86,17 @@ os.chdir('../')
 cwd=os.getcwd()
 
 
+names = [
+    "Xaxis", "bisect", "bisect_3d", "bisect_6d", "annthyroid", "breastw", "cardio", "diabetes", 
+    "glass", "ionosphere", "moodify", "pendigits", "pima", "shuttle", "wine"
+]
+
+EIF_values = [0.99, 0.99, 0.99, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 0.27, 0.54, 0.97, 0.57]
+
+EIF_dataset_values_dict = dict(zip(names, EIF_values))
+
 eta_list = np.linspace(0.5,5,25)
-avg_prec = ablation_EIF_plus(I,dataset,eta_list)
+#avg_prec = ablation_EIF_plus(I,dataset,eta_list)
 
 
 path_ablation = cwd+"/experiments/results/"+dataset.name+"/experiments/ablationEIF+"
@@ -99,11 +108,12 @@ if not os.path.exists(plot_path):
     os.makedirs(plot_path)
 
     
-save_element(avg_prec, path_ablation, filetype="pickle")
+#save_element(avg_prec, path_ablation, filetype="pickle")
 
 avg_prec_file = get_most_recent_file(path_ablation)
 avg_prec = open_element(avg_prec_file, filetype="pickle")
+EIF_value = EIF_dataset_values_dict[dataset_name]
 
-plot_ablation(eta_list,avg_prec,
+plot_ablation(eta_list,avg_prec,EIF_value,
                         dataset_name,
                         plot_path=plot_path)

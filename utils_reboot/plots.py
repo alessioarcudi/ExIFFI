@@ -596,6 +596,7 @@ def plot_time_scaling(model_names,
     return fig,ax
 
 def plot_ablation(eta_list,results,
+                  EIF_value,
                         dataset_name,
                         plot_path=os.getcwd(),
                         show_plot=False,
@@ -612,7 +613,8 @@ def plot_ablation(eta_list,results,
     five_values=[np.percentile(x,5) for x in results]
     ninefive_values=[np.percentile(x,95) for x in results]
 
-    ax.plot(eta_list,median_values,alpha=0.85,c=colors[0],marker="o",label=dataset_name)
+    ax.plot(eta_list,median_values,alpha=0.85,c=colors[0],marker="o",label="EIF+")
+    ax.plot(eta_list,[EIF_value]*len(eta_list),alpha=0.85,c=colors[1],label="EIF")
     ax.fill_between(eta_list,five_values,ninefive_values,alpha=0.1,color=colors[0])
 
         
@@ -620,8 +622,9 @@ def plot_ablation(eta_list,results,
     ax.set_ylabel('Avg Prec',fontsize = 20)
 
     
-    ax.legend()
     ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    ax.set_ylim([0,1])
+    plt.legend()
     
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
