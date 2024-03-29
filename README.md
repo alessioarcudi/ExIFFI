@@ -1,14 +1,9 @@
 # ExIFFI
 
-The Python script and Jupyter Notebooks composing this Repository contain the code used to produce the results presented in the "ExIFFI and EIF+: Interpretability and Enhanced Generalizability to Extend the
-Extended Isolation Forest" paper https://arxiv.org/abs/2310.05468. 
+This is the official repository of the [*"ExIFFI and EIF+: Interpretability and Enhanced Generalizability to Extend the Extended Isolation Forest" paper*](https://arxiv.org/abs/2310.05468).
 
-## Repository Organization 
+The paper introduces Extended Isolation Forest Feature Importance (ExIFFI), a novel interpretation algorithm designed for the Extended Isolation Forest (EIF) anomaly detection model. ExIFFI aims to provide explanations for predictions made by EIF by computing global and local feature importance scores. Additionally, an enhanced variant of EIF, named EIF+, is proposed to improve generalization performance. The evaluation involves comprehensive experiments on synthetic and real-world datasets to assess anomaly detection performance and the effectiveness of ExIFFI for interpretation.
 
-- models -> This folder contains the Python scripts defining the classes implementing the models presented in the paper: Extended Isolation Forest (EIF), Extended Isolation Forest Plus (EIF+) and ExIFFI: Extended Isolation Forest Feature Importance.
+## Usefule Notes
 
-- notebooks -> This folder contains some Jupyter Notebooks that were used to obtain the graphical and numerical results presented in the paper.
-
-- data -> Here the pkl, csv and mat files, containing the synthetic and real-world dataset used for the experiments, can be found.
-
-- utils -> Finally, this folder contains some Pyhton scripts were utility functions, used in the Notebooks and in the model classes, are defined. 
+The `tutorial.ipynb` (contained in the `notebooks` folder) notebook provides a step-by-step guide on how to use ExIFFI and EIF+ for anomaly detection and interpretation. The notebook includes code snippets for training the models, making predictions, and computing feature importance scores.
