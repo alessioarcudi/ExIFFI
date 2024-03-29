@@ -287,7 +287,8 @@ def performance(y_pred:np.array,
                 scenario:int=2,
                 n_runs:int=10,
                 filename:str="",
-                path:str=""
+                path:str=os.getcwd(),
+                save:bool=True
                 ) -> pd.DataFrame: 
     
     # In path insert the local path up to the experiments folder:
@@ -332,7 +333,8 @@ def performance(y_pred:np.array,
     
     filename=f"perf_{dataset.name}_{model_name}_{scenario}"
 
-    save_element(df, path, filename)
+    if save:
+        save_element(df, path, filename)
     
     return df,path
 

@@ -118,3 +118,37 @@ def get_fs_file(dataset,model,interpretation,scenario):
     file_path=get_most_recent_file(path)
     precs=open_element(file_path)
     return precs
+
+def select_scenario():
+    scenario=int(input("Press 1 for scenario 1 and 2 for scenario 2: "))
+    assert scenario in [1,2], "Scenario not recognized: Accepted values: [1,2]"
+    return scenario
+
+def select_pre_process():
+    pre_process=int(input("Press 1 to pre process the dataset, 2 otherwise: "))
+    assert pre_process in [1,2], "Input values not recognized: Accepted values: [1,2]"
+    return pre_process==1
+
+def select_pre_process_scenario(dataset):
+    pre_process=select_pre_process()
+    scenario=select_scenario()
+
+    if scenario==2:
+        dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
+
+    if pre_process==1:
+        dataset.pre_process()
+        print("Dataset pre processed\n")
+    elif scenario==2 and not pre_process==2:
+        print("Dataset not preprocessed\n")
+        dataset.initialize_test()
+    elif scenario==1 and not pre_process==2:
+        print("Dataset not preprocessed\n")
+        dataset.initialize_train_test()
+
+    print(f'Scenario: {scenario}\n')
+
+    print(f'X_train shape: {dataset.X_train.shape}')
+    print(f'X_test shape: {dataset.X_test.shape}')
+
+    return scenario 

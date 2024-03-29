@@ -6,6 +6,7 @@ from typing import Type, Optional, List
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoLocator, ScalarFormatter
 import seaborn as sns 
 sns.set()
 import pandas as pd
