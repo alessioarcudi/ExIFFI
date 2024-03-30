@@ -18,14 +18,17 @@ theme:
     toggle:
       icon: material/toggle-switch-off-outline 
       name: Switch to dark mode
-    primary: teal
+    primary: red
     accent: purple 
   - scheme: slate 
     toggle:
       icon: material/toggle-switch
       name: Switch to light mode    
-    primary: teal
+    primary: red
     accent: lime
+
+  icon:
+    repo: fontawesome/brands/github
 
   markdown_extensions:
   - pymdownx.highlight:
@@ -44,6 +47,9 @@ theme:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
 
+repo_url: https://github.com/alessioarcudi/ExIFFI
+repo_name: alessioarcudi/ExIFFI
+
 plugins:
 - mkdocstrings:
     enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
@@ -53,12 +59,17 @@ plugins:
         options:
           show_source: true
 - mkdocs-jupyter
+# - git-committers:
+#       repository: alessioarcudi/ExIFFI
+#       branch: main
+- search
 
 nav:
   - Home: index.md
   - Dataset: datasets.md
   - Models: models.md
-  - Experimets: experiments.md
+  - Utils: utils.md
+  - Experiments: experiments.md
   - Plots: plots.md
   - Tutorial: tutorial.ipynb
 

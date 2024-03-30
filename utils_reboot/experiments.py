@@ -65,7 +65,7 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
         fit_model (bool): Whether to fit the model on the dataset. Defaults to True.
 
     Returns:
-        np.array: The global feature importance vector.
+        The global feature importance vector.
 
     """
 
@@ -96,7 +96,7 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
         model (str): The name of the model. Defaults to 'EIF+'.
 
     Returns:
-        tuple[float,float]: The average fit and predict time.
+        The average fit and predict time.
     """
 
     fit_times = []
@@ -147,7 +147,7 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
         interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
     
     Returns:
-        tuple[np.array,dict,str,str]: The global feature importances vectors for the different runs and the average importances times.
+        The global feature importances vectors for the different runs and the average importances times.
     """
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
@@ -178,7 +178,7 @@ def compute_plt_data(imp_path:str) -> dict:
         imp_path (str): The path to the importances file.
     
     Returns:
-        dict: The dictionary containing the mean importances, the feature order, and the standard deviation of the importances.
+        The dictionary containing the mean importances, the feature order, and the standard deviation of the importances.
     """
 
     try:
@@ -227,7 +227,7 @@ def feature_selection(I: Type[ExtendedIsolationForest],
             scenario (int): The scenario of the experiment. Defaults to 2.
         
         Returns:
-            np.array: The average precision scores for the different runs.
+            The average precision scores for the different runs.
         """
 
         dataset_shrinking = copy.deepcopy(dataset)
@@ -306,7 +306,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
         pre_process (bool): Whether to pre process the dataset. Defaults to True.
 
     Returns:
-        Union[tuple[np.ndarray, np.ndarray], np.ndarray]: The average precision scores and the global feature importances if `compute_GFI` is True, 
+        The average precision scores and the global feature importances if `compute_GFI` is True, 
         otherwise just the average precision scores are returned. 
     """
 
@@ -398,7 +398,7 @@ def performance(y_pred:np.array,
         save (bool): Whether to save the results. Defaults to True.
 
     Returns:
-        tuple[pd.DataFrame,str]: The performance metrics and the path to the results.
+        The performance metrics and the path to the results.
     """
     
     # In path insert the local path up to the experiments folder:
@@ -461,7 +461,7 @@ def ablation_EIF_plus(I:Type[ExtendedIsolationForest],
         nruns (int): The number of runs. Defaults to 10.
 
     Returns:
-        list[np.array]: The average precision scores.
+        The average precision scores.
     """
 
     precisions = []

@@ -48,7 +48,7 @@ def bar_plot(dataset: Type[Dataset],
         scenario (int, optional): The scenario number. Defaults to 1.
 
     Returns:
-        tuple[plt.figure, plt.axes, pd.DataFrame]: The figure, the axes and the bars dataframe.   
+       The figure, the axes and the bars dataframe.   
     """
     
     if  isinstance(dataset.feature_names, np.ndarray):
@@ -152,7 +152,7 @@ def score_plot(dataset: Type[Dataset],
         scenario (int, optional): The scenario number. Defaults to 1.
     
     Returns:
-        tuple[plt.axes, plt.axes]: The two axes objects used to create the plot.
+        The two axes objects used to create the plot.
 
     """
    # Compute the plt_data with the compute_plt_data function
@@ -258,7 +258,7 @@ def plot_feature_selection(
         change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.
 
     Returns:
-        None: The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
+        The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
 
     """
     
@@ -357,7 +357,7 @@ def plot_precision_over_contamination(precisions:np.ndarray,
         ylim (tuple, optional): The y axis limits. Defaults to (0,1).
 
     Returns:
-        None: The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
+        The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
 
     """
 
@@ -443,7 +443,7 @@ def importance_map(dataset: Type[Dataset],
             interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to "EXIFFI+".
         
         Returns:
-            None: The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.
+            The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.
         """
         
         mins = dataset.X_test.min(axis=0)[list(feats_plot)]
@@ -567,7 +567,7 @@ def get_vals(model: str,
         type (str, optional): The type of execution time. Defaults to 'predict'.
 
     Returns:
-        tuple[List,List,List]: The median, 5th percentile and 95th percentile values of the execution time.
+       The median, 5th percentile and 95th percentile values of the execution time.
     """
 
     assert type in ['predict','fit','importances'], "Type not valid"
@@ -610,7 +610,7 @@ def plot_time_scaling(model_names:List[str],
         save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
 
     Returns:
-        tuple[plt.figure, plt.axes]: The figure and axes objects used to create the plot.
+        The figure and axes objects used to create the plot.
     """
 
     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
@@ -690,7 +690,7 @@ def plot_ablation(eta_list:List[float],
         change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed. Defaults to False.
 
     Returns:
-        tuple[plt.figure, plt.axes]: The figure and axes objects used to create the plot.
+        The figure and axes objects used to create the plot.
     """
 
     fig, ax = plt.subplots()
@@ -732,107 +732,4 @@ def plot_ablation(eta_list:List[float],
         plt.show()
     
     return fig,ax
-
-
-
-
-
-
-
-# def importance_map_col_names(
-#                             name: str,
-#                             X:pd.DataFrame,
-#                             X_train: np.array,
-#                             y_train: np.array,
-#                             model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
-#                             iforest:Type[IsolationForest]=IsolationForest(),
-#                             resolution: Optional[int] = 30,
-#                             pwd: Optional[str] =os.getcwd(),
-#                             save: Optional[bool] =True,
-#                             m: Optional[bool] =None,
-#                             factor: Optional[int] =3, 
-#                             col_names:Optional[List[str]]=None,
-#                             ax:Optional[Type[plt.axes]]=None,
-#                             isdiffi: Optional[bool] = False,
-#                             labels: Optional[bool]=True
-#                             ):
-          
-#             """Stub method of plot_importance_map used to give the user the possibility of specifying in input the names of the features to compare in the Scoremap.
-            
-#             Parameters
-#             ----------
-#             name: Dataset's name
-#             X: Input dataset as a pd.DataFrame
-#             X_train: Training Set
-#             y_train: Dataset training labels
-#             model: Instance of the model on which we want to compute the Local Feature Importance Scores, by default the default version of ExtendedIsolationForest
-#             iforest: Isolation Forest model to use in case isdiffi is set to True, by default the default version of IsolationForest
-#             resolution: Scoremap resolution, by default 30
-#             pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.
-#             save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-#             m: Boolean variable regulating the plt.pcolor advanced settings. By defualt the value of m is set to None.
-#             factor: Integer factor used to define the minimum and maximum value of the points used to create the scoremap. By default the value of f is set to 3.
-#             col_names: List with the names of the two features that will be compares, by default None.
-#             ax: plt.axes object used to create the plot. By default ax is set to None.
-#             isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
-#             labels: Boolean variable used to decide weather to include the x and y label name in the plot.
-#             """
-            
-#             feats_plot=[X.columns.get_loc(col_names[0]),X.columns.get_loc(col_names[1])]           
-#             col_names=list(X.columns)
-
-#             return importance_map(name,X_train,y_train,model,iforest,resolution,pwd,save,m,factor,feats_plot,col_names,ax,isdiffi,labels,show_plot)
-
-# def complete_scoremap(
-#                      name:str,
-#                      dim:int,
-#                      X: pd.DataFrame,
-#                      y: np.array,
-#                      model: Type[ExtendedIsolationForest]=ExtendedIsolationForest(plus=True),
-#                      iforest:Type[IsolationForest]=IsolationForest(),
-#                      pwd:Optional[str] =os.getcwd(),
-#                      isdiffi: Optional[bool] = False,
-#                      half: Optional[bool] = False,
-#                      save: Optional[bool] =True
-#                      ):
-
-#         """Produce the Complete Local Feature Importance Scoremap: a Scoremap for each pair of features in the input dataset.   
-        
-#         Parameters
-#         ----------
-#         name: Dataset's name
-#         dim: Number of input features in the dataset
-#         X: Input dataset 
-#         y: Dataset labels
-#         model: Instance of the model on which we want to compute the Local Feature Importance Scores, by default the default version of ExtendedIsolationForest
-#         iforest: Isolation Forest model to use in case isdiffi is set to True, by default the default version of IsolationForest
-#         pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.
-#         isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
-#         half: Boolean parameter to decide weather to plot all the possible scoremaps or only half of them, by default False
-#         save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-        
-#         Returns
-#         ----------
-#         fig,ax : plt.figure  and plt.axes objects used to create the plot  
-#         """
-            
-#         fig, ax = plt.subplots(dim, dim, figsize=(50, 50))
-#         for i in range(dim):
-#             for j in range(i+1,dim):
-#                     features = [i,j] 
-#                     _,_=importance_map(name,X,y,model,iforest,50,pwd,feats_plot=(features[0],features[1]),ax=ax[i,j],isdiffi=isdiffi,save=False,labels=False)
-#                     if half:
-#                         continue
-#                     _,_=importance_map(name,X,y,model,iforest,50,pwd,feats_plot=(features[1],features[0]),ax=ax[j,i],isdiffi=isdiffi,save=False,labels=False)
-
-#         name_type='Complete_Importance_map'
-
-#         filename=get_filename(name_type,name,'pdf')
-
-#         if save:
-#             plt.savefig(pwd+'/{}'.format(filename),bbox_inches='tight')
-
-#         plt.show()
-    
-#         return fig,ax
 

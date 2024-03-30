@@ -19,66 +19,24 @@ import copy
 
 from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
 
-
-def Dataset_feature_names(name:str) -> List[str]:
-
-    """ 
-        Define the feture names for the datasets for which the feature names are available 
-
-        Args:
-            name: Dataset name 
-
-        Returns:
-            A list of strings containing the feature names of the dataset.
-    """
-
-    data_feature_names={
-       'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
-       'BMI', 'DiabetesPedigreeFunction', 'Age'],
-       'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
-       'speechiness', 'acousticness', 'instrumentalness', 'liveness',
-       'valence', 'tempo', 'spec_rate'],
-       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
-       'glass_DIFFI': ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe'],
-       'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
-                'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline']
-    }
-
-    if name in data_feature_names:    
-        return data_feature_names[name]
-    else:
-        return None 
-
 @dataclass
 class Dataset:
     """
     A class to represent a dataset.
 
     Attributes:
-        name: str
-            The name of the dataset.
-        path: str
-            The path to the dataset file.
-        X: Optional[npt.NDArray]
-            Data matrix of the dataset.
-        X_train: Optional[npt.NDArray]
-            Training set, initialized to None
-        X_test: Optional[npt.NDArray]
-            Test set, initialized to None
-        y: Optional[npt.NDArray]
-            The labels of the dataset.
-        y_train: Optional[npt.NDArray]
-            The labels of the training set
-        y_test: Optional[npt.NDArray]
-            The labels of the test set
-        feature_names: Optional[List[str]]
-            The names of the features of the dataset.
-        shape: tuple
-            The shape of the dataset.
-        n_outliers: int
-            The number of outliers in the dataset.
-        perc_outliers: float
-            The percentage of outliers in the dataset (i.e. the contamination factor)
+        name: The name of the dataset.
+        path: The path to the dataset file.
+        X: Data matrix of the dataset.
+        X_train: Training set, initialized to None
+        X_test: Test set, initialized to None
+        y: The labels of the dataset.
+        y_train: The labels of the training set
+        y_test: The labels of the test set
+        feature_names: The names of the features of the dataset.
+        shape: The shape of the dataset.
+        n_outliers: The number of outliers in the dataset.
+        perc_outliers: The percentage of outliers in the dataset (i.e. the contamination factor)
     """
     name: str
     path: str = "../data/"
@@ -124,7 +82,7 @@ class Dataset:
             Exception: If the dataset name is not valid.
 
         Returns:
-            None: The dataset is loaded in place.
+            The dataset is loaded in place.
         """
         try:
             datapath = self.path + self.name + ".mat"
@@ -166,7 +124,7 @@ class Dataset:
         Drop duplicate samples from the dataset.
 
         Returns:
-            None: The dataset is modified in place.
+            The dataset is modified in place.
         """
         S = np.c_[self.X, self.y]
         S = pd.DataFrame(S).drop_duplicates().to_numpy()
@@ -180,7 +138,7 @@ class Dataset:
             max_samples: The maximum number of samples to keep in the dataset.
         
         Returns:
-            None: The dataset is modified in place.
+            The dataset is modified in place.
         """
         if len(self.X) > max_samples:
             print("downsampled to ", max_samples)
@@ -212,7 +170,7 @@ class Dataset:
         summary statistics of the features.
 
         Returns:
-            None: The dataset summary is printed.
+            The dataset summary is printed.
         
         """
         # Ensure that X and y are not None
@@ -244,7 +202,8 @@ class Dataset:
         print(f" Total Samples: {num_samples}, Features: {num_features}")
         print(f" Inliers: {num_inliers}, Outliers: {num_outliers}, Balance Ratio: {balance_ratio:.2f}")
         print(f" Feature Stats - Mean: {mean_val:.2f}, Std Dev: {std_dev_val:.2f}, Min: {min_val}, Max: {max_val}")
-    
+
+
     def split_dataset(self, 
                       train_size:float = 0.8, 
                       contamination:float = 0.1) -> None:
@@ -257,7 +216,7 @@ class Dataset:
             contamination: The proportion of outliers in the dataset.
 
         Returns:
-            None: The dataset is split into training and test sets in place
+            The dataset is split into training and test sets in place
 
         """
         # Ensure that X and y are not None
@@ -291,7 +250,7 @@ class Dataset:
         Normalize the data using `StansardScaler()` from `sklearn.preprocessing`.
 
         Returns:
-            None: The dataset is normalized in place.
+           The dataset is normalized in place.
         """
         
         # Ensure that X and y are not None
@@ -316,7 +275,7 @@ class Dataset:
         This method is used when `split_dataset()` has not been called before `pre_process()`.
 
         Returns:
-            None: The training and test sets are initialized in place.
+            The training and test sets are initialized in place.
         """
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
@@ -335,11 +294,12 @@ class Dataset:
         This method is used when `split_dataset()` has not been called before `pre_process()`.
 
         Returns:
-            None: The test set is initialized in place.
+            The test set is initialized in place.
         """
 
         self.X_test=copy.deepcopy(self.X)
         self.y_test=copy.deepcopy(self.y)
+
     
     def initialize_train(self) ->None:
 
@@ -349,12 +309,40 @@ class Dataset:
         This method is used when `split_dataset()` has not been called before `pre_process()`.
 
         Returns:
-            None: The training set is initalized in place.
+            The training set is initalized in place.
         """
 
         self.X_train=copy.deepcopy(self.X)
         self.y_train=copy.deepcopy(self.y)
 
+def Dataset_feature_names(name:str) -> List[str]:
+
+    """ 
+        Define the feture names for the datasets for which the feature names are available 
+
+        Args:
+            name: Dataset name 
+
+        Returns:
+            A list of strings containing the feature names of the dataset.
+    """
+
+    data_feature_names={
+       'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'BMI', 'DiabetesPedigreeFunction', 'Age'],
+       'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
+       'speechiness', 'acousticness', 'instrumentalness', 'liveness',
+       'valence', 'tempo', 'spec_rate'],
+       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
+       'glass_DIFFI': ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe'],
+       'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
+                'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline']
+    }
+
+    if name in data_feature_names:    
+        return data_feature_names[name]
+    else:
+        return None 
         
 
  

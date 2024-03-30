@@ -52,7 +52,7 @@ def c_factor(n: int) -> float:
         n: Number of data points for the BST.
         
     Returns:
-        float: Average path length of unsuccesful search in a BST
+        Average path length of unsuccesful search in a BST
         
     """
     if n <=1: return 0
@@ -77,7 +77,7 @@ def get_leaf_ids(X:np.array,
             intercepts: Intercept values of the splitting hyperplanes
 
         Returns:
-            np.array: Leaf node ids for each data point in the dataset.
+           Leaf node ids for each data point in the dataset.
         """
         res = []
         for x in X:
@@ -94,7 +94,7 @@ def calculate_importances(paths:np.ndarray,
                           importances_left:np.ndarray, 
                           importances_right:np.ndarray, 
                           normals:np.ndarray,
-                          d:int):
+                          d:int) -> tuple[np.array,np.array]:
     
     """
     Calculate the importances of the features for the given paths and directions.
@@ -108,7 +108,7 @@ def calculate_importances(paths:np.ndarray,
         d: Number of dimensions in the dataset
 
     Returns:
-        np.array: Importances of the features for the given paths and directions.
+        Importances of the features for the given paths and directions and the normal vectors.
     """
 
     # Flatten the paths and directions for 1D boolean indexing
@@ -174,27 +174,26 @@ class ExtendedTree:
 
      
     Attributes:
-        plus: Boolean flag to indicate if the model is a `EIF` or `EIF+`. Defaults to True (i.e. `EIF+`)
-        locked_dims: Number of dimensions to be locked in the model. Defaults to 0
-        max_depth: Maximum depth of the tree
-        min_sample: Minimum number of samples in a node. Defaults to 1
-        n: Number of samples in the dataset
-        d: Number of dimensions in the dataset
-        node_count: Counter for the number of nodes in the tree
-        max_nodes: Maximum number of nodes in the tree. Defaults to 10000
-        path_to: Array to store the path to the leaf nodes
-        path_to_Right_Left: Array to store the path to the leaf nodes with directions
-        child_left: Array to store the left child nodes
-        child_right: Array to store the right child nodes
-        normals: Array to store the normal vectors of the splitting hyperplanes
-        intercepts: Array to store the intercept values of the splitting hyperplanes
-        node_size: Array to store the size of the nodes
-        depth: Array to store the depth of the nodes
-        corrected_depth: Array to store the corrected depth of the nodes
-        importances_right: Array to store the importances of the right child nodes
-        importances_left: Array to store the importances of the left child nodes
-        eta: Eta value for the model. Defaults to 1.5
-    
+        plus (bool): Boolean flag to indicate if the model is a `EIF` or `EIF+`. Defaults to True (i.e. `EIF+`)
+        locked_dims (int): Number of dimensions to be locked in the model. Defaults to 0
+        max_depth (int): Maximum depth of the tree
+        min_sample (int): Minimum number of samples in a node. Defaults to 1
+        n (int): Number of samples in the dataset
+        d (int): Number of dimensions in the dataset
+        node_count (int): Counter for the number of nodes in the tree
+        max_nodes (int): Maximum number of nodes in the tree. Defaults to 10000
+        path_to (np.array): Array to store the path to the leaf nodes
+        path_to_Right_Left (np.array): Array to store the path to the leaf nodes with directions
+        child_left (np.array): Array to store the left child nodes
+        child_right (np.array): Array to store the right child nodes
+        normals (np.array): Array to store the normal vectors of the splitting hyperplanes
+        intercepts (np.array): Array to store the intercept values of the splitting hyperplanes
+        node_size (np.array): Array to store the size of the nodes
+        depth (np.array): Array to store the depth of the nodes
+        corrected_depth (np.array): Array to store the corrected depth of the nodes
+        importances_right (np.array): Array to store the importances of the right child nodes
+        importances_left (np.array): Array to store the importances of the left child nodes
+        eta (float): Eta value for the model. Defaults to 1.5
 
     """
 
@@ -239,7 +238,7 @@ class ExtendedTree:
             X: Input dataset
 
         Returns:
-            None: The method fits the model and does not return any value.
+            The method fits the model and does not return any value.
         """
 
         self.path_to[0,0] = 0
@@ -262,7 +261,7 @@ class ExtendedTree:
             direction: Direction to the new node
 
         Returns:
-            int: New node id
+            New node id
 
         """
 
@@ -289,7 +288,7 @@ class ExtendedTree:
             depth: Depth of the node
         
         Returns:
-            None: The method extends the tree and does not return any value.
+            The method extends the tree and does not return any value.
         """
 
         stack = [(0, X, 0)] 
@@ -330,7 +329,7 @@ class ExtendedTree:
             if self.node_count >= self.max_nodes:
                 raise ValueError("Max number of nodes reached")
 
-    def leaf_ids(self, X) -> np.array:
+    def leaf_ids(self, X:np.array) -> np.array:
         """
         Get the leaf node ids for each data point in the dataset.
 
@@ -340,12 +339,12 @@ class ExtendedTree:
             X: Input dataset
 
         Returns:
-            np.array: Leaf node ids for each data point in the dataset.
+           Leaf node ids for each data point in the dataset.
         """
         return get_leaf_ids(X, self.child_left, self.child_right, self.normals, self.intercepts) 
          
                 
-    def apply(self, X):
+    def apply(self, X:np.array) -> None:
         """
         Update the `path_to` attribute with the path to the leaf nodes for each data point in the dataset.
 
@@ -353,7 +352,7 @@ class ExtendedTree:
             X: Input dataset
 
         Returns:
-            None: The method updates `path_to` and does not return any value.
+            The method updates `path_to` and does not return any value.
         """
         return self.path_to[self.leaf_ids(X)] 
     
@@ -367,7 +366,7 @@ class ExtendedTree:
             ids: Leaf node ids for each data point in the dataset.
 
         Returns:
-            np.array: Anomaly score for each data point in the dataset.
+            Anomaly score for each data point in the dataset.
         """
         return self.corrected_depth[ids],
     
@@ -380,7 +379,7 @@ class ExtendedTree:
             ids: Leaf node ids for each data point in the dataset.
 
         Returns:
-            tuple[np.array,np.array]: Importances of the features for the given leaf node ids and the normal vectors.
+            Importances of the features for the given leaf node ids and the normal vectors.
         """
         importances,normals = calculate_importances(
             self.path_to[ids], 
@@ -400,15 +399,15 @@ class ExtendedIsolationForest():
     Class that represents the Extended Isolation Forest model.
 
     Attributes:
-        n_estimators: Number of trees in the model. Defaults to 400
-        max_samples: Maximum number of samples in a node. Defaults to 256
-        max_depth: Maximum depth of the trees. Defaults to "auto"
-        plus: Boolean flag to indicate if the model is a `EIF` or `EIF+`.
-        name: Name of the model
-        ids: Leaf node ids for each data point in the dataset. Defaults to None
-        X: Input dataset. Defaults to None
-        eta: Eta value for the model. Defaults to 1.5
-        avg_number_of_nodes: Average number of nodes in the trees
+        n_estimators (int): Number of trees in the model. Defaults to 400
+        max_samples (int): Maximum number of samples in a node. Defaults to 256
+        max_depth (int): Maximum depth of the trees. Defaults to "auto"
+        plus (bool): Boolean flag to indicate if the model is a `EIF` or `EIF+`.
+        name (str): Name of the model
+        ids (np.array): Leaf node ids for each data point in the dataset. Defaults to None
+        X (np.array): Input dataset. Defaults to None
+        eta (float): Eta value for the model. Defaults to 1.5
+        avg_number_of_nodes (int): Average number of nodes in the trees
     
     """
 
@@ -431,7 +430,7 @@ class ExtendedIsolationForest():
     def avg_number_of_nodes(self):
         return np.mean([T.node_count for T in self.trees])
         
-    def fit(self, X:np.array, locked_dims=None) -> None:
+    def fit(self, X:np.array, locked_dims:int=None) -> None:
 
         """
         Fit the model to the dataset.
@@ -441,7 +440,7 @@ class ExtendedIsolationForest():
             locked_dims: Number of dimensions to be locked in the model. Defaults to None
 
         Returns:
-            None: The method fits the model and does not return any value.
+            The method fits the model and does not return any value.
         """
 
         self.ids = None
@@ -465,7 +464,7 @@ class ExtendedIsolationForest():
             X: Input dataset
 
         Returns:
-            None: The method computes the leaf node ids and does not return any value.
+            The method computes the leaf node ids and does not return any value.
         """
         if self.ids is None or self.X.shape != X.shape:
             self.X = X
@@ -480,7 +479,7 @@ class ExtendedIsolationForest():
             X: Input dataset
 
         Returns:
-            np.array: Anomaly score for each data point in the dataset.
+            Anomaly score for each data point in the dataset.
         """
         self.compute_ids(X)
         predictions=[tree.predict(X,self.ids[i]) for i,tree in enumerate(self.trees)]
@@ -498,7 +497,7 @@ class ExtendedIsolationForest():
             p: Proportion of outliers (i.e. threshold for the anomaly score)
 
         Returns:
-            np.array: Predicted class for each data point in the dataset.
+           Class labels (i.e. 0 for inliers and 1 for outliers)
         """
         An_score = self.predict(X)
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
@@ -516,7 +515,7 @@ class ExtendedIsolationForest():
             ids: Leaf node ids for each data point in the dataset.
 
         Returns:
-            tuple[np.array,np.array]: Importances of the features for the given leaf node ids and the normal vectors.
+            Importances of the features for the given leaf node ids and the normal vectors.
 
         """
         importances = np.zeros(X.shape)
@@ -539,7 +538,7 @@ class ExtendedIsolationForest():
             p: Proportion of outliers (i.e. threshold for the anomaly score). Defaults to 0.1
 
         Returns:
-            np.array: Global importances of the features for the dataset.
+            Global importances of the features for the dataset.
         """
 
         self.compute_ids(X)
@@ -559,7 +558,7 @@ class ExtendedIsolationForest():
             X: Input dataset
 
         Returns:
-            np.array: Local importances of the features for the dataset.
+           Local importances of the features for the dataset.
         """
         
         self.compute_ids(X)
@@ -575,26 +574,16 @@ class IsolationForest(ExtendedIsolationForest):
     This is a subclass of `ExtendedIsolationForest` with the `plus` attribute set to False and the 
     `locked_dims` attribute set to the number of dimensions minus one.
 
-    """
+    Attributes:
+        n_estimators (int): Number of trees in the model. Defaults to 400
+        max_depth (Union[str,int]): Maximum depth of the trees. Defaults to "auto"
+        max_samples (Union[str,int]): Maximum number of samples in a node. Defaults to "auto"
 
+    """
     def __init__(self,
                  n_estimators:int=400,
                  max_depth:Union[str,int]="auto",
                  max_samples:Union[str,int]="auto") -> None:
-
-        """
-        Initialize the Isolation Forest model using the `__init__` method of the `ExtendedIsolationForest` class.
-
-        Args:
-
-            n_estimators: Number of trees in the model. Defaults to 400
-            max_depth: Maximum depth of the trees. Defaults to "auto"
-            max_samples: Maximum number of samples in a node. Defaults to "auto"
-
-        Returns:
-            None: The method initializes the model and does not return any value.
-
-        """
         super().__init__(plus=False,n_estimators=n_estimators,max_depth=max_depth,max_samples=max_samples)
         self.name="IF"
             
@@ -608,7 +597,7 @@ class IsolationForest(ExtendedIsolationForest):
             X: Input dataset
 
         Returns:
-            None: The method fits the model and does not return any value.
+            The method fits the model and does not return any value.
         """
 
         return super().fit(X, locked_dims=X.shape[1]-1)
@@ -627,7 +616,7 @@ class IsolationForest(ExtendedIsolationForest):
             p: Proportion of outliers (i.e. threshold for the anomaly score). Defaults to 0.1
 
         Returns:
-            tuple[np.array,np.array]: Anomaly score for each data point in the dataset and the predicted class for each data point in the dataset.
+            Anomaly score for each data point in the dataset and the predicted class for each data point in the dataset.
         """
 
         self.compute_ids(X)
