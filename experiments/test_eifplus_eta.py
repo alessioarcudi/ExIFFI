@@ -97,7 +97,7 @@ EIF_values = [0.99, 0.99, 0.99, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 
 EIF_dataset_values_dict = dict(zip(names, EIF_values))
 
 eta_list = np.linspace(0.5,5,25)
-#avg_prec = ablation_EIF_plus(I,dataset,eta_list)
+avg_prec = ablation_EIF_plus(I,dataset,eta_list)
 
 
 path_ablation = cwd+"/experiments/results/"+dataset.name+"/experiments/ablationEIF+"

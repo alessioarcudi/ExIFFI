@@ -30,29 +30,25 @@ def bar_plot(dataset: Type[Dataset],
             save_image = True, 
             show_plot = True,
             model:str='EIF+',
-            interpretation:str="EXIFFI",
-            scenario=1) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
+            interpretation:str="EXIFFI+",
+            scenario:int=1) -> tuple[plt.figure, plt.axes, pd.DataFrame]:
     """
-    Obtain the Global Importance Bar Plot given the Importance Scores values computed in the compute_local_importance or compute_global_importance functions. 
+    Compute the Global Importance Bar Plot starting from the Global Feature Importance vector.  
     
-    Parameters
-    ----------
-    imps_path: Path of the pkl file containing the array of shape (n_samples,n_features) with the LFI/GFI Scores for the input dataset.
-    Obtained from the compute_local_importance or compute_global_importance functions.   
-    name: Dataset's name 
-    pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.    
-    f: Number of vertical bars to include in the Bar Plot. By default f is set to 6.
-    col_names: List with the names of the features of the input dataset, by default None. 
-    is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
-    If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
-    Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False.  
-    save: Boolean variable used to decide weather to save the Bar Plot locally as a PDF or not. BY default save is set to True. 
-    show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
+    Args:
+        dataset (Type[Dataset]): Input dataset
+        global_importances_file (str): The path to the file containing the global importances.
+        filetype (str, optional): The file type of the global importances file. Defaults to "npz".
+        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
+        f (int, optional): The number of ranks to be displayed in the plot. Defaults to 6. 
+        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
+        model (str, optional): The AD model on which the importances should be computed. Defaults to 'EIF+'.
+        interpretation (str, optional): The interpretation model used. Defaults to 'EXIFFI+'.
+        scenario (int, optional): The scenario number. Defaults to 1.
 
-    Returns
-    ----------
-    fig,ax : plt.figure  and plt.axes objects used to create the plot 
-    bars: pd.DataFrame containing the percentage count of the features in the first f positions of the Bar Plot.    
+    Returns:
+        tuple[plt.figure, plt.axes, pd.DataFrame]: The figure, the axes and the bars dataframe.   
     """
     
     if  isinstance(dataset.feature_names, np.ndarray):
@@ -78,7 +74,7 @@ def bar_plot(dataset: Type[Dataset],
     number_colours = 20
     color = plt.cm.get_cmap('tab20',number_colours).colors
     patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
-    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    '|',';',':',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
     importances_matrix = np.array([np.array(pd.Series(x).sort_values(ascending = False).index).T for x in importances])
     dim=int(importances.shape[1])
 
@@ -143,24 +139,21 @@ def score_plot(dataset: Type[Dataset],
             interpretation:str="EXIFFI",
             scenario=1) -> tuple[plt.axes, plt.axes]:
     """
-    Obtain the Global Feature Importance Score Plot exploiting the information obtained from the compute_local_importance or compute_global_importance functions. 
+    Obtain the Global Feature Importance Score Plot starting from the Global Feature Importance vector.
+
+    Args:
+        dataset (Type[Dataset]): Input dataset
+        global_importances_file (str): The path to the file containing the global importances.
+        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
+        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
+        model (str, optional): The AD model on which the importances should be computed. Defaults to 'EIF+'.
+        interpretation (str, optional): The interpretation model used. Defaults to 'EXIFFI'.
+        scenario (int, optional): The scenario number. Defaults to 1.
     
-    Parameters
-    ----------
-    plt_data_path: Dictionary generated from the compute_local_importance or compute_global_importance functions 
-    with the necessary information to create the Score Plot.
-    name: Dataset's name
-    pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory. 
-    col_names: List with the names of the features of the input dataset, by default None.  
-    is_local: Boolean variable used to specify weather we are plotting the Global or Local Feature Importance in order to set the file name.
-    If is_local is True the result will be the LFI Score Plot (based on the LFI scores of the input samples), otherwise the result is the GFI 
-    Score Plot (based on the GFI scores obtained in the different n_runs execution of the model). By default is_local is set to False. 
-    save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-    show_plot: Boolean variable used to decide whether to show the plot on the screen or not. By default, show_plot is set to True.
-                
-    Returns
-    ----------
-    ax1,ax2: The two plt.axes objects used to create the plot.  
+    Returns:
+        tuple[plt.axes, plt.axes]: The two axes objects used to create the plot.
+
     """
    # Compute the plt_data with the compute_plt_data function
     col_names = dataset.feature_names
@@ -175,7 +168,7 @@ def score_plot(dataset: Type[Dataset],
         name_file = f"{current_time}_GFI_Score_plot_{dataset.name}_{model}_{interpretation}_{scenario}"
 
     patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
-    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    '|',';',':',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
     imp_vals=plt_data['Importances']
     feat_imp=pd.DataFrame({'Global Importance': np.round(imp_vals,3),
                         'Feature': plt_data['feat_order'],
@@ -243,7 +236,31 @@ def plot_feature_selection(
         box_loc:tuple=None,
         change_box_loc:float=0.9,
         rotation:bool=False,
-        change_ylim:bool=False):
+        change_ylim:bool=False)-> None:
+    
+    """
+    Obtain the feature selection plot.
+
+    Args:
+        precision_file (str): The path to the file containing the precision values.
+        plot_path (str): The path where the plot will be saved.
+        precision_file_random (Optional[str], optional): The path to the file containing precision values computed with the random Feature Selection approach. Defaults to None.
+        color (int, optional): The color of the plot. Defaults to 0.
+        model (Optional[str], optional): Name of the AD model. Defaults to None.
+        eval_model (Optional[str], optional): Name of the evaluation model. Defaults to 'EIF+'.
+        interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to None.
+        scenario (Optional[int], optional): The scenario number. Defaults to 2.
+        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
+        box_loc (tuple, optional): The location of the text box containing the Area under the curve of Feature Selection value. Defaults to None.
+        change_box_loc (float, optional): Change the y axis value of the text box location containing the Area under the curve of Feature Selection value. Defaults to 0.9.
+        rotation (bool, optional): A boolean indicating whether the x ticks should be rotated by 45 degrees. Defaults to False.
+        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.
+
+    Returns:
+        None: The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
+
+    """
     
     colors = ["tab:red","tab:gray","tab:orange","tab:green","tab:blue","tab:olive",'tab:brown']
     if model is None:
@@ -317,17 +334,33 @@ def plot_feature_selection(
         plt.show()
         
 
-def plot_precision_over_contamination(precisions,
-                                      dataset_name,
-                                      model_name,
-                                      plot_path,
-                                      contamination=np.linspace(0.0,0.1,10),
-                                      save_image=True,
-                                      plot_image=False,
-                                      ylim=(0,1),
-                                      insert_box_loc=False,
-                                      box_loc=(0.04,0.2),
-                                      box_text='EIF+ - EIF'):
+def plot_precision_over_contamination(precisions:np.ndarray,
+                                      dataset_name:str,
+                                      model_name:str,
+                                      plot_path:str,
+                                      contamination:np.ndarray=np.linspace(0.0,0.1,10),
+                                      save_image:bool=True,
+                                      plot_image:bool=False,
+                                      ylim:tuple=(0,1)) -> None:
+    
+    """
+    Obtain the precision over contamination plot.
+
+    Args:
+        precisions (np.ndarray): The precision values for different contamination values, obtained from the contamination_in_training_precision_evaluation method.
+        dataset_name (str): The dataset name.
+        model_name (str): The model name.
+        plot_path (str): The path where the plot will be saved.
+        contamination (np.ndarray, optional): The contamination values. Defaults to np.linspace(0.0,0.1,10).
+        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
+        ylim (tuple, optional): The y axis limits. Defaults to (0,1).
+
+    Returns:
+        None: The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
+
+    """
+
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
     
@@ -339,10 +372,10 @@ def plot_precision_over_contamination(precisions,
     
     plt.ylim(ylim)
 
-    if insert_box_loc:
-        text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
-        plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
-            verticalalignment='top', horizontalalignment='right')
+    # if insert_box_loc:
+    #     text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
+    #     plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
+    #         verticalalignment='top', horizontalalignment='right')
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
@@ -355,10 +388,20 @@ def plot_precision_over_contamination(precisions,
     if plot_image:
         plt.show()
 
-def get_contamination_comparison(model1,
-                            model2,
-                            dataset_name,
-                            path=os.getcwd()):
+def get_contamination_comparison(model1:str,
+                            model2:str,
+                            dataset_name:str,
+                            path:str=os.getcwd()):
+    
+    """
+    Obtain the difference in precision between two models for different contamination values.
+
+    Args:
+        model1 (str): The first model name.
+        model2 (str): The second model name.
+        dataset_name (str): The dataset name.
+        path (str, optional): Starting path to retrieve the path where the precisions of the two models are stored. Defaults to os.getcwd().
+    """
     
     path_model1=path+'/results/'+ dataset_name +'/experiments/contamination/'+model1
     path_model2=path+'/results/'+ dataset_name +'/experiments/contamination/'+model2
@@ -381,34 +424,26 @@ def importance_map(dataset: Type[Dataset],
                    isdiffi: Optional[bool] = False,
                    scenario: Optional[int] = 2,
                    interpretation: Optional[str] = "EXIFFI+"
-                   ):
+                   ) -> None:
         """
         Produce the Local Feature Importance Scoremap.   
         
-        Parameters
-        ----------
-        name: Dataset's name
-        X_train: Training Set 
-        y_train: Dataset training labels
-        model: Instance of the model on which we want to compute the Local Feature Importance Scores, by default the default version of ExtendedIsolationForest
-        iforest: Isolation Forest model to use in case isdiffi is set to True, by default the default version of IsolationForest
-        resolution: Scoremap resolution, by default 30
-        pwd: Directory where the plot will be saved as a PDF file. By default the value of pwd is set to the current working directory.
-        save: Boolean variable used to decide weather to save the Score Plot locally as a PDF or not. By default save is set to True.
-        m: Boolean variable regulating the plt.pcolor advanced settings. By defualt the value of m is set to None.
-        factor: Integer factor used to define the minimum and maximum value of the points used to create the scoremap. By default the value of f is set to 3.
-        feats_plot: This tuple contains the indexes of the pair of features to compare in the Scoremap. By default the value of feats_plot
-        is set to (0,1). Do not use in case we pass the col_names parameter.
-        col_names: List with the names of the features of the input dataset, by default None.
-        two features will be compared. 
-        ax: plt.axes object used to create the plot. By default ax is set to None.
-        isdiffi: Boolean variable used to decide weather to use the Diffi algorithm to compute the Local Feature Importance Scores or not. By default isdiffi is set to False.
-        labels: Boolean variable used to decide weather to include the x and y label name in the plot.
-        When calling the plot_importance_map function inside plot_complete_scoremap this parameter will be set to False 
-                    
-        Returns
-        ----------
-        fig,ax : plt.figure  and plt.axes objects used to create the plot 
+        Args:
+            dataset (Type[Dataset]): Input dataset
+            model (Type[ExtendedIsolationForest]): The AD model.
+            resolution (Optional[int], optional): The resolution of the plot. Defaults to 30.
+            path_plot (Optional[str], optional): The path where the plot will be saved. Defaults to os.getcwd().
+            save_plot (Optional[bool], optional): A boolean indicating whether the plot should be saved. Defaults to True.
+            show_plot (Optional[bool], optional): A boolean indicating whether the plot should be displayed. Defaults to False.
+            factor (Optional[int], optional): The factor by which the min and max values of the features are extended. Defaults to 3.
+            feats_plot (Optional[tuple], optional): The features to be plotted. Defaults to (0,1).
+            col_names (List[str], optional): The names of the features. Defaults to None.
+            isdiffi (Optional[bool], optional): A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.
+            scenario (Optional[int], optional): The scenario number. Defaults to 2.
+            interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to "EXIFFI+".
+        
+        Returns:
+            None: The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.
         """
         
         mins = dataset.X_test.min(axis=0)[list(feats_plot)]
@@ -484,7 +519,7 @@ def gfi_over_contamination(importances, contamination, model_index, plot_path,co
     
     number_colours = 20
     patterns=[None,'!','@','#','$','^','&','*','°','(',')','-','_','+','=','[',']','{','}',
-    '|',';',':','\l',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
+    '|',';',':',',','.','<','>','/','?','`','~','\\','!!','@@','##','$$','^^','&&','**','°°','((']
     color = plt.cm.get_cmap('tab20',number_colours).colors
     for i in range(importances_mean.shape[1]):
         plt.plot(contamination, importances_mean[:,i], color=color[i % number_colours],  label=col_names[i],marker="o")
@@ -508,6 +543,7 @@ def get_time_scaling_files(dataset: Type[Dataset],
                            model: Type[ExtendedIsolationForest],
                            experiment_path: str=os.getcwd(),
                            interpretation:str='NA'):    
+
     path_fit_predict=os.path.join(experiment_path,dataset.name,'experiments','time_scaling',model,'fit_predict')
     fit_pred_times=open_element(get_most_recent_file(path_fit_predict),filetype='pickle')
     if interpretation == "NA":
@@ -522,6 +558,18 @@ def get_vals(model: str,
             dataset_names: List[str],
             type:str='predict') -> tuple[List,List,List]:
     
+    """
+    Obtain statistics on the execution time of a model for different datasets. These values will be used in the plot_time_scaling method.
+
+    Args:
+        model (str): The model name.
+        dataset_names (List[str]): The list of dataset names.
+        type (str, optional): The type of execution time. Defaults to 'predict'.
+
+    Returns:
+        tuple[List,List,List]: The median, 5th percentile and 95th percentile values of the execution time.
+    """
+
     assert type in ['predict','fit','importances'], "Type not valid"
     
     os.chdir('../utils_reboot')
@@ -539,14 +587,31 @@ def get_vals(model: str,
 
     return median_val_times,five_val_times,ninefive_val_times
 
-def plot_time_scaling(model_names,
-                        dataset_names,
-                        data_path,
-                        type='predict',
-                        plot_type='samples',
-                        plot_path=os.getcwd(),
-                        show_plot=True,
-                        save_plot=True):
+def plot_time_scaling(model_names:List[str],
+                      dataset_names:List[str],
+                      data_path:str,
+                      type:str='predict',
+                      plot_type:str='samples',
+                      plot_path:str=os.getcwd(),
+                      show_plot:bool=True,
+                      save_plot:bool=True)-> tuple[plt.figure, plt.axes]:
+    
+    """
+    Obtain the time scaling plot.
+
+    Args:
+        model_names (List[str]): The list of model names.
+        dataset_names (List[str]): The list of dataset names.
+        data_path (str): The path to the datasets.
+        type (str, optional): The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
+        plot_type (str, optional): The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
+        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
+        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
+        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+
+    Returns:
+        tuple[plt.figure, plt.axes]: The figure and axes objects used to create the plot.
+    """
 
     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
     assert plot_type in ['samples','features'], "Plot Type not valid. Accepted values: ['samples','features']"
@@ -602,13 +667,31 @@ def plot_time_scaling(model_names,
     
     return fig,ax
 
-def plot_ablation(eta_list,results,
-                  EIF_value,
-                        dataset_name,
-                        plot_path=os.getcwd(),
-                        show_plot=False,
-                        save_plot=True,
-                        change_ylim=False):
+def plot_ablation(eta_list:List[float],
+                  avg_prec:List[np.ndarray],
+                  EIF_value:float,
+                  dataset_name:str,
+                  plot_path:str=os.getcwd(),
+                  show_plot:bool=False,
+                  save_plot:bool=True,
+                  change_ylim:bool=False) -> tuple[plt.figure, plt.axes]:
+    
+    """
+    Obtain the plot of the Average precision values against different values of the era parameter.
+
+    Args:
+        eta_list (List[float]): The list of eta values.
+        avg_prec (List[np.ndarray]): The list of average precision values.
+        EIF_value (float): The average precision value of the EIF model.
+        dataset_name (str): The dataset name.
+        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
+        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
+        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed. Defaults to False.
+
+    Returns:
+        tuple[plt.figure, plt.axes]: The figure and axes objects used to create the plot.
+    """
 
     fig, ax = plt.subplots()
     plt.style.use('default')
@@ -617,9 +700,9 @@ def plot_ablation(eta_list,results,
     colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
 
 
-    median_values=[np.mean(x) for x in results]
-    five_values=[np.percentile(x,5) for x in results]
-    ninefive_values=[np.percentile(x,95) for x in results]
+    median_values=[np.mean(x) for x in avg_prec]
+    five_values=[np.percentile(x,5) for x in avg_prec]
+    ninefive_values=[np.percentile(x,95) for x in avg_prec]
 
     ax.plot(eta_list,median_values,alpha=0.85,c=colors[0],marker="o",label="EIF+")
     ax.plot(eta_list,[EIF_value]*len(eta_list),alpha=0.85,c=colors[1],label="EIF")

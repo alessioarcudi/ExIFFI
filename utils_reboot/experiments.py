@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type,Union
 
 import sys
 sys.path.append('..')
@@ -51,9 +51,24 @@ with open(filename, "rb") as file:
 def compute_global_importances(I: Type[ExtendedIsolationForest],
                         dataset: Type[Dataset],
                         p = 0.1,
-                        interpretation="EXIFFI",
-                        model = "EIF+",
+                        interpretation="EXIFFI+",
                         fit_model = True) -> np.array: 
+    
+    """
+    Compute the global feature importances for an interpration model on a specific dataset.
+
+    Args:
+        I (Type[ExtendedIsolationForest]): The AD model.
+        dataset (Type[Dataset]): Input dataset.
+        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
+        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
+        fit_model (bool): Whether to fit the model on the dataset. Defaults to True.
+
+    Returns:
+        np.array: The global feature importance vector.
+
+    """
+
     if fit_model:
         I.fit(dataset.X_train)        
     if interpretation=="DIFFI":
@@ -69,7 +84,21 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
 def fit_predict_experiment(I: Type[ExtendedIsolationForest],
                             dataset: Type[Dataset],
                             n_runs:int = 40,
-                            model='EIF+'):
+                            model='EIF+') -> tuple[float,float]:
+    
+    """
+    Fit and predict the model on the dataset for a number of runs and keep track of the fit and predict times.
+
+    Args:
+        I (Type[ExtendedIsolationForest]): The AD model.
+        dataset (Type[Dataset]): Input dataset.
+        n_runs (int): The number of runs. Defaults to 40.
+        model (str): The name of the model. Defaults to 'EIF+'.
+
+    Returns:
+        tuple[float,float]: The average fit and predict time.
+    """
+
     fit_times = []
     predict_times = []
     
@@ -98,13 +127,28 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
 
     return np.mean(fit_times), np.mean(predict_times)
                         
-def experiment_global_importances(I: Type[ExtendedIsolationForest],
-                               dataset: Type[Dataset],
-                               n_runs:int = 10, 
-                               p = 0.1,
-                               model = "EIF+",
-                               interpretation="EXIFFI",
-                               scenario=2) -> tuple[np.array,dict,str,str]:
+def experiment_global_importances(I:Type[ExtendedIsolationForest],
+                               dataset:Type[Dataset],
+                               n_runs:int=10, 
+                               p:float=0.1,
+                               model:str="EIF+",
+                               interpretation:str="EXIFFI+"
+                               ) -> tuple[np.array,dict,str,str]:
+    
+    """
+    Compute the global feature importances for an interpration model on a specific dataset for a number of runs.
+
+    Args:
+        I (Type[ExtendedIsolationForest]): The AD model.
+        dataset (Type[Dataset]): Input dataset.
+        n_runs (int): The number of runs. Defaults to 10.
+        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
+        model (str): The name of the model. Defaults to 'EIF+'.
+        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
+    
+    Returns:
+        tuple[np.array,dict,str,str]: The global feature importances vectors for the different runs and the average importances times.
+    """
 
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     imp_times=[]
@@ -125,7 +169,17 @@ def experiment_global_importances(I: Type[ExtendedIsolationForest],
         pickle.dump(dict_time, file)
     return fi,np.mean(imp_times)
 
-def compute_plt_data(imp_path):
+def compute_plt_data(imp_path:str) -> dict:
+
+    """
+    Compute statistics on the global feature importances obtained from experiment_global_importances. These will then be used in the score_plot method. 
+
+    Args:
+        imp_path (str): The path to the importances file.
+    
+    Returns:
+        dict: The dictionary containing the mean importances, the feature order, and the standard deviation of the importances.
+    """
 
     try:
         fi = np.load(imp_path)['element']
@@ -158,7 +212,23 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                       inverse: bool = True,
                       random: bool = False,
                       scenario:int=2
-                      ) -> tuple[np.array,dict,str,str]:
+                      ) -> np.array:
+        
+        """
+        Perform feature selection on the dataset by dropping features in order of importance.
+
+        Args:
+            I (Type[ExtendedIsolationForest]): The AD model.
+            dataset (Type[Dataset]): Input dataset.
+            importances_indexes (npt.NDArray): The indexes of the features in the dataset.
+            n_runs (int): The number of runs. Defaults to 10.
+            inverse (bool): Whether to drop the features in decreasing order of importance. Defaults to True.
+            random (bool): Whether to drop the features in random order. Defaults to False.
+            scenario (int): The scenario of the experiment. Defaults to 2.
+        
+        Returns:
+            np.array: The average precision scores for the different runs.
+        """
 
         dataset_shrinking = copy.deepcopy(dataset)
         d = dataset.X.shape[1]
@@ -217,10 +287,28 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    train_size = 0.8,
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_GFI:bool=False,
-                                                   interpretation:str="EXIFFI",
+                                                   interpretation:str="EXIFFI+",
                                                    pre_process:bool=True, # in the synthetic datasets the dataset should not be pre processed
-                                                   scenario:int=1 # in the contamination experiments we only use scenario 1
-                                                   ) -> tuple[np.array,dict,str,str]:
+                                                   ) -> Union[tuple[np.ndarray, np.ndarray], np.ndarray]:
+    
+    """
+    Evaluate the average precision of the model on the dataset for different contamination values in the training set. 
+    The precision values will then be used in the `plot_precision_over_contamination` method
+
+    Args:
+        I (Type[ExtendedIsolationForest]): The AD model.
+        dataset (Type[Dataset]): Input dataset.
+        n_runs (int): The number of runs. Defaults to 10.
+        train_size (float): The size of the training set. Defaults to 0.8.
+        contamination_values (npt.NDArray): The contamination values. Defaults to `np.linspace(0.0,0.1,10)`.
+        compute_GFI (bool): Whether to compute the global feature importances. Defaults to False.
+        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
+        pre_process (bool): Whether to pre process the dataset. Defaults to True.
+
+    Returns:
+        Union[tuple[np.ndarray, np.ndarray], np.ndarray]: The average precision scores and the global feature importances if `compute_GFI` is True, 
+        otherwise just the average precision scores are returned. 
+    """
 
     precisions = np.zeros(shape=(len(contamination_values),n_runs))
     if compute_GFI:
@@ -289,7 +377,29 @@ def performance(y_pred:np.array,
                 filename:str="",
                 path:str=os.getcwd(),
                 save:bool=True
-                ) -> pd.DataFrame: 
+                ) -> tuple[pd.DataFrame,str]: 
+    
+    """
+    Compute the performance metrics of the model on the dataset.
+
+    Args:
+        y_pred (np.array): The predicted labels.
+        y_true (np.array): The true labels.
+        score (np.array): The Anomaly Scores.
+        I (Type[ExtendedIsolationForest]): The AD model.
+        model_name (str): The name of the model.
+        dataset (Type[Dataset]): Input dataset.
+        contamination (float): The contamination factor. Defaults to 0.1.
+        train_size (float): The size of the training set. Defaults to 0.8.
+        scenario (int): The scenario of the experiment. Defaults to 2.
+        n_runs (int): The number of runs. Defaults to 10.
+        filename (str): The filename. Defaults to "".
+        path (str): The path to the experiments folder. Defaults to os.getcwd().
+        save (bool): Whether to save the results. Defaults to True.
+
+    Returns:
+        tuple[pd.DataFrame,str]: The performance metrics and the path to the results.
+    """
     
     # In path insert the local path up to the experiments folder:
     # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
@@ -308,8 +418,6 @@ def performance(y_pred:np.array,
             score = I.decision_function(dataset.X_test)
         else:
             score = I.predict(dataset.X_test)
-            # import ipdb; 
-            # ipdb.set_trace()
         precisions.append(average_precision_score(y_true, score))
     
     df=pd.DataFrame({
@@ -338,7 +446,24 @@ def performance(y_pred:np.array,
     
     return df,path
 
-def ablation_EIF_plus(I, dataset, eta_list, nruns = 10):
+def ablation_EIF_plus(I:Type[ExtendedIsolationForest], 
+                      dataset:Type[Dataset], 
+                      eta_list:list[float], 
+                      nruns:int=10) -> list[np.array]:
+
+    """
+    Compute the average precision scores for different values of the eta parameter in the EIF+ model.
+
+    Args:
+        I (Type[ExtendedIsolationForest]): The AD model.
+        dataset (Type[Dataset]): Input dataset.
+        eta_list (list): The list of eta values.
+        nruns (int): The number of runs. Defaults to 10.
+
+    Returns:
+        list[np.array]: The average precision scores.
+    """
+
     precisions = []
     for eta in tqdm(eta_list):
         precision = []

@@ -20,7 +20,17 @@ import copy
 from sklearn.preprocessing import StandardScaler,MinMaxScaler,MaxAbsScaler,RobustScaler
 
 
-def Dataset_feature_names(name:str):
+def Dataset_feature_names(name:str) -> List[str]:
+
+    """ 
+        Define the feture names for the datasets for which the feature names are available 
+
+        Args:
+            name: Dataset name 
+
+        Returns:
+            A list of strings containing the feature names of the dataset.
+    """
 
     data_feature_names={
        'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
@@ -38,47 +48,37 @@ def Dataset_feature_names(name:str):
         return data_feature_names[name]
     else:
         return None 
-    
-# def Dataset_box_loc(name:str):
-
-#     data_box_loc={
-#         'wine': (4,0.8),
-#         'cardio': (3,0.3),
-#         'glass': (5,0.35),
-#         'pima': (4,0.5),
-#         'breastw': (4,0.7),
-#         'ionosphere': (8,0.6),
-#         'annthyroid': (4,0.6),
-#         'pendigits': (3,0.5),
-#         'diabetes': (3,0.6),
-#         'shuttle': (4,0.6),
-#         'moodify': (3,0.5),
-#         'Xaxis': (4,0.8),
-#         'Yaxis': (4,0.8),
-#         'bisect': (4,0.8),
-#         'bisect_3d': (2,0.6),
-#         'bisect_6d': (4,0.9),
-#     }
-
-#     return data_box_loc[name]
 
 @dataclass
 class Dataset:
     """
     A class to represent a dataset.
-    INSTANCE VARIABLES:
+
+    Attributes:
         name: str
             The name of the dataset.
         path: str
             The path to the dataset file.
         X: Optional[npt.NDArray]
-            The input features of the dataset.
+            Data matrix of the dataset.
+        X_train: Optional[npt.NDArray]
+            Training set, initialized to None
+        X_test: Optional[npt.NDArray]
+            Test set, initialized to None
         y: Optional[npt.NDArray]
             The labels of the dataset.
+        y_train: Optional[npt.NDArray]
+            The labels of the training set
+        y_test: Optional[npt.NDArray]
+            The labels of the test set
+        feature_names: Optional[List[str]]
+            The names of the features of the dataset.
         shape: tuple
             The shape of the dataset.
         n_outliers: int
             The number of outliers in the dataset.
+        perc_outliers: float
+            The percentage of outliers in the dataset (i.e. the contamination factor)
     """
     name: str
     path: str = "../data/"
@@ -89,9 +89,14 @@ class Dataset:
     X_test: Optional[npt.NDArray] = field(default=None, init=False)
     y_test: Optional[npt.NDArray] = field(default=None, init=False)
     feature_names: Optional[List[str]] = field(default=None, init=False)
-    box_loc: Optional[tuple] = field(default=None, init=False)
+    #box_loc: Optional[tuple] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
+        """Initialize the dataset.
+
+        Load the dataset from the file and set the feature names.
+        
+        """
         self.load()
         self.feature_names=Dataset_feature_names(self.name)
         if self.feature_names is None:
@@ -111,6 +116,16 @@ class Dataset:
         return sum(self.y) / len(self.y) if self.y is not None else 0.0
         
     def load(self) -> None:
+        """
+        Load the dataset from the file.
+
+        Raises:
+            FileNotFoundError: If the dataset file is not found.
+            Exception: If the dataset name is not valid.
+
+        Returns:
+            None: The dataset is loaded in place.
+        """
         try:
             datapath = self.path + self.name + ".mat"
             try:
@@ -147,18 +162,33 @@ class Dataset:
         return f"[{self.name}][{self.shape}][{self.n_outliers}]"
 
     def drop_duplicates(self) -> None:
+        """
+        Drop duplicate samples from the dataset.
+
+        Returns:
+            None: The dataset is modified in place.
+        """
         S = np.c_[self.X, self.y]
         S = pd.DataFrame(S).drop_duplicates().to_numpy()
         self.X, self.y = S[:, :-1], S[:, -1]
         
     def downsample(self, max_samples: int = 2500) -> None:
+        """
+        Downsample the dataset to a maximum number of samples.
+
+        Args:
+            max_samples: The maximum number of samples to keep in the dataset.
+        
+        Returns:
+            None: The dataset is modified in place.
+        """
         if len(self.X) > max_samples:
             print("downsampled to ", max_samples)
             sss = SSS(n_splits=1, test_size=1 - max_samples / len(self.X))
             index = list(sss.split(self.X, self.y))[0][0]
             self.X, self.y = self.X[index, :], self.y[index]
     
-    def partition_data(self,X,y) -> tuple:
+    def partition_data(self,X:np.array,y:np.array) -> tuple:
 
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
@@ -175,6 +205,16 @@ class Dataset:
         return inliers, outliers,y_inliers,y_outliers
     
     def print_dataset_resume(self) -> None:
+        """
+        Print a summary of the dataset.
+
+        The summary includes the number of samples, the number of features, the number of inliers and outliers and some
+        summary statistics of the features.
+
+        Returns:
+            None: The dataset summary is printed.
+        
+        """
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -205,7 +245,21 @@ class Dataset:
         print(f" Inliers: {num_inliers}, Outliers: {num_outliers}, Balance Ratio: {balance_ratio:.2f}")
         print(f" Feature Stats - Mean: {mean_val:.2f}, Std Dev: {std_dev_val:.2f}, Min: {min_val}, Max: {max_val}")
     
-    def split_dataset(self, train_size = 0.8, contamination: float = 0.1) -> tuple:
+    def split_dataset(self, 
+                      train_size:float = 0.8, 
+                      contamination:float = 0.1) -> None:
+        
+        """
+        Split the dataset into training and test sets with a given train size and contamination factor.
+
+        Args:
+            train_size: The proportion of the dataset to include in the training set.
+            contamination: The proportion of outliers in the dataset.
+
+        Returns:
+            None: The dataset is split into training and test sets in place
+
+        """
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -232,6 +286,14 @@ class Dataset:
             self.y_train[i] = self.y[index]
 
     def pre_process(self) -> None:
+
+        """
+        Normalize the data using `StansardScaler()` from `sklearn.preprocessing`.
+
+        Returns:
+            None: The dataset is normalized in place.
+        """
+        
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -247,6 +309,15 @@ class Dataset:
         self.X_test=scaler.transform(self.X_test)
 
     def initialize_train_test(self) -> None:
+
+        """
+        Initialize the training and test sets with the original dataset. 
+
+        This method is used when `split_dataset()` has not been called before `pre_process()`.
+
+        Returns:
+            None: The training and test sets are initialized in place.
+        """
         # Ensure that X and y are not None
         if self.X is None or self.y is None:
             print("Dataset not loaded.")
@@ -257,10 +328,30 @@ class Dataset:
             self.initialize_test()
 
     def initialize_test(self) ->None:
+
+        """
+        Initialize the test set with the original dataset. 
+
+        This method is used when `split_dataset()` has not been called before `pre_process()`.
+
+        Returns:
+            None: The test set is initialized in place.
+        """
+
         self.X_test=copy.deepcopy(self.X)
         self.y_test=copy.deepcopy(self.y)
     
     def initialize_train(self) ->None:
+
+        """
+        Initialize the train set with the original dataset. 
+
+        This method is used when `split_dataset()` has not been called before `pre_process()`.
+
+        Returns:
+            None: The training set is initalized in place.
+        """
+
         self.X_train=copy.deepcopy(self.X)
         self.y_train=copy.deepcopy(self.y)
 
