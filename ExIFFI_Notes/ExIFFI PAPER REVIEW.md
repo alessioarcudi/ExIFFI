@@ -220,6 +220,13 @@ Datasets from Table 2 of *On the evaluation of unsupervised outlier detection: m
 > [!todo] `normal_median` Distribution
 >  Sampling from the distribution $N(median(X),\eta \ std(X))$ maybe we can better even better cuts because the median is not influenced by the outliers and will provide cuts that will divide in exact halves the dataset with higher probabilities. 
 
+# `ExIFFI` Final Review Notes
 
+Le cose da sistemare secondo la review reject sono:
+
+- Punto 1 -> Ridurre di molto la lunghezza facendo una cosa molto piu concisa in modo che sia piu facile da presentare e da capire il metodo per I lettori. 
+- Punto 2 -> Qua non capisco bene cosa intenda con manually designed features. Poi dice che 
+- Punto 3-> Possiamo supportare l'applicabilità di `EXIFFI` a non solo `IF` e dati tabulari visto I risultati che stiamo ottenendo da `TEP` e `PIADE`. Qua bisogna capire se si possono includere I risultati su questi due nella nuova submission di `EXIFFI` o fare cmq il paper industriale a parte e citarlo. 
+- Punto 4 -> Nella parte sperimentale bisogna includere il paragone con qualche modello di interpretability piu recente. Potremmo cmq mettere `ACME` e `DIFFI` (anche se è sempre Gian vs Gian vs Gian). Forse le varie versioni di `SHAP` sono un po troppo vecchie (Hanno detto degli ultimi due anni) -> provare a cercare qualche modello di interpretability per AD ma non credo ce ne siano molti. Si potrebbe considerare `ECOD` (intrinsically interpretable ma solo Local).
 
 
