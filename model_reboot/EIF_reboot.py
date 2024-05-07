@@ -482,7 +482,8 @@ class ExtendedIsolationForest():
             Anomaly score for each data point in the dataset.
         """
         self.compute_ids(X)
-        predictions=[tree.predict(X,self.ids[i]) for i,tree in enumerate(self.trees)]
+        #predictions=[tree.predict(X,self.ids[i]) for i,tree in enumerate(self.trees)]
+        predictions=[tree.predict(self.ids[i]) for i,tree in enumerate(self.trees)]
         values = np.array([p[0] for p in predictions])
         return np.power(2,-np.mean([value for value in values], axis=0))
     
