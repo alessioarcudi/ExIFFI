@@ -10,6 +10,7 @@ from utils_reboot.datasets import Dataset
 from sklearn.ensemble import IsolationForest 
 from pyod.models.dif import DIF as oldDIF
 from pyod.models.auto_encoder import AutoEncoder as oldAutoEncoder
+from datetime import datetime
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
 
@@ -157,6 +158,38 @@ class AutoEncoder(oldAutoEncoder):
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
     
+def get_feature_indexes(dataset:Type[Dataset],
+                        f1:str,
+                        f2:str) -> tuple[int,int]:
+    
+    """
+    Function to get the indexes of two features in the dataset.
+
+    Args:
+        dataset: Dataset
+        f1: Name of the first feature
+        f2: Name of the second feature
+    
+    Returns:
+        Indexes of the two features in the dataset
+    """
+
+    if isinstance(f1,int) and isinstance(f2,int):
+        return f1,f2
+
+    feature_names=dataset.feature_names
+
+    try:
+        idx1=feature_names.index(f1)
+    except:
+        print('Feature name not valid')
+    try: 
+        idx2=feature_names.index(f2)
+    except:
+        print('Feature name not valid')
+
+    return idx1,idx2
+    
 
 def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[NewPrecisions],Type[Precisions_random]],
                  directory_path:str,
@@ -188,7 +221,8 @@ def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[
     elif filetype == "npz":
         np.savez(path, element=element)
         
-def get_most_recent_file(directory_path:str)->str:
+def get_most_recent_file(directory_path:str,
+                         filetype:str="pickle")->str:
 
     """
     Function to get the most recent file (i.e. last modified file) in a directory path.
@@ -201,8 +235,14 @@ def get_most_recent_file(directory_path:str)->str:
 
     """
     
-    files = sorted(os.listdir(directory_path), key=lambda x: os.path.getmtime(os.path.join(directory_path, x)), reverse=True)
-    return os.path.join(directory_path, files[0])
+    # files = sorted(os.listdir(directory_path), key=lambda x: os.path.getmtime(os.path.join(directory_path, x)), reverse=True)
+    # return os.path.join(directory_path, files[0])
+
+    date_format = "%d-%m-%Y_%H-%M-%S"
+    datetimes=[datetime.strptime(file[:19],date_format) for file in os.listdir(directory_path)]
+    sorted_files=sorted(datetimes,reverse=True)
+    most_recent_file=sorted_files[0].strftime(date_format)+f'_.{filetype}'
+    return os.path.join(directory_path,most_recent_file)
 
 def open_element(file_path:str,
                  filetype:str="pickle") -> Union[np.array,list,pd.DataFrame,Type[Precisions],Type[NewPrecisions],Type[Precisions_random]]:

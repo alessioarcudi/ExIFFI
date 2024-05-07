@@ -157,8 +157,7 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
         fi[i,:]=compute_global_importances(I,
                         dataset,
                         p = p,
-                        interpretation=interpretation,
-                        model = model)
+                        interpretation=interpretation)
         gfi_time = time.time() - start_time
         if i>3:
             imp_times.append(gfi_time)

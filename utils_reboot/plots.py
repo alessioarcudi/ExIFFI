@@ -286,6 +286,8 @@ def plot_feature_selection(
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
 
+    #import ipdb; ipdb.set_trace()
+
     if precision_file_random is not None:
         precision_random=open_element(precision_file_random)
         median_random = [np.percentile(x, 50) for x in precision_random.random]
@@ -500,9 +502,9 @@ def importance_map(dataset: Type[Dataset],
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
         if isdiffi:
-            filename = current_time+"_importance_map_"+dataset.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
+            filename = current_time+"_importance_map_"+dataset.name+"_"+model.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
         else:
-            filename = current_time+"_importance_map_"+dataset.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
+            filename = current_time+"_importance_map_"+dataset.name+"_"+model.name+"_"+interpretation+f"_{str(scenario)}"+f"_feat_{feats_plot[0]}_{feats_plot[1]}"+".pdf"
 
         if show_plot:
             plt.show()
