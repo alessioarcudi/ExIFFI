@@ -2,13 +2,22 @@
 
 SCRIPT_PATH="test_feature_selection.py"
 
-DATASETS="bisect"
-
-# Split the DATASETS string into an array
-IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
+DATASETS="bisect_3d"
 
 # Path to the datasets 
 DATASET_PATH="../data/syn/"
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "EXIFFI" \
+        --scenario 1 \
+        --compute_random
+
+# Split the DATASETS string into an array
+# IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Iterate over the datasets and call the Python command for each dataset
 # for dataset in "${DATASET_ARRAY[@]}"; do
@@ -70,64 +79,64 @@ DATASET_PATH="../data/syn/"
 
 # done
 
-MODELS="EIF+ EIF"
-IFS=' ' read -ra MODELS_ARRAY <<< "$MODELS"
-SCENARIOS=(1 2)
+# MODELS="EIF+ EIF"
+# IFS=' ' read -ra MODELS_ARRAY <<< "$MODELS"
+# SCENARIOS=(1 2)
 
-for model in "${MODELS_ARRAY[@]}"; do
-    for scenario in "${SCENARIOS[@]}"; do
+# for model in "${MODELS_ARRAY[@]}"; do
+#     for scenario in "${SCENARIOS[@]}"; do
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "EIF+" \
-            --interpretation "EXIFFI+" \
-            --scenario "$scenario" \
-            --compute_random 
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "EIF+" \
+#             --interpretation "EXIFFI+" \
+#             --scenario "$scenario" \
+#             --compute_random 
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "EIF" \
-            --interpretation "EXIFFI" \
-            --scenario "$scenario" 
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "EIF" \
+#             --interpretation "EXIFFI" \
+#             --scenario "$scenario" 
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "IF" \
-            --interpretation "DIFFI" \
-            --scenario "$scenario" 
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "IF" \
+#             --interpretation "DIFFI" \
+#             --scenario "$scenario" 
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "EIF+" \
-            --interpretation "RandomForest" \
-            --scenario "$scenario"
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "EIF+" \
+#             --interpretation "RandomForest" \
+#             --scenario "$scenario"
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "EIF" \
-            --interpretation "RandomForest" \
-            --scenario "$scenario" 
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "EIF" \
+#             --interpretation "RandomForest" \
+#             --scenario "$scenario" 
 
-        python $SCRIPT_PATH \
-            --dataset_name $DATASETS \
-            --dataset_path $DATASET_PATH \
-            --model "$model" \
-            --model_interpretation "IF" \
-            --interpretation "RandomForest" \
-            --scenario "$scenario"
+#         python $SCRIPT_PATH \
+#             --dataset_name $DATASETS \
+#             --dataset_path $DATASET_PATH \
+#             --model "$model" \
+#             --model_interpretation "IF" \
+#             --interpretation "RandomForest" \
+#             --scenario "$scenario"
 
-    done
-done
+#     done
+# done
 
 # python $SCRIPT_PATH \
 #             --dataset_name $DATASETS \
