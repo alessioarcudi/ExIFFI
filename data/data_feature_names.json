@@ -1,0 +1,7 @@
+{"pima": ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"], 
+"moodify": ["duration (ms)", "danceability", "energy", "loudness", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "spec_rate"], 
+"diabetes": ["age", "bmi", "HbA1c_level", "blood_glucose_level"], 
+"glass": ["RI", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe"], 
+"wine": ["Alcohol", "Malic acid", "Ash", "Alcalinity of ash", "Magnesium", 
+        "Phenols", "Flavanoids", "Nonflavanoid phenols", 
+        "Proanthocyanins", "Color intensity", "Hue", "OD280/OD315 of diluted wines", "Proline"]}
