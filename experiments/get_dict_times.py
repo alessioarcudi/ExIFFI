@@ -55,9 +55,10 @@ print("#"*50)
 
 imp_df=pd.DataFrame({
 
-    'model':['DIFFI','EXIFFI','EXIFFI+','IF_RF','EIF_RF','EIF+_RF'],
+    'model':['DIFFI','EXIFFI','IF_EXIFFI','EXIFFI+','IF_RF','EIF_RF','EIF+_RF'],
 
     'importances':[compute_mean_times(dict_time,'importances','DIFFI',dataset.name),
+                   compute_mean_times(dict_time,'importances','EXIFFI',dataset.name),
                    compute_mean_times(dict_time,'importances','EXIFFI',dataset.name),
                    compute_mean_times(dict_time,'importances','EXIFFI+',dataset.name),
                    compute_mean_times(dict_time,'importances','RandomForest',dataset.name),

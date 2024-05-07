@@ -48,7 +48,7 @@ if args.interpretation == "EXIFFI+":
     assert args.model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 if args.interpretation == "EXIFFI":
-    assert args.model=="EIF", "EXIFFI can only be used with the EIF model"
+    assert args.model=="EIF" or args.model=="IF", "EXIFFI can only be used with the IF and EIF model"
 
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
@@ -59,7 +59,6 @@ if args.interpretation == "RandomForest":
 # Access the arguments
 dataset_name = args.dataset_name
 dataset_path = args.dataset_path
-
 n_estimators = args.n_estimators
 max_depth = args.max_depth
 max_samples = args.max_samples
@@ -172,7 +171,7 @@ if GFI:
     print('Global Feature Importances Experiment')
     print('#'*50)
 
-    _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, scenario=scenario)
+    _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)
 
     print(f'Mean Importances Time: {imp_times}')
     imp_dict={"importances_time":imp_times}

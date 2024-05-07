@@ -25,7 +25,8 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_if_exiffi.pickle"
+#filename = cwd + "/utils_reboot/time_scaling_test_dei.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
@@ -38,7 +39,7 @@ if not os.path.exists(filename):
 
     dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
             "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
-            "importances":{"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"IF_EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
     
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
@@ -161,7 +162,10 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
         gfi_time = time.time() - start_time
         if i>3:
             imp_times.append(gfi_time)
-            dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+            if (I.name=="IF") and (interpretation=="EXIFFI"):
+                dict_time["importances"]["IF_EXIFFI"].setdefault(dataset.name, []).append(gfi_time)
+            else:
+                dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
             #print(f'Added time {str(gfi_time)} to time dict')
     
     with open(filename, "wb") as file:
