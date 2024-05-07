@@ -3,7 +3,6 @@ import sys
 import ast
 import os
 cwd = os.getcwd()
-#os.chdir('/home/davidefrizzo/Desktop/PHD/ExIFFI/experiments')
 sys.path.append("..")
 from collections import namedtuple
 
@@ -63,7 +62,7 @@ change_ylim = args.change_ylim
 change_box_loc=args.change_box_loc
 
 
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
 
 # Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
@@ -86,9 +85,6 @@ else:
     dataset.initialize_train_test()
     print("#"*50)
 
-# import ipdb;
-# ipdb.set_trace()
-
 assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
 assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
 assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
@@ -97,15 +93,15 @@ if interpretation == "DIFFI":
     assert model_interpretation=="IF", "DIFFI can only be used with the IF model"
 
 if interpretation == "EXIFFI":
-    assert model_interpretation=="EIF", "EXIFFI can only be used with the EIF model"
+    assert model_interpretation=="EIF" or model_interpretation=="IF", "EXIFFI can only be used with IF or EIF model"
 
 if interpretation == "EXIFFI+":
     assert model_interpretation=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 if model == "IF":
     if interpretation == "EXIFFI" or interpretation=="EXIFFI+":
-        #I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-        I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
+        I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+        #I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
     elif interpretation == "DIFFI" or interpretation == "RandomForest":
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
@@ -113,6 +109,7 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
+# import ipdb; ipdb.set_trace()
 
 print('#'*50)
 print('Feature Selection Experiment')
@@ -123,8 +120,6 @@ print(f'Model for Feature Order: {model_interpretation}')
 print(f'Interpretation Model: {interpretation}')
 print(f'Scenario: {scenario}')
 print('#'*50)
-
-#cwd = '/home/davidefrizzo/Desktop/PHD/ExIFFI'
 
 os.chdir('../')
 cwd=os.getcwd()
@@ -165,8 +160,10 @@ path_experiment_feats = path_experiments + "/global_importances/" + model_interp
 if not os.path.exists(path_experiment_feats):
     os.makedirs(path_experiment_feats) 
 
+#import ipdb; ipdb.set_trace()
+
 # feature selection → direct and inverse feature selection
-most_recent_file = get_most_recent_file(path_experiment_feats)
+most_recent_file = get_most_recent_file(path_experiment_feats,filetype="npz")
 matrix = open_element(most_recent_file,filetype="npz")
 feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
@@ -187,9 +184,9 @@ if compute_random:
 #plot feature selection
 fs_prec = get_most_recent_file(path_experiment_model_interpretation_scenario)
 fs_prec_random = get_most_recent_file(path_experiment_model_interpretation_random_scenario)
-plot_feature_selection(fs_prec,
-                        path_plots, 
-                        fs_prec_random, 
+plot_feature_selection(precision_file=fs_prec,
+                        plot_path=path_plots, 
+                        precision_file_random=fs_prec_random, 
                         model=model_interpretation, 
                         eval_model=model, 
                         interpretation=interpretation, 

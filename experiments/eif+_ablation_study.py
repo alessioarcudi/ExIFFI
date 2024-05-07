@@ -42,7 +42,7 @@ n_runs = args.n_runs
 model_index = args.model_index
 
 
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
 
 I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)

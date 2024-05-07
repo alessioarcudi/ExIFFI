@@ -72,7 +72,7 @@ scenario = args.scenario
 GFI = args.compute_GFI
 fit_predict = args.compute_fit_predict 
 
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
 
 if dataset.shape[0]>7500:

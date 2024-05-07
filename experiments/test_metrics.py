@@ -58,7 +58,7 @@ model = args.model
 scenario = args.scenario
 
 # Load the dataset
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
 
 # import ipdb; 

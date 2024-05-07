@@ -43,9 +43,8 @@ model = args.model
 scenario = args.scenario
 pre_process = args.pre_process
 
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
-
 
 print('#'*50)
 print('Performance Metrics Experiment')

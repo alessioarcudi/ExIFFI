@@ -34,7 +34,7 @@ dataset_path = args.dataset_path
 change_ylim = args.change_ylim
 models = args.models
 
-dataset = Dataset(name=dataset_name, path=dataset_path)
+dataset = Dataset(name=dataset_name, path=dataset_path,feature_names_filepath='../data/')
 
 path_contamination = os.getcwd()+'/results/'+ dataset.name +'/experiments/contamination/'
 path_plots = os.getcwd()+'/results/'+ dataset.name +'/plots_new/contamination_plots'

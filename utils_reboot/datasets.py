@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 
 from scipy.io import loadmat
 import mat73
+import json
 
 import numpy as np
 import random 
@@ -40,6 +41,7 @@ class Dataset:
     """
     name: str
     path: str = "../data/"
+    feature_names_filepath: Optional[str] = None
     X: Optional[npt.NDArray] = field(default=None, init=False)
     y: Optional[npt.NDArray] = field(default=None, init=False)
     X_train: Optional[npt.NDArray] = field(default=None, init=False)
@@ -56,10 +58,13 @@ class Dataset:
         
         """
         self.load()
-        self.feature_names=Dataset_feature_names(self.name)
+
+        if self.feature_names_filepath is not None:
+            self.dataset_feature_names()
+            #import ipdb; ipdb.set_trace()
+
         if self.feature_names is None:
             self.feature_names=np.arange(self.shape[1])
-        #self.box_loc=Dataset_box_loc(self.name)
         
     @property
     def shape(self) -> tuple:
@@ -104,7 +109,7 @@ class Dataset:
             except Exception as e:
                 try:
                     datapath = self.path + self.name + ".csv"
-                    if self.name == "glass_DIFFI":
+                    if self.name == "glass":
                         T = pd.read_csv(datapath)
                     else:
                         T = pd.read_csv(datapath,index_col=0)
@@ -315,34 +320,21 @@ class Dataset:
         self.X_train=copy.deepcopy(self.X)
         self.y_train=copy.deepcopy(self.y)
 
-def Dataset_feature_names(name:str) -> List[str]:
+    def dataset_feature_names(self) -> List[str]:
 
-    """ 
-        Define the feture names for the datasets for which the feature names are available 
+            """ 
+            Define the feture names for the datasets for which the feature names are available 
 
-        Args:
-            name: Dataset name 
+            Returns:
+                Set the feature_names attributes to a list of string containing the feature names of the dataset.
+            """
+            with open(self.feature_names_filepath+'data_feature_names.json','r') as f:
+                data_feature_names=json.load(f)
 
-        Returns:
-            A list of strings containing the feature names of the dataset.
-    """
-
-    data_feature_names={
-       'pima': ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
-       'BMI', 'DiabetesPedigreeFunction', 'Age'],
-       'moodify': ['duration (ms)', 'danceability', 'energy', 'loudness',
-       'speechiness', 'acousticness', 'instrumentalness', 'liveness',
-       'valence', 'tempo', 'spec_rate'],
-       'diabetes': ['age', 'bmi', 'HbA1c_level', 'blood_glucose_level'],
-       'glass_DIFFI': ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe'],
-       'wine': ['Alcohol', 'Malic acid', 'Ash', 'Alcalinity of ash', 'Magnesium','Phenols',
-                'Flavanoids', 'Nonflavanoid phenols', 'Proanthocyanins', 'Color intensity','Hue','OD280/OD315 of diluted wines','Proline']
-    }
-
-    if name in data_feature_names:    
-        return data_feature_names[name]
-    else:
-        return None 
+            if self.name in data_feature_names:    
+                self.feature_names=data_feature_names[self.name]
+            else:
+                self.feature_names=None 
         
 
  

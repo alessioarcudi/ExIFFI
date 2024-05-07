@@ -13,7 +13,7 @@ from utils_reboot.plots import *
 from utils_reboot.utils import *
 
 
-from model_reboot.EIF_reboot import ExtendedIsolationForest
+from model_reboot.EIF_reboot import ExtendedIsolationForest,IsolationForest
 import argparse
 
 # Create the argument parser
@@ -32,7 +32,9 @@ parser.add_argument('--model', type=str, default="EIF+", help='Name of the inter
 parser.add_argument('--interpretation', type=str, default="EXIFFI+", help='Name of the interpretation model. Accepted values are: [EXIFFI+,EXIFFI,DIFFI,RandomForest]')
 parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 parser.add_argument('--pre_process',type=bool,default=False, help='If set, preprocess the dataset')
-parser.add_argument('--feats_plot',type=str,default=(0,1),help='Pair of features to plot in the importance map')
+parser.add_argument('--feature1',type=lambda x: int(x) if x.isdigit() else x,help='First feature of the pair to plot in the importance map')
+parser.add_argument('--feature2',type=lambda x: int(x) if x.isdigit() else x,help='Second feature of the pair to plot in the importance map')
+
 
 # Parse the arguments
 args = parser.parse_args()
@@ -50,11 +52,13 @@ model = args.model
 interpretation = args.interpretation
 scenario = args.scenario
 pre_process = args.pre_process
-feats_plot_str = args.feats_plot
-feats_plot=ast.literal_eval(feats_plot_str)
+feature1 = args.feature1
+feature2 = args.feature2
 
-dataset = Dataset(dataset_name, path = dataset_path)
+dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
+
+feats_plot=get_feature_indexes(dataset,feature1,feature2)
 
 # Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
 if dataset.shape[0]>7500:
@@ -83,7 +87,7 @@ if interpretation == "DIFFI":
     assert model=="IF", "DIFFI can only be used with the IF model"
 
 if interpretation == "EXIFFI":
-    assert model=="EIF", "EXIFFI can only be used with the EIF model"
+    assert model=="EIF" or model=="IF", "EXIFFI can be used with the EIF and IF models"
 
 if interpretation == "EXIFFI+":
     assert model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
