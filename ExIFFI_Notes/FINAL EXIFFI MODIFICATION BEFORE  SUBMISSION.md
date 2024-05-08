@@ -6,18 +6,25 @@ Final little modifications of `ExIFFI` before new submission to `EAAI` Journal.
 	- [ ] Rephrase the role of `ExIFFI` as an Interpretability method that work for different versions of Isolation Forest (i.e. `IF`, `EIF` and `EIF+`)
 	- [ ] Move one (or more) datasets from the `Experimental Results` sections to the `Appendix` (e.g `Bisect6D`) to reduce the number of pages and making the `Experimental Results` section less redundant and repetitive
 	- [ ] Summarize some explanations. For example with the new Overleaf template of `EAAI` new the Local Scoremaps description is one page long → too much. 
-- [ ] Additional Experiments
-	- [ ] To prove the usability of `ExIFFI` as an Interpretability method for `IF` based models we need to try to see what happens if we use it to interpret the `IF` model. So we have to use the `IsolationForest` class (contained in `EIF_reboot.py`) as the AD model to explain. 
-		- [ ] Produce the Bar and Score Plot 
-		- [ ] Produce the Feature Selection Plot and compute the new `AUC_FS` values
-		- [ ] Produce the Local Scoremaps 
+- [x] Additional Experiments (for the moment only on the datasets inserted in the paper)
+	- [x] To prove the usability of `ExIFFI` as an Interpretability method for `IF` based models we need to try to see what happens if we use it to interpret the `IF` model. So we have to use the `IsolationForest` class (contained in `EIF_reboot.py`) as the AD model to explain. 
+		- [x] Produce the Bar and Score Plot 
+		- [x] Produce the Feature Selection Plot and compute the new `AUC_FS` values
+		- [x] Produce the Local Scoremaps 
 	- [ ] Add the new produced Feature Selection Plot in the paper
-	- [ ] Try to compute the GFI scores again using as contamination the contamination of the dataset (i.e. `dataset.perc_outliers`) instead of the default value of 0.1. I hope this does not change much otherwise I should redo all the experiments for all the datasets. 
+	- [x] Try to compute the GFI scores again using as contamination the contamination of the dataset (i.e. `dataset.perc_outliers`) instead of the default value of 0.1. I hope this does not change much otherwise I should redo all the experiments for all the datasets → This thing makes sense but theoretically we cannot do it because we are in an unsupervised setting. We have the labels only because we are using some benchmark datasets built ad-hoc but in a real world scenario typically we do not have them. In the Industrial `ExIFFI` paper we used the dataset contamination because it was kind of a supervised dataset (since `TEP` is actually a synthetic dataset).
 
 ## Experiments
 
-Keep track of the experiments on `IF_EXIFFI`. Let's starts first with the datasets included in the main part of the paper. 
+Keep track of the experiments on `IF_EXIFFI`. Let's starts first with the datasets included in the main part of the paper: 
 
+- Real World Datasets
+	- `glass`
+	- `annthyroid`
+	- `moodify`
+- Synthetic Datasets
+	- `Xaxis`
+	- `bisect_3d`
 ### Real World Datasets
 
 - [x] `glass`
@@ -114,6 +121,234 @@ As a consequence the Feature Selection plots are the symmetric version of the on
 The Importance Plots are similar to the ones of `EXIFFI+` and `DIFFI`. With the new distribution associated with `bisect_3d` `IF` is not affected by its artifacts and so it is able to correctly identify Features 0,1,2 as the most important ones. 
 
 As a consequence also the Feature Selection plots are very similar to the ones of `EXIFFI+`. 
+
+## Experiments Appendix Datasets 
+
+### Real World Datasets
+
+- [x] `breastw`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+Similarly to `DIFFI` it is able to identify Feature 8 as the most important in all the runs, while `EXIFFI` is not good in doing that in this dataset. In fact `breastw` is one of the dataset with an high contamination factor (52%) (pretty abnormal for the Anomaly Detection task) and moreover inliers and outliers are distributed in a grid like shape, so it's easier to detected them using the axis-aligned cuts typical of `IF`. 
+
+Feature Selection Plots very similar to the ones of `DIFFI` and `EXIFFI`. 
+
+Mean Importance time → 
+
+- [x] `cardio`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+It is similar to `EIF_RandomForest` and `EIF+_RandomForest` that detect in all the runs Feature 6 as the most important. Differently from the previously cited models Feature 6 is detected also in `scenario1`. 
+
+In the Feature Selection plot is more similar to `DIFFI` than to `EXIFFI` that is much better in this case. 
+
+Mean Importance time →
+
+- [x] `diabetes`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+More similar to `DIFFI` since they both identify `bmi` as the most important feature. `IF_EXIFFI` however identifies `HbA1c_level` and `blood_glucose_level` as the most important in `scenario1` as it is done by `EXIFFI`. 
+
+In the Feature Selection plots it is similar to `DIFFI` in `scenario2` (because it misses the first two most important features) with a negative `AUC_FS` value but it is better in `scenario1` because there it identifies the two most important features (`AUC_FS` positive). 
+
+Mean Importance time →
+
+- [x] `ionosphere`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+Very differently from all the other models `IF_EXIFFI` identifies Feature 0 as the most important in all the runs. Also the `RandomForest` based models identify a single dominant feature but they are different: Feature 25 for `EIF+_RandomForest` and `EIF_RandomForest` and Feature 31 for `IF_RandomForest`. Here the high-dimensionality of the dataset and the contamination factor (35% with the respect to the 10% used by default) makes the interpretability task more challenging. 
+
+Feature Selection plots in any case very similar. Here we have the typical situation that can be observed when there is an high-dimensional dataset (like it happened with `TEP`). At the beginning the Average Precision is almost constant and then it starts to decrease in the last features because there is a subset of important features and as we start to remove some of them from the group the model performance start to drop. Interestingly in `scenario1` the `AUC_FS` metric is positive and the Average Precision increases a lot passing from 2 to 1 features, so probably Feature 0 is correctly identified as an important feature. 
+
+Mean Importance time →
+
+- [x] `pendigits`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+Pretty randomic distribution of the importances but in `IF_EXIFFI` Feature 3 and 5 are clearly the first two. These two features are in the top 4 both for `DIFFI` and `EXIFFI` so that's a good sign. 
+
+Feature Selection Plots more or less similar to the ones of `EXIFFI`. 
+
+Mean Importance time →
+
+- [x] `pima`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+Situation similar to the one of `ionosphere`, in fact `IF_EXIFFI` identifies `Insuline` as the most important feature while `RandomForest` based models all identify `Glucose`, `DIFFI` and `EXIFFI` are instead more random. That's because `pima` has the problem of overlapping inliers and outliers and the contamination is 34%. 
+
+Feature Selection plots similar to the ones of the other models. 
+
+Mean Importance time →
+
+- [x] `shuttle`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+Also here the opinion of the models is pretty different: `IF_EXIFFI`, `EIF_RandomForest` and `EIF+_RandomForest` divide the importance between Feature 0 and Feature 8 while for `DIFFI` the most important is Feature 3. `EXIFFI` is pretty random as usual. 
+
+Feature Selection plots similar to the ones of `EIF+_RandomForest` and  `EIF_RandomForest`. 
+
+Mean Importance time →
+
+
+- [x] `wine`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+`Proline` is identified as the most important feature only in 40% of the runs, similarly to `DIFFI`. 
+
+Feature Selection Plot similar to the one of `EXIFFI`. 
+
+Mean Importance time → 
+
+> [!todo] 
+> Compute the importance time for these datasets  
+### Synthetic Datasets
+
+- [ ] `Yaxis`
+	- [ ] Importance Plots
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+	- [ ] Feature Selection Plots
+		- [ ] `EIF+`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+		- [ ] `EIF`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+	- [ ] Local Scoremaps
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+
+Mean Importance time →
+
+- [ ] `bisect`
+	- [ ] Importance Plots
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+	- [ ] Feature Selection Plots
+		- [ ] `EIF+`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+		- [ ] `EIF`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+	- [ ] Local Scoremaps
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+
+Mean Importance time →
+
+- [ ] `bisect_6d`
+	- [ ] Importance Plots
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+	- [ ] Feature Selection Plots
+		- [ ] `EIF+`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+		- [ ] `EIF`
+			- [ ] `scenario1`
+			- [ ] `scenario2`
+	- [ ] Local Scoremaps
+		- [ ] `scenario1`
+		- [ ] `scenario2`
+
+Mean Importance time →
 
 ### Important general notes
 
