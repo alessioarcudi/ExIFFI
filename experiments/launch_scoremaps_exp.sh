@@ -2,9 +2,9 @@
 
 SCRIPT_PATH="test_local_importances.py"
 
-DATASETS="wine"
+DATASETS="bisect_6d"
 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -12,9 +12,8 @@ DATASET_PATH="../data/real/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
-        --feature1 "Proline" \
-        --feature2 "Magnesium" \
-        --pre_process 1
+        --feature1 1 \
+        --feature2 0 
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -22,9 +21,8 @@ DATASET_PATH="../data/real/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
-        --feature1 "Proline" \
-        --feature2 "Magnesium" \
-        --pre_process 1
+        --feature1 1 \
+        --feature2 0 
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \

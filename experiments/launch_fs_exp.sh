@@ -2,10 +2,10 @@
 
 SCRIPT_PATH="test_feature_selection.py"
 
-DATASETS="wine"
+DATASETS="bisect_6d"
 
 # Path to the datasets 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -14,7 +14,7 @@ DATASET_PATH="../data/real/"
         --model_interpretation "IF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
-        --pre_process 
+        --change_ylim 
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -23,7 +23,7 @@ DATASET_PATH="../data/real/"
         --model_interpretation "IF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
-        --pre_process 
+        --change_ylim
 
 # Split the DATASETS string into an array
 # IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"

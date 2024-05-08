@@ -2,9 +2,9 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
-DATASETS="breastw"
+DATASETS="bisect_6d"
 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
 
 python $SCRIPT_PATH \
