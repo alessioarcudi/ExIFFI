@@ -145,7 +145,7 @@ Similarly to `DIFFI` it is able to identify Feature 8 as the most important in a
 
 Feature Selection Plots very similar to the ones of `DIFFI` and `EXIFFI`. 
 
-Mean Importance time → 
+Mean Importance time → 0.10
 
 - [x] `cardio`
 	- [x] Importance Plots
@@ -166,7 +166,7 @@ It is similar to `EIF_RandomForest` and `EIF+_RandomForest` that detect in all t
 
 In the Feature Selection plot is more similar to `DIFFI` than to `EXIFFI` that is much better in this case. 
 
-Mean Importance time →
+Mean Importance time → 0.36
 
 - [x] `diabetes`
 	- [x] Importance Plots
@@ -187,7 +187,7 @@ More similar to `DIFFI` since they both identify `bmi` as the most important fea
 
 In the Feature Selection plots it is similar to `DIFFI` in `scenario2` (because it misses the first two most important features) with a negative `AUC_FS` value but it is better in `scenario1` because there it identifies the two most important features (`AUC_FS` positive). 
 
-Mean Importance time →
+Mean Importance time → 0.73
 
 - [x] `ionosphere`
 	- [x] Importance Plots
@@ -208,7 +208,7 @@ Very differently from all the other models `IF_EXIFFI` identifies Feature 0 as t
 
 Feature Selection plots in any case very similar. Here we have the typical situation that can be observed when there is an high-dimensional dataset (like it happened with `TEP`). At the beginning the Average Precision is almost constant and then it starts to decrease in the last features because there is a subset of important features and as we start to remove some of them from the group the model performance start to drop. Interestingly in `scenario1` the `AUC_FS` metric is positive and the Average Precision increases a lot passing from 2 to 1 features, so probably Feature 0 is correctly identified as an important feature. 
 
-Mean Importance time →
+Mean Importance time → 0.16
 
 - [x] `pendigits`
 	- [x] Importance Plots
@@ -229,7 +229,7 @@ Pretty randomic distribution of the importances but in `IF_EXIFFI` Feature 3 and
 
 Feature Selection Plots more or less similar to the ones of `EXIFFI`. 
 
-Mean Importance time →
+Mean Importance time → 1.13 
 
 - [x] `pima`
 	- [x] Importance Plots
@@ -250,7 +250,7 @@ Situation similar to the one of `ionosphere`, in fact `IF_EXIFFI` identifies `In
 
 Feature Selection plots similar to the ones of the other models. 
 
-Mean Importance time →
+Mean Importance time → 0.14
 
 - [x] `shuttle`
 	- [x] Importance Plots
@@ -271,7 +271,7 @@ Also here the opinion of the models is pretty different: `IF_EXIFFI`, `EIF_Rando
 
 Feature Selection plots similar to the ones of `EIF+_RandomForest` and  `EIF_RandomForest`. 
 
-Mean Importance time →
+Mean Importance time → 0.86
 
 
 - [x] `wine`
@@ -293,64 +293,71 @@ Mean Importance time →
 
 Feature Selection Plot similar to the one of `EXIFFI`. 
 
-Mean Importance time → 
-
-> [!todo] 
-> Compute the importance time for these datasets  
+Mean Importance time → 0.078
 ### Synthetic Datasets
 
-- [ ] `Yaxis`
-	- [ ] Importance Plots
-		- [ ] `scenario1`
-		- [ ] `scenario2`
-	- [ ] Feature Selection Plots
-		- [ ] `EIF+`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-		- [ ] `EIF`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-	- [ ] Local Scoremaps
-		- [ ] `scenario1`
-		- [ ] `scenario2`
+- [x] `Yaxis`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
 
-Mean Importance time →
+As expected the result is the symmetric with the respect to the one obtained with `Xaxis`, random importance distribution and Feature 1 (the most important one) is identified most of the time as the least important. 
 
-- [ ] `bisect`
-	- [ ] Importance Plots
-		- [ ] `scenario1`
-		- [ ] `scenario2`
-	- [ ] Feature Selection Plots
-		- [ ] `EIF+`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-		- [ ] `EIF`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-	- [ ] Local Scoremaps
-		- [ ] `scenario1`
-		- [ ] `scenario2`
+The Feature Selection plots are a bit different from the ones obtained with `Xaxis` in `scenario2`. In fact we have the Average Precision that stays constantly at 1 for the first 3 features for the blue line and for the first 4 features for the red line and then suddenly it goes down to almost 0 for the remaining features. As a result we have a sort of parallelogram as the area between the two curves. On the other hand in `scenario1` we have the usual blue line always above the red line and a big negative `AUC_FS` value. 
 
-Mean Importance time →
+Mean Importance time → 0.17
 
-- [ ] `bisect_6d`
-	- [ ] Importance Plots
-		- [ ] `scenario1`
-		- [ ] `scenario2`
-	- [ ] Feature Selection Plots
-		- [ ] `EIF+`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-		- [ ] `EIF`
-			- [ ] `scenario1`
-			- [ ] `scenario2`
-	- [ ] Local Scoremaps
-		- [ ] `scenario1`
-		- [ ] `scenario2`
+- [x] `bisect`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
 
-Mean Importance time →
+As expected `IF_EXIFFI` is able to identify Feature 0 and 1 as the ones sharing the importance since the artifacts of `IF` do not happen with the anomalies distributed along a bisector line. 
 
-### Important general notes
+As expected Feature Selection plots very similar to the ones I already have in `EXIFFI`/`EXIFFI+`. 
+
+Mean Importance time → 0.16
+
+- [x] `bisect_6d`
+	- [x] Importance Plots
+		- [x] `scenario1`
+		- [x] `scenario2`
+	- [x] Feature Selection Plots
+		- [x] `EIF+`
+			- [x] `scenario1`
+			- [x] `scenario2`
+		- [x] `EIF`
+			- [x] `scenario1`
+			- [x] `scenario2`
+	- [x] Local Scoremaps
+		- [x] `scenario1`
+		- [x] `scenario2`
+
+As usual here the importance is evenly shared among all the features so essentially all the bars in the Bar Plot are multicolor, but there is a slight difference in the sense that `IF_EXIFFI` tends to find a single important feature. So for example in `scenario2` there is Feature 3 that has a slight advantage over the others. This effect sligthly changes also the Feature Selection plot that, in `EXIFFI`, have an increase passing from 2 to 1 features while here there is a decrease, because probably that Feature 3 is not properly the most important. 
+
+Mean Importance time → 0.16
+
+## Important general notes
 
 > [!note] 
 > Looking at the contamination plots:
