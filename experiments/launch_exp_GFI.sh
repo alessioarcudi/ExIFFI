@@ -4,11 +4,11 @@
 SCRIPT_PATH="test_global_importancies.py"
 
 # List of datasets
-DATASETS="bisect_3d"
+DATASETS="wine"
 
 
 # Path to the datasetsok
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
 
 python $SCRIPT_PATH \
@@ -16,7 +16,16 @@ python $SCRIPT_PATH \
     --dataset_path $DATASET_PATH \
     --model "IF" \
     --interpretation "EXIFFI" \
-    --scenario 1
+    --scenario 2 \
+    --pre_process
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "EXIFFI" \
+    --scenario 1 \
+    --pre_process
 
 # Use pre_process ONLY ON THE NON SYNTHETIC DATASETS
 

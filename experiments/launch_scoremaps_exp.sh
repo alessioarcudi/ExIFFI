@@ -2,7 +2,7 @@
 
 SCRIPT_PATH="test_local_importances.py"
 
-DATASETS="moodify"
+DATASETS="wine"
 
 DATASET_PATH="../data/real/"
 
@@ -12,8 +12,8 @@ DATASET_PATH="../data/real/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
-        --feature1 "loudness" \
-        --feature2 "spec_rate" \
+        --feature1 "Proline" \
+        --feature2 "Magnesium" \
         --pre_process 1
 
     python $SCRIPT_PATH \
@@ -22,8 +22,8 @@ DATASET_PATH="../data/real/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
-        --feature1 "loudness" \
-        --feature2 "spec_rate" \
+        --feature1 "Proline" \
+        --feature2 "Magnesium" \
         --pre_process 1
 
     # python $SCRIPT_PATH \
