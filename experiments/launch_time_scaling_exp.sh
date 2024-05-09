@@ -9,7 +9,8 @@ DATASET_PATH="../data/syn/"
 
 python $SCRIPT_PATH \
         --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
+        --dataset_path $DATASET_PATH \\\
+        --change_ylim
         --model "IF" \
         --interpretation "EXIFFI" \
         --compute_GFI 1 

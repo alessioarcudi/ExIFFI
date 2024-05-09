@@ -150,7 +150,6 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
     Returns:
         The global feature importances vectors for the different runs and the average importances times.
     """
-
     fi=np.zeros(shape=(n_runs,dataset.X.shape[1]))
     imp_times=[]
     for i in tqdm(range(n_runs)):

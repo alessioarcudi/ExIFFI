@@ -2,28 +2,83 @@
 
 SCRIPT_PATH="test_feature_selection.py"
 
-DATASETS="bisect_6d"
+DATASETS="moodify"
 
 # Path to the datasets 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
-        --model_interpretation "IF" \
-        --interpretation "EXIFFI" \
+        --model "EIF+" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
         --scenario 2 \
-        --change_ylim 
+        --pre_process 
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF" \
-        --model_interpretation "IF" \
-        --interpretation "EXIFFI" \
-        --scenario 1 \
-        --change_ylim
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "EIF+" \
+    #     --interpretation "EXIFFI+" \
+    #     --scenario 2 \
+    #     --pre_process 
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "EXIFFI" \
+    #     --scenario 2 \
+    #     --pre_process
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "RandomForest" \
+    #     --scenario 1 \
+    #     --change_ylim 
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "EIF" \
+    #     --interpretation "RandomForest" \
+    #     --scenario 1 \
+    #     --change_ylim  
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "EIF+" \
+    #     --interpretation "RandomForest" \
+    #     --scenario 1 \
+    #     --change_ylim 
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "EXIFFI" \
+    #     --scenario 1 \
+    #     --change_ylim
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "EIF+" \
+    #     --interpretation "EXIFFI+" \
+    #     --scenario 2 
+
+
 
 # Split the DATASETS string into an array
 # IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"

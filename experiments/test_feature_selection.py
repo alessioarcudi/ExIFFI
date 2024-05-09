@@ -70,8 +70,8 @@ if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
 
 if scenario==2:
-    #dataset.split_dataset(train_size=0.8,contamination=0)
-    dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
+    dataset.split_dataset(train_size=0.8,contamination=0)
+    #dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
 
 # Preprocess the dataset
 if pre_process:
@@ -84,6 +84,8 @@ else:
     print("Dataset not preprocessed")
     dataset.initialize_train_test()
     print("#"*50)
+
+# import ipdb; ipdb.set_trace()
 
 assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
 assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
