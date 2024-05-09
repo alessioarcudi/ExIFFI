@@ -11,7 +11,7 @@ Final little modifications of `ExIFFI` before new submission to `EAAI` Journal.
 		- [x] Produce the Bar and Score Plot 
 		- [x] Produce the Feature Selection Plot and compute the new `AUC_FS` values
 		- [x] Produce the Local Scoremaps 
-	- [ ] Add the new produced Feature Selection Plot in the paper
+	- [x] Add the new produced Feature Selection Plot in the paper
 	- [x] Try to compute the GFI scores again using as contamination the contamination of the dataset (i.e. `dataset.perc_outliers`) instead of the default value of 0.1. I hope this does not change much otherwise I should redo all the experiments for all the datasets → This thing makes sense but theoretically we cannot do it because we are in an unsupervised setting. We have the labels only because we are using some benchmark datasets built ad-hoc but in a real world scenario typically we do not have them. In the Industrial `ExIFFI` paper we used the dataset contamination because it was kind of a supervised dataset (since `TEP` is actually a synthetic dataset).
 
 ## Experiments
