@@ -792,7 +792,6 @@
         <tr>
           <td><code>save_image</code></td>
           <td>
-                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -806,7 +805,6 @@
         <tr>
           <td><code>show_plot</code></td>
           <td>
-                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1006,16 +1004,16 @@
 <span class="sd">    Compute the Global Importance Bar Plot starting from the Global Feature Importance vector.  </span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset</span>
-<span class="sd">        global_importances_file (str): The path to the file containing the global importances.</span>
-<span class="sd">        filetype (str, optional): The file type of the global importances file. Defaults to &quot;npz&quot;.</span>
-<span class="sd">        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().</span>
-<span class="sd">        f (int, optional): The number of ranks to be displayed in the plot. Defaults to 6. </span>
-<span class="sd">        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.</span>
-<span class="sd">        model (str, optional): The AD model on which the importances should be computed. Defaults to &#39;EIF+&#39;.</span>
-<span class="sd">        interpretation (str, optional): The interpretation model used. Defaults to &#39;EXIFFI+&#39;.</span>
-<span class="sd">        scenario (int, optional): The scenario number. Defaults to 1.</span>
+<span class="sd">        dataset: Input dataset</span>
+<span class="sd">        global_importances_file: The path to the file containing the global importances.</span>
+<span class="sd">        filetype: The file type of the global importances file. Defaults to &quot;npz&quot;.</span>
+<span class="sd">        plot_path: The path where the plot will be saved. Defaults to os.getcwd().</span>
+<span class="sd">        f: The number of ranks to be displayed in the plot. Defaults to 6. </span>
+<span class="sd">        save_image: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.</span>
+<span class="sd">        model: The AD model on which the importances should be computed. Defaults to &#39;EIF+&#39;.</span>
+<span class="sd">        interpretation: The interpretation model used. Defaults to &#39;EXIFFI+&#39;.</span>
+<span class="sd">        scenario: The scenario number. Defaults to 1.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">       The figure, the axes and the bars dataframe.   </span>
@@ -1192,7 +1190,10 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
 <span class="normal">392</span>
 <span class="normal">393</span>
 <span class="normal">394</span>
@@ -1211,10 +1212,7 @@
 <span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_contamination_comparison</span><span class="p">(</span><span class="n">model1</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
+<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_contamination_comparison</span><span class="p">(</span><span class="n">model1</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                             <span class="n">model2</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                             <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                             <span class="n">path</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
@@ -1223,10 +1221,10 @@
 <span class="sd">    Obtain the difference in precision between two models for different contamination values.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model1 (str): The first model name.</span>
-<span class="sd">        model2 (str): The second model name.</span>
-<span class="sd">        dataset_name (str): The dataset name.</span>
-<span class="sd">        path (str, optional): Starting path to retrieve the path where the precisions of the two models are stored. Defaults to os.getcwd().</span>
+<span class="sd">        model1: The first model name.</span>
+<span class="sd">        model2: The second model name.</span>
+<span class="sd">        dataset_name: The dataset name.</span>
+<span class="sd">        path: Starting path to retrieve the path where the precisions of the two models are stored. Defaults to os.getcwd().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">path_model1</span><span class="o">=</span><span class="n">path</span><span class="o">+</span><span class="s1">&#39;/results/&#39;</span><span class="o">+</span> <span class="n">dataset_name</span> <span class="o">+</span><span class="s1">&#39;/experiments/contamination/&#39;</span><span class="o">+</span><span class="n">model1</span>
@@ -1342,7 +1340,11 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">557</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
 <span class="normal">558</span>
 <span class="normal">559</span>
 <span class="normal">560</span>
@@ -1369,11 +1371,7 @@
 <span class="normal">581</span>
 <span class="normal">582</span>
 <span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
-<span class="normal">586</span>
-<span class="normal">587</span>
-<span class="normal">588</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_vals</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+<span class="normal">584</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_vals</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
             <span class="n">dataset_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
             <span class="nb">type</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span><span class="n">List</span><span class="p">,</span><span class="n">List</span><span class="p">]:</span>
 
@@ -1381,9 +1379,9 @@
 <span class="sd">    Obtain statistics on the execution time of a model for different datasets. These values will be used in the plot_time_scaling method.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model (str): The model name.</span>
-<span class="sd">        dataset_names (List[str]): The list of dataset names.</span>
-<span class="sd">        type (str, optional): The type of execution time. Defaults to &#39;predict&#39;.</span>
+<span class="sd">        model: The model name.</span>
+<span class="sd">        dataset_names: The list of dataset names.</span>
+<span class="sd">        type: The type of execution time. Defaults to &#39;predict&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">       The median, 5th percentile and 95th percentile values of the execution time.</span>
@@ -1636,7 +1634,10 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">415</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
 <span class="normal">416</span>
 <span class="normal">417</span>
 <span class="normal">418</span>
@@ -1727,11 +1728,7 @@
 <span class="normal">503</span>
 <span class="normal">504</span>
 <span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span>
-<span class="normal">509</span>
-<span class="normal">510</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">importance_map</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
+<span class="normal">506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">importance_map</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
                    <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
                    <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
                    <span class="n">path_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
@@ -1748,18 +1745,18 @@
 <span class="sd">        Produce the Local Feature Importance Scoremap.   </span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            dataset (Type[Dataset]): Input dataset</span>
-<span class="sd">            model (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">            resolution (Optional[int], optional): The resolution of the plot. Defaults to 30.</span>
-<span class="sd">            path_plot (Optional[str], optional): The path where the plot will be saved. Defaults to os.getcwd().</span>
-<span class="sd">            save_plot (Optional[bool], optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">            show_plot (Optional[bool], optional): A boolean indicating whether the plot should be displayed. Defaults to False.</span>
-<span class="sd">            factor (Optional[int], optional): The factor by which the min and max values of the features are extended. Defaults to 3.</span>
-<span class="sd">            feats_plot (Optional[tuple], optional): The features to be plotted. Defaults to (0,1).</span>
-<span class="sd">            col_names (List[str], optional): The names of the features. Defaults to None.</span>
-<span class="sd">            isdiffi (Optional[bool], optional): A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.</span>
-<span class="sd">            scenario (Optional[int], optional): The scenario number. Defaults to 2.</span>
-<span class="sd">            interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to &quot;EXIFFI+&quot;.</span>
+<span class="sd">            dataset: Input dataset</span>
+<span class="sd">            model: The AD model.</span>
+<span class="sd">            resolution: The resolution of the plot. Defaults to 30.</span>
+<span class="sd">            path_plot: The path where the plot will be saved. Defaults to os.getcwd().</span>
+<span class="sd">            save_plot: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">            show_plot: A boolean indicating whether the plot should be displayed. Defaults to False.</span>
+<span class="sd">            factor: The factor by which the min and max values of the features are extended. Defaults to 3.</span>
+<span class="sd">            feats_plot: The features to be plotted. Defaults to (0,1).</span>
+<span class="sd">            col_names: The names of the features. Defaults to None.</span>
+<span class="sd">            isdiffi: A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.</span>
+<span class="sd">            scenario: The scenario number. Defaults to 2.</span>
+<span class="sd">            interpretation: Name of the interpretation model used. Defaults to &quot;EXIFFI+&quot;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.</span>
@@ -1793,7 +1790,6 @@
         <span class="c1"># Create a new pyplot object if plt is not provided</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
-
         <span class="n">cp</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">Score</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">CenteredNorm</span><span class="p">())</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="p">(</span><span class="n">importance_matrix</span><span class="p">[:,</span> <span class="n">feats_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">importance_matrix</span><span class="p">[:,</span> <span class="n">feats_plot</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">Greys</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
@@ -1819,9 +1815,9 @@
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
         <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-%m-%Y_%H-%M-%S&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">isdiffi</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">+</span><span class="s2">&quot;_importance_map_&quot;</span><span class="o">+</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">interpretation</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_feat_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;.pdf&quot;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">+</span><span class="s2">&quot;_importance_map_&quot;</span><span class="o">+</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">interpretation</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_feat_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;.pdf&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">+</span><span class="s2">&quot;_importance_map_&quot;</span><span class="o">+</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">interpretation</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_feat_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;.pdf&quot;</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">+</span><span class="s2">&quot;_importance_map_&quot;</span><span class="o">+</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">interpretation</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="sa">f</span><span class="s2">&quot;_feat_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">feats_plot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;.pdf&quot;</span>
 
         <span class="k">if</span> <span class="n">show_plot</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2002,7 +1998,11 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">670</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
 <span class="normal">671</span>
 <span class="normal">672</span>
 <span class="normal">673</span>
@@ -2062,11 +2062,7 @@
 <span class="normal">727</span>
 <span class="normal">728</span>
 <span class="normal">729</span>
-<span class="normal">730</span>
-<span class="normal">731</span>
-<span class="normal">732</span>
-<span class="normal">733</span>
-<span class="normal">734</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_ablation</span><span class="p">(</span><span class="n">eta_list</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+<span class="normal">730</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_ablation</span><span class="p">(</span><span class="n">eta_list</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                   <span class="n">avg_prec</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
                   <span class="n">EIF_value</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span>
                   <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
@@ -2079,14 +2075,14 @@
 <span class="sd">    Obtain the plot of the Average precision values against different values of the era parameter.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        eta_list (List[float]): The list of eta values.</span>
-<span class="sd">        avg_prec (List[np.ndarray]): The list of average precision values.</span>
-<span class="sd">        EIF_value (float): The average precision value of the EIF model.</span>
-<span class="sd">        dataset_name (str): The dataset name.</span>
-<span class="sd">        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().</span>
-<span class="sd">        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.</span>
-<span class="sd">        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed. Defaults to False.</span>
+<span class="sd">        eta_list: The list of eta values.</span>
+<span class="sd">        avg_prec: The list of average precision values.</span>
+<span class="sd">        EIF_value: The average precision value of the EIF model.</span>
+<span class="sd">        dataset_name: The dataset name.</span>
+<span class="sd">        plot_path: The path where the plot will be saved. Defaults to os.getcwd().</span>
+<span class="sd">        show_plot: A boolean indicating whether the plot should be displayed. Defaults to False.</span>
+<span class="sd">        save_plot: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        change_ylim: A boolean indicating whether the y axis limits should be changed. Defaults to False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The figure and axes objects used to create the plot.</span>
@@ -2499,7 +2495,9 @@
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_feature_selection</span><span class="p">(</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_feature_selection</span><span class="p">(</span>
         <span class="n">precision_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">plot_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">precision_file_random</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2519,20 +2517,20 @@
 <span class="sd">    Obtain the feature selection plot.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        precision_file (str): The path to the file containing the precision values.</span>
-<span class="sd">        plot_path (str): The path where the plot will be saved.</span>
-<span class="sd">        precision_file_random (Optional[str], optional): The path to the file containing precision values computed with the random Feature Selection approach. Defaults to None.</span>
-<span class="sd">        color (int, optional): The color of the plot. Defaults to 0.</span>
-<span class="sd">        model (Optional[str], optional): Name of the AD model. Defaults to None.</span>
-<span class="sd">        eval_model (Optional[str], optional): Name of the evaluation model. Defaults to &#39;EIF+&#39;.</span>
-<span class="sd">        interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to None.</span>
-<span class="sd">        scenario (Optional[int], optional): The scenario number. Defaults to 2.</span>
-<span class="sd">        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.</span>
-<span class="sd">        box_loc (tuple, optional): The location of the text box containing the Area under the curve of Feature Selection value. Defaults to None.</span>
-<span class="sd">        change_box_loc (float, optional): Change the y axis value of the text box location containing the Area under the curve of Feature Selection value. Defaults to 0.9.</span>
-<span class="sd">        rotation (bool, optional): A boolean indicating whether the x ticks should be rotated by 45 degrees. Defaults to False.</span>
-<span class="sd">        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.</span>
+<span class="sd">        precision_file: The path to the file containing the precision values.</span>
+<span class="sd">        plot_path: The path where the plot will be saved.</span>
+<span class="sd">        precision_file_random: The path to the file containing precision values computed with the random Feature Selection approach. Defaults to None.</span>
+<span class="sd">        color: The color of the plot. Defaults to 0.</span>
+<span class="sd">        model: Name of the AD model. Defaults to None.</span>
+<span class="sd">        eval_model: Name of the evaluation model. Defaults to &#39;EIF+&#39;.</span>
+<span class="sd">        interpretation: Name of the interpretation model used. Defaults to None.</span>
+<span class="sd">        scenario: The scenario number. Defaults to 2.</span>
+<span class="sd">        save_image: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        plot_image: A boolean indicating whether the plot should be displayed. Defaults to False.</span>
+<span class="sd">        box_loc: The location of the text box containing the Area under the curve of Feature Selection value. Defaults to None.</span>
+<span class="sd">        change_box_loc: Change the y axis value of the text box location containing the Area under the curve of Feature Selection value. Defaults to 0.9.</span>
+<span class="sd">        rotation: A boolean indicating whether the x ticks should be rotated by 45 degrees. Defaults to False.</span>
+<span class="sd">        change_ylim: A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.</span>
@@ -2562,6 +2560,8 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;#F2F2F2&#39;</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+
+    <span class="c1">#import ipdb; ipdb.set_trace()</span>
 
     <span class="k">if</span> <span class="n">precision_file_random</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">precision_random</span><span class="o">=</span><span class="n">open_element</span><span class="p">(</span><span class="n">precision_file_random</span><span class="p">)</span>
@@ -2784,9 +2784,7 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
 <span class="normal">342</span>
@@ -2833,10 +2831,7 @@
 <span class="normal">383</span>
 <span class="normal">384</span>
 <span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_precision_over_contamination</span><span class="p">(</span><span class="n">precisions</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="normal">386</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_precision_over_contamination</span><span class="p">(</span><span class="n">precisions</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                                       <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                                       <span class="n">model_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                                       <span class="n">plot_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
@@ -2849,14 +2844,14 @@
 <span class="sd">    Obtain the precision over contamination plot.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        precisions (np.ndarray): The precision values for different contamination values, obtained from the contamination_in_training_precision_evaluation method.</span>
-<span class="sd">        dataset_name (str): The dataset name.</span>
-<span class="sd">        model_name (str): The model name.</span>
-<span class="sd">        plot_path (str): The path where the plot will be saved.</span>
-<span class="sd">        contamination (np.ndarray, optional): The contamination values. Defaults to np.linspace(0.0,0.1,10).</span>
-<span class="sd">        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.</span>
-<span class="sd">        ylim (tuple, optional): The y axis limits. Defaults to (0,1).</span>
+<span class="sd">        precisions: The precision values for different contamination values, obtained from the contamination_in_training_precision_evaluation method.</span>
+<span class="sd">        dataset_name: The dataset name.</span>
+<span class="sd">        model_name: The model name.</span>
+<span class="sd">        plot_path: The path where the plot will be saved.</span>
+<span class="sd">        contamination: The contamination values. Defaults to np.linspace(0.0,0.1,10).</span>
+<span class="sd">        save_image: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        plot_image: A boolean indicating whether the plot should be displayed. Defaults to False.</span>
+<span class="sd">        ylim: The y axis limits. Defaults to (0,1).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.</span>
@@ -2873,11 +2868,6 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">contamination</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">precisions</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">precisions</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
-
-    <span class="c1"># if insert_box_loc:</span>
-    <span class="c1">#     text_box_content = box_text + &quot; = &quot; + str(np.round(np.mean(precisions),3))</span>
-    <span class="c1">#     plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor=&#39;white&#39;, alpha=0.5, boxstyle=&quot;round&quot;, pad=0.5), </span>
-    <span class="c1">#         verticalalignment=&#39;top&#39;, horizontalalignment=&#39;right&#39;)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Contamination&quot;</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Average Precision&quot;</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
@@ -3064,7 +3054,11 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/plots.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">590</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
 <span class="normal">591</span>
 <span class="normal">592</span>
 <span class="normal">593</span>
@@ -3138,11 +3132,7 @@
 <span class="normal">661</span>
 <span class="normal">662</span>
 <span class="normal">663</span>
-<span class="normal">664</span>
-<span class="normal">665</span>
-<span class="normal">666</span>
-<span class="normal">667</span>
-<span class="normal">668</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_time_scaling</span><span class="p">(</span><span class="n">model_names</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="normal">664</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_time_scaling</span><span class="p">(</span><span class="n">model_names</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                       <span class="n">dataset_names</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                       <span class="n">data_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
                       <span class="nb">type</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">,</span>
@@ -3155,14 +3145,14 @@
 <span class="sd">    Obtain the time scaling plot.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model_names (List[str]): The list of model names.</span>
-<span class="sd">        dataset_names (List[str]): The list of dataset names.</span>
-<span class="sd">        data_path (str): The path to the datasets.</span>
-<span class="sd">        type (str, optional): The type of execution time, accepted values are: [&#39;fit&#39;,&#39;predict&#39;,&#39;importances&#39;] Defaults to &#39;predict&#39;.</span>
-<span class="sd">        plot_type (str, optional): The type of plot, accepted values are [&#39;samples&#39;,&#39;features&#39;]. Defaults to &#39;samples&#39;.</span>
-<span class="sd">        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().</span>
-<span class="sd">        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.</span>
-<span class="sd">        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        model_names: The list of model names.</span>
+<span class="sd">        dataset_names: The list of dataset names.</span>
+<span class="sd">        data_path: The path to the datasets.</span>
+<span class="sd">        type: The type of execution time, accepted values are: [&#39;fit&#39;,&#39;predict&#39;,&#39;importances&#39;] Defaults to &#39;predict&#39;.</span>
+<span class="sd">        plot_type: The type of plot, accepted values are [&#39;samples&#39;,&#39;features&#39;]. Defaults to &#39;samples&#39;.</span>
+<span class="sd">        plot_path: The path where the plot will be saved. Defaults to os.getcwd().</span>
+<span class="sd">        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.</span>
+<span class="sd">        save_plot: A boolean indicating whether the plot should be saved. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The figure and axes objects used to create the plot.</span>
@@ -3300,7 +3290,6 @@
         <tr>
           <td><code>save_image</code></td>
           <td>
-                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3314,7 +3303,6 @@
         <tr>
           <td><code>show_plot</code></td>
           <td>
-                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3356,7 +3344,6 @@
         <tr>
           <td><code>scenario</code></td>
           <td>
-                <code>int</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3498,14 +3485,14 @@
 <span class="sd">    Obtain the Global Feature Importance Score Plot starting from the Global Feature Importance vector.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset</span>
-<span class="sd">        global_importances_file (str): The path to the file containing the global importances.</span>
-<span class="sd">        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().</span>
-<span class="sd">        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.</span>
-<span class="sd">        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.</span>
-<span class="sd">        model (str, optional): The AD model on which the importances should be computed. Defaults to &#39;EIF+&#39;.</span>
-<span class="sd">        interpretation (str, optional): The interpretation model used. Defaults to &#39;EXIFFI&#39;.</span>
-<span class="sd">        scenario (int, optional): The scenario number. Defaults to 1.</span>
+<span class="sd">        dataset: Input dataset</span>
+<span class="sd">        global_importances_file: The path to the file containing the global importances.</span>
+<span class="sd">        plot_path: The path where the plot will be saved. Defaults to os.getcwd().</span>
+<span class="sd">        save_image: A boolean indicating whether the plot should be saved. Defaults to True.</span>
+<span class="sd">        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.</span>
+<span class="sd">        model: The AD model on which the importances should be computed. Defaults to &#39;EIF+&#39;.</span>
+<span class="sd">        interpretation: The interpretation model used. Defaults to &#39;EXIFFI&#39;.</span>
+<span class="sd">        scenario: The scenario number. Defaults to 1.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The two axes objects used to create the plot.</span>
