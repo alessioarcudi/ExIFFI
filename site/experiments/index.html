@@ -741,7 +741,7 @@
         <tr>
           <td><code>eta_list</code></td>
           <td>
-                <code>list</code>
+                <code>list[float]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -795,7 +795,12 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">449</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
 <span class="normal">450</span>
 <span class="normal">451</span>
 <span class="normal">452</span>
@@ -817,12 +822,7 @@
 <span class="normal">468</span>
 <span class="normal">469</span>
 <span class="normal">470</span>
-<span class="normal">471</span>
-<span class="normal">472</span>
-<span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span>
-<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ablation_EIF_plus</span><span class="p">(</span><span class="n">I</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span> 
+<span class="normal">471</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ablation_EIF_plus</span><span class="p">(</span><span class="n">I</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span> 
                       <span class="n">dataset</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span> 
                       <span class="n">eta_list</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> 
                       <span class="n">nruns</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
@@ -831,10 +831,10 @@
 <span class="sd">    Compute the average precision scores for different values of the eta parameter in the EIF+ model.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        eta_list (list): The list of eta values.</span>
-<span class="sd">        nruns (int): The number of runs. Defaults to 10.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        eta_list: The list of eta values.</span>
+<span class="sd">        nruns: The number of runs. Defaults to 10.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The average precision scores.</span>
@@ -915,7 +915,6 @@
         <tr>
           <td><code>p</code></td>
           <td>
-                <code>float</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -929,7 +928,6 @@
         <tr>
           <td><code>interpretation</code></td>
           <td>
-                <code>str</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -943,7 +941,6 @@
         <tr>
           <td><code>fit_model</code></td>
           <td>
-                <code>bool</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -983,8 +980,7 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
-<span class="normal">52</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
@@ -1014,7 +1010,8 @@
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
-<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_global_importances</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_global_importances</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
                         <span class="n">dataset</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
                         <span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                         <span class="n">interpretation</span><span class="o">=</span><span class="s2">&quot;EXIFFI+&quot;</span><span class="p">,</span>
@@ -1024,11 +1021,11 @@
 <span class="sd">    Compute the global feature importances for an interpration model on a specific dataset.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.</span>
-<span class="sd">        interpretation (str): Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
-<span class="sd">        fit_model (bool): Whether to fit the model on the dataset. Defaults to True.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        p: The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.</span>
+<span class="sd">        interpretation: Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
+<span class="sd">        fit_model: Whether to fit the model on the dataset. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The global feature importance vector.</span>
@@ -1123,9 +1120,7 @@
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
@@ -1156,13 +1151,15 @@
 <span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
-<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_plt_data</span><span class="p">(</span><span class="n">imp_path</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_plt_data</span><span class="p">(</span><span class="n">imp_path</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute statistics on the global feature importances obtained from experiment_global_importances. These will then be used in the score_plot method. </span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        imp_path (str): The path to the importances file.</span>
+<span class="sd">        imp_path: The path to the importances file.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The dictionary containing the mean importances, the feature order, and the standard deviation of the importances.</span>
@@ -1270,7 +1267,6 @@ The precision values will then be used in the <code>plot_precision_over_contamin
         <tr>
           <td><code>train_size</code></td>
           <td>
-                <code>float</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1456,15 +1452,14 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="normal">361</span>
 <span class="normal">362</span>
 <span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">contamination_in_training_precision_evaluation</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
+<span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">contamination_in_training_precision_evaluation</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
                                                    <span class="n">dataset</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
                                                    <span class="n">n_runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                                                    <span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                                                    <span class="n">contamination_values</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
                                                    <span class="n">compute_GFI</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                    <span class="n">interpretation</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;EXIFFI+&quot;</span><span class="p">,</span>
-                                                   <span class="n">pre_process</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># in the synthetic datasets the dataset should not be pre processed</span>
+                                                   <span class="n">pre_process</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1472,14 +1467,14 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="sd">    The precision values will then be used in the `plot_precision_over_contamination` method</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        n_runs (int): The number of runs. Defaults to 10.</span>
-<span class="sd">        train_size (float): The size of the training set. Defaults to 0.8.</span>
-<span class="sd">        contamination_values (npt.NDArray): The contamination values. Defaults to `np.linspace(0.0,0.1,10)`.</span>
-<span class="sd">        compute_GFI (bool): Whether to compute the global feature importances. Defaults to False.</span>
-<span class="sd">        interpretation (str): Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
-<span class="sd">        pre_process (bool): Whether to pre process the dataset. Defaults to True.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        n_runs: The number of runs. Defaults to 10.</span>
+<span class="sd">        train_size: The size of the training set. Defaults to 0.8.</span>
+<span class="sd">        contamination_values: The contamination values. Defaults to `np.linspace(0.0,0.1,10)`.</span>
+<span class="sd">        compute_GFI: Whether to compute the global feature importances. Defaults to False.</span>
+<span class="sd">        interpretation: Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
+<span class="sd">        pre_process: Whether to pre process the dataset. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The average precision scores and the global feature importances if `compute_GFI` is True, </span>
@@ -1531,7 +1526,6 @@ The precision values will then be used in the <code>plot_precision_over_contamin
                     <span class="n">dict_time</span><span class="p">[</span><span class="s2">&quot;predict&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">predict_time</span><span class="p">)</span>
 
             <span class="n">avg_prec</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">average_precision_score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">y_test</span><span class="p">,</span><span class="n">score</span><span class="p">)</span>
-            <span class="c1">#import ipdb; ipdb.set_trace()</span>
             <span class="n">precisions</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_prec</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -1686,8 +1680,7 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
-<span class="normal">131</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
@@ -1726,7 +1719,9 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">experiment_global_importances</span><span class="p">(</span><span class="n">I</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">experiment_global_importances</span><span class="p">(</span><span class="n">I</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
                                <span class="n">dataset</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
                                <span class="n">n_runs</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
                                <span class="n">p</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
@@ -1738,17 +1733,16 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="sd">    Compute the global feature importances for an interpration model on a specific dataset for a number of runs.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        n_runs (int): The number of runs. Defaults to 10.</span>
-<span class="sd">        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.</span>
-<span class="sd">        model (str): The name of the model. Defaults to &#39;EIF+&#39;.</span>
-<span class="sd">        interpretation (str): Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        n_runs: The number of runs. Defaults to 10.</span>
+<span class="sd">        p: The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.</span>
+<span class="sd">        model: The name of the model. Defaults to &#39;EIF+&#39;.</span>
+<span class="sd">        interpretation: Name of the interpretation method to be used. Defaults to &quot;EXIFFI+&quot;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The global feature importances vectors for the different runs and the average importances times.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">fi</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_runs</span><span class="p">,</span><span class="n">dataset</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     <span class="n">imp_times</span><span class="o">=</span><span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_runs</span><span class="p">)):</span>
@@ -1756,12 +1750,14 @@ The precision values will then be used in the <code>plot_precision_over_contamin
         <span class="n">fi</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span><span class="o">=</span><span class="n">compute_global_importances</span><span class="p">(</span><span class="n">I</span><span class="p">,</span>
                         <span class="n">dataset</span><span class="p">,</span>
                         <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span>
-                        <span class="n">interpretation</span><span class="o">=</span><span class="n">interpretation</span><span class="p">,</span>
-                        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
+                        <span class="n">interpretation</span><span class="o">=</span><span class="n">interpretation</span><span class="p">)</span>
         <span class="n">gfi_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
             <span class="n">imp_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gfi_time</span><span class="p">)</span>
-            <span class="n">dict_time</span><span class="p">[</span><span class="s2">&quot;importances&quot;</span><span class="p">][</span><span class="n">interpretation</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gfi_time</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">model</span><span class="o">==</span><span class="s2">&quot;IF&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">interpretation</span><span class="o">==</span><span class="s2">&quot;EXIFFI&quot;</span><span class="p">):</span>
+                <span class="n">dict_time</span><span class="p">[</span><span class="s2">&quot;importances&quot;</span><span class="p">][</span><span class="s2">&quot;IF_EXIFFI&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gfi_time</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dict_time</span><span class="p">[</span><span class="s2">&quot;importances&quot;</span><span class="p">][</span><span class="n">interpretation</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gfi_time</span><span class="p">)</span>
             <span class="c1">#print(f&#39;Added time {str(gfi_time)} to time dict&#39;)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -1928,9 +1924,7 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
 <span class="normal">213</span>
@@ -2014,13 +2008,13 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="sd">        Perform feature selection on the dataset by dropping features in order of importance.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">            dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">            importances_indexes (npt.NDArray): The indexes of the features in the dataset.</span>
-<span class="sd">            n_runs (int): The number of runs. Defaults to 10.</span>
-<span class="sd">            inverse (bool): Whether to drop the features in decreasing order of importance. Defaults to True.</span>
-<span class="sd">            random (bool): Whether to drop the features in random order. Defaults to False.</span>
-<span class="sd">            scenario (int): The scenario of the experiment. Defaults to 2.</span>
+<span class="sd">            I: The AD model.</span>
+<span class="sd">            dataset: Input dataset.</span>
+<span class="sd">            importances_indexes: The indexes of the features in the dataset.</span>
+<span class="sd">            n_runs: The number of runs. Defaults to 10.</span>
+<span class="sd">            inverse: Whether to drop the features in decreasing order of importance. Defaults to True.</span>
+<span class="sd">            random: Whether to drop the features in random order. Defaults to False.</span>
+<span class="sd">            scenario: The scenario of the experiment. Defaults to 2.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The average precision scores for the different runs.</span>
@@ -2064,8 +2058,6 @@ The precision values will then be used in the <code>plot_precision_over_contamin
                         <span class="n">I</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset_shrinking</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
                         <span class="n">score</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset_shrinking</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
                     <span class="n">avg_prec</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">average_precision_score</span><span class="p">(</span><span class="n">dataset_shrinking</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">score</span><span class="p">)</span>
-                    <span class="c1"># import ipdb;</span>
-                    <span class="c1"># ipdb.set_trace()</span>
                     <span class="n">runs</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_prec</span>
                 <span class="k">except</span><span class="p">:</span>
                     <span class="n">runs</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
@@ -2154,7 +2146,6 @@ The precision values will then be used in the <code>plot_precision_over_contamin
         <tr>
           <td><code>model</code></td>
           <td>
-                <code>str</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2194,8 +2185,7 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
-<span class="normal"> 85</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
 <span class="normal"> 86</span>
 <span class="normal"> 87</span>
 <span class="normal"> 88</span>
@@ -2238,7 +2228,8 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
-<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fit_predict_experiment</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fit_predict_experiment</span><span class="p">(</span><span class="n">I</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
                             <span class="n">dataset</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dataset</span><span class="p">],</span>
                             <span class="n">n_runs</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
                             <span class="n">model</span><span class="o">=</span><span class="s1">&#39;EIF+&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span><span class="nb">float</span><span class="p">]:</span>
@@ -2247,10 +2238,10 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="sd">    Fit and predict the model on the dataset for a number of runs and keep track of the fit and predict times.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        n_runs (int): The number of runs. Defaults to 40.</span>
-<span class="sd">        model (str): The name of the model. Defaults to &#39;EIF+&#39;.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        n_runs: The number of runs. Defaults to 40.</span>
+<span class="sd">        model: The name of the model. Defaults to &#39;EIF+&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The average fit and predict time.</span>
@@ -2528,7 +2519,8 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 
           <details class="quote">
             <summary>Source code in <code>utils_reboot/experiments.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">367</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">366</span>
+<span class="normal">367</span>
 <span class="normal">368</span>
 <span class="normal">369</span>
 <span class="normal">370</span>
@@ -2603,12 +2595,7 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="normal">439</span>
 <span class="normal">440</span>
 <span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
                 <span class="n">y_true</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
                 <span class="n">score</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
                 <span class="n">I</span><span class="p">:</span><span class="n">Type</span><span class="p">[</span><span class="n">ExtendedIsolationForest</span><span class="p">],</span>
@@ -2627,27 +2614,23 @@ The precision values will then be used in the <code>plot_precision_over_contamin
 <span class="sd">    Compute the performance metrics of the model on the dataset.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        y_pred (np.array): The predicted labels.</span>
-<span class="sd">        y_true (np.array): The true labels.</span>
-<span class="sd">        score (np.array): The Anomaly Scores.</span>
-<span class="sd">        I (Type[ExtendedIsolationForest]): The AD model.</span>
-<span class="sd">        model_name (str): The name of the model.</span>
-<span class="sd">        dataset (Type[Dataset]): Input dataset.</span>
-<span class="sd">        contamination (float): The contamination factor. Defaults to 0.1.</span>
-<span class="sd">        train_size (float): The size of the training set. Defaults to 0.8.</span>
-<span class="sd">        scenario (int): The scenario of the experiment. Defaults to 2.</span>
-<span class="sd">        n_runs (int): The number of runs. Defaults to 10.</span>
-<span class="sd">        filename (str): The filename. Defaults to &quot;&quot;.</span>
-<span class="sd">        path (str): The path to the experiments folder. Defaults to os.getcwd().</span>
-<span class="sd">        save (bool): Whether to save the results. Defaults to True.</span>
+<span class="sd">        y_pred: The predicted labels.</span>
+<span class="sd">        y_true: The true labels.</span>
+<span class="sd">        score: The Anomaly Scores.</span>
+<span class="sd">        I: The AD model.</span>
+<span class="sd">        model_name: The name of the model.</span>
+<span class="sd">        dataset: Input dataset.</span>
+<span class="sd">        contamination: The contamination factor. Defaults to 0.1.</span>
+<span class="sd">        train_size: The size of the training set. Defaults to 0.8.</span>
+<span class="sd">        scenario: The scenario of the experiment. Defaults to 2.</span>
+<span class="sd">        n_runs: The number of runs. Defaults to 10.</span>
+<span class="sd">        filename: The filename. Defaults to &quot;&quot;.</span>
+<span class="sd">        path: The path to the experiments folder. Defaults to os.getcwd().</span>
+<span class="sd">        save: Whether to save the results. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The performance metrics and the path to the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># In path insert the local path up to the experiments folder:</span>
-    <span class="c1"># For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments</span>
-    <span class="c1"># For Alessio → /Users/alessio/Documents/ExIFFI</span>
 
     <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
