@@ -59,11 +59,11 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     Compute the global feature importances for an interpration model on a specific dataset.
 
     Args:
-        I (Type[ExtendedIsolationForest]): The AD model.
-        dataset (Type[Dataset]): Input dataset.
-        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
-        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
-        fit_model (bool): Whether to fit the model on the dataset. Defaults to True.
+        I: The AD model.
+        dataset: Input dataset.
+        p: The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
+        interpretation: Name of the interpretation method to be used. Defaults to "EXIFFI+".
+        fit_model: Whether to fit the model on the dataset. Defaults to True.
 
     Returns:
         The global feature importance vector.
@@ -91,10 +91,10 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
     Fit and predict the model on the dataset for a number of runs and keep track of the fit and predict times.
 
     Args:
-        I (Type[ExtendedIsolationForest]): The AD model.
-        dataset (Type[Dataset]): Input dataset.
-        n_runs (int): The number of runs. Defaults to 40.
-        model (str): The name of the model. Defaults to 'EIF+'.
+        I: The AD model.
+        dataset: Input dataset.
+        n_runs: The number of runs. Defaults to 40.
+        model: The name of the model. Defaults to 'EIF+'.
 
     Returns:
         The average fit and predict time.
@@ -140,12 +140,12 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
     Compute the global feature importances for an interpration model on a specific dataset for a number of runs.
 
     Args:
-        I (Type[ExtendedIsolationForest]): The AD model.
-        dataset (Type[Dataset]): Input dataset.
-        n_runs (int): The number of runs. Defaults to 10.
-        p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
-        model (str): The name of the model. Defaults to 'EIF+'.
-        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
+        I: The AD model.
+        dataset: Input dataset.
+        n_runs: The number of runs. Defaults to 10.
+        p: The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
+        model: The name of the model. Defaults to 'EIF+'.
+        interpretation: Name of the interpretation method to be used. Defaults to "EXIFFI+".
     
     Returns:
         The global feature importances vectors for the different runs and the average importances times.
@@ -177,7 +177,7 @@ def compute_plt_data(imp_path:str) -> dict:
     Compute statistics on the global feature importances obtained from experiment_global_importances. These will then be used in the score_plot method. 
 
     Args:
-        imp_path (str): The path to the importances file.
+        imp_path: The path to the importances file.
     
     Returns:
         The dictionary containing the mean importances, the feature order, and the standard deviation of the importances.
@@ -220,13 +220,13 @@ def feature_selection(I: Type[ExtendedIsolationForest],
         Perform feature selection on the dataset by dropping features in order of importance.
 
         Args:
-            I (Type[ExtendedIsolationForest]): The AD model.
-            dataset (Type[Dataset]): Input dataset.
-            importances_indexes (npt.NDArray): The indexes of the features in the dataset.
-            n_runs (int): The number of runs. Defaults to 10.
-            inverse (bool): Whether to drop the features in decreasing order of importance. Defaults to True.
-            random (bool): Whether to drop the features in random order. Defaults to False.
-            scenario (int): The scenario of the experiment. Defaults to 2.
+            I: The AD model.
+            dataset: Input dataset.
+            importances_indexes: The indexes of the features in the dataset.
+            n_runs: The number of runs. Defaults to 10.
+            inverse: Whether to drop the features in decreasing order of importance. Defaults to True.
+            random: Whether to drop the features in random order. Defaults to False.
+            scenario: The scenario of the experiment. Defaults to 2.
         
         Returns:
             The average precision scores for the different runs.
@@ -270,8 +270,6 @@ def feature_selection(I: Type[ExtendedIsolationForest],
                         I.fit(dataset_shrinking.X_train)
                         score = I.predict(dataset_shrinking.X_test)
                     avg_prec = sklearn.metrics.average_precision_score(dataset_shrinking.y,score)
-                    # import ipdb;
-                    # ipdb.set_trace()
                     runs[run] = avg_prec
                 except:
                     runs[run] = np.nan
@@ -290,7 +288,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                                                    contamination_values: npt.NDArray = np.linspace(0.0,0.1,10),
                                                    compute_GFI:bool=False,
                                                    interpretation:str="EXIFFI+",
-                                                   pre_process:bool=True, # in the synthetic datasets the dataset should not be pre processed
+                                                   pre_process:bool=True,
                                                    ) -> Union[tuple[np.ndarray, np.ndarray], np.ndarray]:
     
     """
@@ -298,14 +296,14 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
     The precision values will then be used in the `plot_precision_over_contamination` method
 
     Args:
-        I (Type[ExtendedIsolationForest]): The AD model.
-        dataset (Type[Dataset]): Input dataset.
-        n_runs (int): The number of runs. Defaults to 10.
-        train_size (float): The size of the training set. Defaults to 0.8.
-        contamination_values (npt.NDArray): The contamination values. Defaults to `np.linspace(0.0,0.1,10)`.
-        compute_GFI (bool): Whether to compute the global feature importances. Defaults to False.
-        interpretation (str): Name of the interpretation method to be used. Defaults to "EXIFFI+".
-        pre_process (bool): Whether to pre process the dataset. Defaults to True.
+        I: The AD model.
+        dataset: Input dataset.
+        n_runs: The number of runs. Defaults to 10.
+        train_size: The size of the training set. Defaults to 0.8.
+        contamination_values: The contamination values. Defaults to `np.linspace(0.0,0.1,10)`.
+        compute_GFI: Whether to compute the global feature importances. Defaults to False.
+        interpretation: Name of the interpretation method to be used. Defaults to "EXIFFI+".
+        pre_process: Whether to pre process the dataset. Defaults to True.
 
     Returns:
         The average precision scores and the global feature importances if `compute_GFI` is True, 
@@ -357,7 +355,6 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
                     dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
             
             avg_prec = sklearn.metrics.average_precision_score(dataset.y_test,score)
-            #import ipdb; ipdb.set_trace()
             precisions[i,j] = avg_prec
     
     with open(filename, "wb") as file:
@@ -385,27 +382,23 @@ def performance(y_pred:np.array,
     Compute the performance metrics of the model on the dataset.
 
     Args:
-        y_pred (np.array): The predicted labels.
-        y_true (np.array): The true labels.
-        score (np.array): The Anomaly Scores.
-        I (Type[ExtendedIsolationForest]): The AD model.
-        model_name (str): The name of the model.
-        dataset (Type[Dataset]): Input dataset.
-        contamination (float): The contamination factor. Defaults to 0.1.
-        train_size (float): The size of the training set. Defaults to 0.8.
-        scenario (int): The scenario of the experiment. Defaults to 2.
-        n_runs (int): The number of runs. Defaults to 10.
-        filename (str): The filename. Defaults to "".
-        path (str): The path to the experiments folder. Defaults to os.getcwd().
-        save (bool): Whether to save the results. Defaults to True.
+        y_pred: The predicted labels.
+        y_true: The true labels.
+        score: The Anomaly Scores.
+        I: The AD model.
+        model_name: The name of the model.
+        dataset: Input dataset.
+        contamination: The contamination factor. Defaults to 0.1.
+        train_size: The size of the training set. Defaults to 0.8.
+        scenario: The scenario of the experiment. Defaults to 2.
+        n_runs: The number of runs. Defaults to 10.
+        filename: The filename. Defaults to "".
+        path: The path to the experiments folder. Defaults to os.getcwd().
+        save: Whether to save the results. Defaults to True.
 
     Returns:
         The performance metrics and the path to the results.
     """
-    
-    # In path insert the local path up to the experiments folder:
-    # For Davide → /home/davidefrizzo/Desktop/PHD/ExIFFI/experiments
-    # For Alessio → /Users/alessio/Documents/ExIFFI
 
     y_pred=y_pred.astype(int)
     y_true=y_true.astype(int)
@@ -457,10 +450,10 @@ def ablation_EIF_plus(I:Type[ExtendedIsolationForest],
     Compute the average precision scores for different values of the eta parameter in the EIF+ model.
 
     Args:
-        I (Type[ExtendedIsolationForest]): The AD model.
-        dataset (Type[Dataset]): Input dataset.
-        eta_list (list): The list of eta values.
-        nruns (int): The number of runs. Defaults to 10.
+        I: The AD model.
+        dataset: Input dataset.
+        eta_list: The list of eta values.
+        nruns: The number of runs. Defaults to 10.
 
     Returns:
         The average precision scores.

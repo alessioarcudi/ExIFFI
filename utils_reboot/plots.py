@@ -36,16 +36,16 @@ def bar_plot(dataset: Type[Dataset],
     Compute the Global Importance Bar Plot starting from the Global Feature Importance vector.  
     
     Args:
-        dataset (Type[Dataset]): Input dataset
-        global_importances_file (str): The path to the file containing the global importances.
-        filetype (str, optional): The file type of the global importances file. Defaults to "npz".
-        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
-        f (int, optional): The number of ranks to be displayed in the plot. Defaults to 6. 
-        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
-        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
-        model (str, optional): The AD model on which the importances should be computed. Defaults to 'EIF+'.
-        interpretation (str, optional): The interpretation model used. Defaults to 'EXIFFI+'.
-        scenario (int, optional): The scenario number. Defaults to 1.
+        dataset: Input dataset
+        global_importances_file: The path to the file containing the global importances.
+        filetype: The file type of the global importances file. Defaults to "npz".
+        plot_path: The path where the plot will be saved. Defaults to os.getcwd().
+        f: The number of ranks to be displayed in the plot. Defaults to 6. 
+        save_image: A boolean indicating whether the plot should be saved. Defaults to True.
+        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.
+        model: The AD model on which the importances should be computed. Defaults to 'EIF+'.
+        interpretation: The interpretation model used. Defaults to 'EXIFFI+'.
+        scenario: The scenario number. Defaults to 1.
 
     Returns:
        The figure, the axes and the bars dataframe.   
@@ -142,14 +142,14 @@ def score_plot(dataset: Type[Dataset],
     Obtain the Global Feature Importance Score Plot starting from the Global Feature Importance vector.
 
     Args:
-        dataset (Type[Dataset]): Input dataset
-        global_importances_file (str): The path to the file containing the global importances.
-        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
-        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
-        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
-        model (str, optional): The AD model on which the importances should be computed. Defaults to 'EIF+'.
-        interpretation (str, optional): The interpretation model used. Defaults to 'EXIFFI'.
-        scenario (int, optional): The scenario number. Defaults to 1.
+        dataset: Input dataset
+        global_importances_file: The path to the file containing the global importances.
+        plot_path: The path where the plot will be saved. Defaults to os.getcwd().
+        save_image: A boolean indicating whether the plot should be saved. Defaults to True.
+        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.
+        model: The AD model on which the importances should be computed. Defaults to 'EIF+'.
+        interpretation: The interpretation model used. Defaults to 'EXIFFI'.
+        scenario: The scenario number. Defaults to 1.
     
     Returns:
         The two axes objects used to create the plot.
@@ -242,20 +242,20 @@ def plot_feature_selection(
     Obtain the feature selection plot.
 
     Args:
-        precision_file (str): The path to the file containing the precision values.
-        plot_path (str): The path where the plot will be saved.
-        precision_file_random (Optional[str], optional): The path to the file containing precision values computed with the random Feature Selection approach. Defaults to None.
-        color (int, optional): The color of the plot. Defaults to 0.
-        model (Optional[str], optional): Name of the AD model. Defaults to None.
-        eval_model (Optional[str], optional): Name of the evaluation model. Defaults to 'EIF+'.
-        interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to None.
-        scenario (Optional[int], optional): The scenario number. Defaults to 2.
-        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
-        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
-        box_loc (tuple, optional): The location of the text box containing the Area under the curve of Feature Selection value. Defaults to None.
-        change_box_loc (float, optional): Change the y axis value of the text box location containing the Area under the curve of Feature Selection value. Defaults to 0.9.
-        rotation (bool, optional): A boolean indicating whether the x ticks should be rotated by 45 degrees. Defaults to False.
-        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.
+        precision_file: The path to the file containing the precision values.
+        plot_path: The path where the plot will be saved.
+        precision_file_random: The path to the file containing precision values computed with the random Feature Selection approach. Defaults to None.
+        color: The color of the plot. Defaults to 0.
+        model: Name of the AD model. Defaults to None.
+        eval_model: Name of the evaluation model. Defaults to 'EIF+'.
+        interpretation: Name of the interpretation model used. Defaults to None.
+        scenario: The scenario number. Defaults to 2.
+        save_image: A boolean indicating whether the plot should be saved. Defaults to True.
+        plot_image: A boolean indicating whether the plot should be displayed. Defaults to False.
+        box_loc: The location of the text box containing the Area under the curve of Feature Selection value. Defaults to None.
+        change_box_loc: Change the y axis value of the text box location containing the Area under the curve of Feature Selection value. Defaults to 0.9.
+        rotation: A boolean indicating whether the x ticks should be rotated by 45 degrees. Defaults to False.
+        change_ylim: A boolean indicating whether the y axis limits should be changed (from 1 to 1.1). Defaults to False.
 
     Returns:
         The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
@@ -349,14 +349,14 @@ def plot_precision_over_contamination(precisions:np.ndarray,
     Obtain the precision over contamination plot.
 
     Args:
-        precisions (np.ndarray): The precision values for different contamination values, obtained from the contamination_in_training_precision_evaluation method.
-        dataset_name (str): The dataset name.
-        model_name (str): The model name.
-        plot_path (str): The path where the plot will be saved.
-        contamination (np.ndarray, optional): The contamination values. Defaults to np.linspace(0.0,0.1,10).
-        save_image (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
-        plot_image (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
-        ylim (tuple, optional): The y axis limits. Defaults to (0,1).
+        precisions: The precision values for different contamination values, obtained from the contamination_in_training_precision_evaluation method.
+        dataset_name: The dataset name.
+        model_name: The model name.
+        plot_path: The path where the plot will be saved.
+        contamination: The contamination values. Defaults to np.linspace(0.0,0.1,10).
+        save_image: A boolean indicating whether the plot should be saved. Defaults to True.
+        plot_image: A boolean indicating whether the plot should be displayed. Defaults to False.
+        ylim: The y axis limits. Defaults to (0,1).
 
     Returns:
         The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
@@ -373,11 +373,6 @@ def plot_precision_over_contamination(precisions:np.ndarray,
     plt.fill_between(contamination, [np.percentile(x, 10) for x in precisions], [np.percentile(x, 90) for x in precisions],alpha=0.1, color="tab:blue")
     
     plt.ylim(ylim)
-
-    # if insert_box_loc:
-    #     text_box_content = box_text + " = " + str(np.round(np.mean(precisions),3))
-    #     plt.text(box_loc[0],box_loc[1], text_box_content, bbox=dict(facecolor='white', alpha=0.5, boxstyle="round", pad=0.5), 
-    #         verticalalignment='top', horizontalalignment='right')
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)
@@ -399,10 +394,10 @@ def get_contamination_comparison(model1:str,
     Obtain the difference in precision between two models for different contamination values.
 
     Args:
-        model1 (str): The first model name.
-        model2 (str): The second model name.
-        dataset_name (str): The dataset name.
-        path (str, optional): Starting path to retrieve the path where the precisions of the two models are stored. Defaults to os.getcwd().
+        model1: The first model name.
+        model2: The second model name.
+        dataset_name: The dataset name.
+        path: Starting path to retrieve the path where the precisions of the two models are stored. Defaults to os.getcwd().
     """
     
     path_model1=path+'/results/'+ dataset_name +'/experiments/contamination/'+model1
@@ -431,18 +426,18 @@ def importance_map(dataset: Type[Dataset],
         Produce the Local Feature Importance Scoremap.   
         
         Args:
-            dataset (Type[Dataset]): Input dataset
-            model (Type[ExtendedIsolationForest]): The AD model.
-            resolution (Optional[int], optional): The resolution of the plot. Defaults to 30.
-            path_plot (Optional[str], optional): The path where the plot will be saved. Defaults to os.getcwd().
-            save_plot (Optional[bool], optional): A boolean indicating whether the plot should be saved. Defaults to True.
-            show_plot (Optional[bool], optional): A boolean indicating whether the plot should be displayed. Defaults to False.
-            factor (Optional[int], optional): The factor by which the min and max values of the features are extended. Defaults to 3.
-            feats_plot (Optional[tuple], optional): The features to be plotted. Defaults to (0,1).
-            col_names (List[str], optional): The names of the features. Defaults to None.
-            isdiffi (Optional[bool], optional): A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.
-            scenario (Optional[int], optional): The scenario number. Defaults to 2.
-            interpretation (Optional[str], optional): Name of the interpretation model used. Defaults to "EXIFFI+".
+            dataset: Input dataset
+            model: The AD model.
+            resolution: The resolution of the plot. Defaults to 30.
+            path_plot: The path where the plot will be saved. Defaults to os.getcwd().
+            save_plot: A boolean indicating whether the plot should be saved. Defaults to True.
+            show_plot: A boolean indicating whether the plot should be displayed. Defaults to False.
+            factor: The factor by which the min and max values of the features are extended. Defaults to 3.
+            feats_plot: The features to be plotted. Defaults to (0,1).
+            col_names: The names of the features. Defaults to None.
+            isdiffi: A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.
+            scenario: The scenario number. Defaults to 2.
+            interpretation: Name of the interpretation model used. Defaults to "EXIFFI+".
         
         Returns:
             The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.
@@ -476,7 +471,6 @@ def importance_map(dataset: Type[Dataset],
         # Create a new pyplot object if plt is not provided
         fig, ax = plt.subplots()
         
-
         cp = ax.pcolor(xx, yy, Score, cmap=cm.RdBu, shading='nearest', norm=colors.CenteredNorm())
         
         ax.contour(xx, yy, (importance_matrix[:, feats_plot[0]] + importance_matrix[:, feats_plot[1]]).reshape(xx.shape), levels=7, cmap=cm.Greys, alpha=0.7)
@@ -564,9 +558,9 @@ def get_vals(model: str,
     Obtain statistics on the execution time of a model for different datasets. These values will be used in the plot_time_scaling method.
 
     Args:
-        model (str): The model name.
-        dataset_names (List[str]): The list of dataset names.
-        type (str, optional): The type of execution time. Defaults to 'predict'.
+        model: The model name.
+        dataset_names: The list of dataset names.
+        type: The type of execution time. Defaults to 'predict'.
 
     Returns:
        The median, 5th percentile and 95th percentile values of the execution time.
@@ -602,14 +596,14 @@ def plot_time_scaling(model_names:List[str],
     Obtain the time scaling plot.
 
     Args:
-        model_names (List[str]): The list of model names.
-        dataset_names (List[str]): The list of dataset names.
-        data_path (str): The path to the datasets.
-        type (str, optional): The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
-        plot_type (str, optional): The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
-        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
-        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to True.
-        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
+        model_names: The list of model names.
+        dataset_names: The list of dataset names.
+        data_path: The path to the datasets.
+        type: The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
+        plot_type: The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
+        plot_path: The path where the plot will be saved. Defaults to os.getcwd().
+        show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.
+        save_plot: A boolean indicating whether the plot should be saved. Defaults to True.
 
     Returns:
         The figure and axes objects used to create the plot.
@@ -682,14 +676,14 @@ def plot_ablation(eta_list:List[float],
     Obtain the plot of the Average precision values against different values of the era parameter.
 
     Args:
-        eta_list (List[float]): The list of eta values.
-        avg_prec (List[np.ndarray]): The list of average precision values.
-        EIF_value (float): The average precision value of the EIF model.
-        dataset_name (str): The dataset name.
-        plot_path (str, optional): The path where the plot will be saved. Defaults to os.getcwd().
-        show_plot (bool, optional): A boolean indicating whether the plot should be displayed. Defaults to False.
-        save_plot (bool, optional): A boolean indicating whether the plot should be saved. Defaults to True.
-        change_ylim (bool, optional): A boolean indicating whether the y axis limits should be changed. Defaults to False.
+        eta_list: The list of eta values.
+        avg_prec: The list of average precision values.
+        EIF_value: The average precision value of the EIF model.
+        dataset_name: The dataset name.
+        plot_path: The path where the plot will be saved. Defaults to os.getcwd().
+        show_plot: A boolean indicating whether the plot should be displayed. Defaults to False.
+        save_plot: A boolean indicating whether the plot should be saved. Defaults to True.
+        change_ylim: A boolean indicating whether the y axis limits should be changed. Defaults to False.
 
     Returns:
         The figure and axes objects used to create the plot.

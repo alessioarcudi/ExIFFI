@@ -28,16 +28,14 @@ class Dataset:
     Attributes:
         name: The name of the dataset.
         path: The path to the dataset file.
+        feature_names_filepath: The path to the json file containing the feature names of the dataset.
         X: Data matrix of the dataset.
-        X_train: Training set, initialized to None
-        X_test: Test set, initialized to None
         y: The labels of the dataset.
+        X_train: Training set, initialized to None
         y_train: The labels of the training set
+        X_test: Test set, initialized to None
         y_test: The labels of the test set
         feature_names: The names of the features of the dataset.
-        shape: The shape of the dataset.
-        n_outliers: The number of outliers in the dataset.
-        perc_outliers: The percentage of outliers in the dataset (i.e. the contamination factor)
     """
     name: str
     path: str = "../data/"
@@ -49,7 +47,6 @@ class Dataset:
     X_test: Optional[npt.NDArray] = field(default=None, init=False)
     y_test: Optional[npt.NDArray] = field(default=None, init=False)
     feature_names: Optional[List[str]] = field(default=None, init=False)
-    #box_loc: Optional[tuple] = field(default=None, init=False)
 
     def __post_init__(self) -> None:
         """Initialize the dataset.
@@ -61,21 +58,38 @@ class Dataset:
 
         if self.feature_names_filepath is not None:
             self.dataset_feature_names()
-            #import ipdb; ipdb.set_trace()
 
         if self.feature_names is None:
             self.feature_names=np.arange(self.shape[1])
         
     @property
     def shape(self) -> tuple:
+        """
+        Return the shape of the dataset.
+
+        Returns:
+            The shape of the dataset.
+        """
         return self.X.shape if self.X is not None else ()
     
     @property
     def n_outliers(self) -> int:
+        """
+        Return the number of outliers in the dataset.
+        
+        Returns:
+            The number of outliers in the dataset.
+        """
         return int(sum(self.y)) if self.y is not None else 0
     
     @property
     def perc_outliers(self) -> float:
+        """
+        Return the percentage of outliers in the dataset (i.e. the contamination factor)
+
+        Returns:
+            The percentage of outliers in the dataset.
+        """
         return sum(self.y) / len(self.y) if self.y is not None else 0.0
         
     def load(self) -> None:
@@ -323,7 +337,7 @@ class Dataset:
     def dataset_feature_names(self) -> List[str]:
 
             """ 
-            Define the feture names for the datasets for which the feature names are available 
+            Set the feture names for the datasets for which the feature names are available 
 
             Returns:
                 Set the feature_names attributes to a list of string containing the feature names of the dataset.

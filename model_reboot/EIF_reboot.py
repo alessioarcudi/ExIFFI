@@ -26,6 +26,9 @@ def make_rand_vector(df:int,
         df: Degrees of freedom
         dimensions: number of dimensions of the feature space
 
+    Raises:
+        ValueError: If the degree of freedom does not match with the dataset dimensions
+
     Returns:
         vec: Random unitary vector in the unit ball
         
@@ -46,7 +49,7 @@ def make_rand_vector(df:int,
 def c_factor(n: int) -> float:
     """
     Average path length of unsuccesful search in a binary search tree given n points.
-    This is a constant factor that will be used as a normalization factor in the Anomaly Score calculation.
+    This is a constant factor that will be used as a normalization factor in the Anomaly Score computation.
     
     Args:
         n: Number of data points for the BST.
@@ -427,7 +430,14 @@ class ExtendedIsolationForest():
         self.eta=eta
     
     @property
-    def avg_number_of_nodes(self):
+    def avg_number_of_nodes(self) -> float:
+        """
+        Compute the average number of nodes in the trees.
+        
+        Returns:
+            The average number of nodes in the trees.
+            
+        """
         return np.mean([T.node_count for T in self.trees])
         
     def fit(self, X:np.array, locked_dims:int=None) -> None:

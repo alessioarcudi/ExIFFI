@@ -159,11 +159,11 @@ class AutoEncoder(oldAutoEncoder):
         return y_hat
     
 def get_feature_indexes(dataset:Type[Dataset],
-                        f1:str,
-                        f2:str) -> tuple[int,int]:
+                        f1:Union[str, int],
+                        f2:Union[str, int]) -> tuple[int,int]:
     
     """
-    Function to get the indexes of two features in the dataset.
+    Function to get the indexes of two features in the dataset given the feature names. 
 
     Args:
         dataset: Dataset
@@ -229,15 +229,14 @@ def get_most_recent_file(directory_path:str,
 
     Args:
         directory_path: Directory path where the files are stored
+        filetype: Type of the file (i.e. `npz` or `pickle`)
 
     Returns:
         Path to the most recent file in the directory path
 
     """
     
-    # files = sorted(os.listdir(directory_path), key=lambda x: os.path.getmtime(os.path.join(directory_path, x)), reverse=True)
-    # return os.path.join(directory_path, files[0])
-
+    assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"
     date_format = "%d-%m-%Y_%H-%M-%S"
     datetimes=[datetime.strptime(file[:19],date_format) for file in os.listdir(directory_path)]
     sorted_files=sorted(datetimes,reverse=True)
