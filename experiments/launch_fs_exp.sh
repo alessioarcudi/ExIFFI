@@ -11,10 +11,37 @@ DATASET_PATH="../data/real/"
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
         --model "EIF+" \
-        --model_interpretation "EIF+" \
-        --interpretation "EXIFFI+" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
         --scenario 2 \
         --pre_process 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 1 \
+        --pre_process
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 2 \
+        --pre_process 
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 1 \
+        --pre_process
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \

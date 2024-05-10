@@ -161,7 +161,7 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
         gfi_time = time.time() - start_time
         if i>3:
             imp_times.append(gfi_time)
-            if (I.name=="IF") and (interpretation=="EXIFFI"):
+            if (model=="IF") and (interpretation=="EXIFFI"):
                 dict_time["importances"]["IF_EXIFFI"].setdefault(dataset.name, []).append(gfi_time)
             else:
                 dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)

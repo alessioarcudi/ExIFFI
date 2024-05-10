@@ -14,17 +14,18 @@ DATASET_PATH="../data/real/"
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATH \
-    --model "EIF+" \
-    --interpretation "EXIFFI+" \
+    --model "IF" \
+    --interpretation "DIFFI" \
     --scenario 2 \
     --pre_process
 
-# python $SCRIPT_PATH \
-#     --dataset_name $DATASETS \
-#     --dataset_path $DATASET_PATH \
-#     --model "IF" \
-#     --interpretation "EXIFFI" \
-#     --scenario 1 
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "DIFFI" \
+    --scenario 1 \
+    --pre_process 
 
 # Use pre_process ONLY ON THE NON SYNTHETIC DATASETS
 

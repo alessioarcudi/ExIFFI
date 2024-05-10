@@ -2,9 +2,9 @@
 
 SCRIPT_PATH="test_local_importances.py"
 
-DATASETS="bisect_6d"
+DATASETS="moodify"
 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -12,8 +12,9 @@ DATASET_PATH="../data/syn/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
-        --feature1 1 \
-        --feature2 0 
+        --feature1 "loudness" \
+        --feature2 "instrumentalness" \
+        --pre_process 1
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -21,8 +22,9 @@ DATASET_PATH="../data/syn/"
         --model "IF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
-        --feature1 1 \
-        --feature2 0 
+        --feature1 "loudness" \
+        --feature2 "instrumentalness" \
+        --pre_process 1
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \
