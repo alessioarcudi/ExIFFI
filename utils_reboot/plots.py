@@ -78,6 +78,8 @@ def bar_plot(dataset: Type[Dataset],
     importances_matrix = np.array([np.array(pd.Series(x).sort_values(ascending = False).index).T for x in importances])
     dim=int(importances.shape[1])
 
+    #import ipdb; ipdb.set_trace()
+
     bars = [[(list(importances_matrix[:,j]).count(i)/len(importances_matrix))*100 for i in range(dim)] for j in range(dim)]
     bars = pd.DataFrame(bars)
 

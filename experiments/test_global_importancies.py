@@ -127,7 +127,12 @@ if not os.path.exists(path_experiment_model_interpretation):
 path_experiment_model_interpretation_scenario = path_experiment_model_interpretation + "/scenario_"+str(scenario)
 if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
+
+most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario,filetype="npz")
+bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
     
+quit()
+
 #Compute global importances
 full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)    
 save_element(full_importances, path_experiment_model_interpretation_scenario, filetype="npz")

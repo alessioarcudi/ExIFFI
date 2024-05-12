@@ -6,7 +6,9 @@ from dataclasses import dataclass, field
 
 from scipy.io import loadmat
 import mat73
+import os 
 import json
+import glob
 
 import numpy as np
 import random 
@@ -104,17 +106,19 @@ class Dataset:
             The dataset is loaded in place.
         """
         try:
-            datapath = self.path + self.name + ".mat"
+            datapath=glob.glob(self.path+'/*.mat')
+            index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
             try:
-                mat = loadmat(datapath)
+                mat = loadmat(datapath[index[0]])
             except NotImplementedError:
-                mat = mat73.loadmat(datapath)
+                mat = mat73.loadmat(datapath[index[0]])
                 
             self.X = mat['X'].astype(float)
             self.y = mat['y'].reshape(-1, 1).astype(float)
         except FileNotFoundError:
             try:
-                datapath = self.path + self.name + ".csv"
+                datapath=glob.glob(self.path+'/*.csv')
+                index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
                 T = pd.read_csv(datapath)
                 if 'Unnamed: 0' in T.columns:
                     T = T.drop(columns=['Unnamed: 0'])
@@ -122,7 +126,8 @@ class Dataset:
                 self.y = T['y'].to_numpy(dtype=float).reshape(-1, 1)
             except Exception as e:
                 try:
-                    datapath = self.path + self.name + ".csv"
+                    datapath=glob.glob(self.path+'/*.csv')
+                    index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
                     if self.name == "glass":
                         T = pd.read_csv(datapath)
                     else:

@@ -15,17 +15,17 @@ python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATH \
     --model "IF" \
-    --interpretation "DIFFI" \
+    --interpretation "EXIFFI" \
     --scenario 2 \
     --pre_process
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATH \
-    --model "IF" \
-    --interpretation "DIFFI" \
-    --scenario 1 \
-    --pre_process 
+# python $SCRIPT_PATH \
+#     --dataset_name $DATASETS \
+#     --dataset_path $DATASET_PATH \
+#     --model "IF" \
+#     --interpretation "DIFFI" \
+#     --scenario 1 \
+#     --pre_process 
 
 # Use pre_process ONLY ON THE NON SYNTHETIC DATASETS
 
