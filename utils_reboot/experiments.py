@@ -20,6 +20,7 @@ import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
+import shap
 
 import pickle
 import time
