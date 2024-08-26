@@ -30,6 +30,7 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
+parser.add_argument('--background', type=float, default=0.1, help='Size of the background dataset for KernelSHAP')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+,EIF+_RF,DIF,AnomalyAutoencoder,AnomalyAutoencoder_16')
@@ -63,6 +64,7 @@ n_estimators = args.n_estimators
 max_depth = args.max_depth
 max_samples = args.max_samples
 contamination = args.contamination
+background = args.background
 n_runs = args.n_runs
 pre_process = args.pre_process
 model = args.model
@@ -72,6 +74,7 @@ GFI = args.compute_GFI
 fit_predict = args.compute_fit_predict 
 
 dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
+# import ipdb; ipdb.set_trace()
 dataset.drop_duplicates()
 
 if dataset.shape[0]>7500:
@@ -172,7 +175,7 @@ if GFI:
     print('#'*50)
 
     if interpretation == "KernelSHAP":
-        _,imp_times = compute_local_importances_kernelSHAP(I, dataset)
+        _,imp_times = compute_local_importances_kernelSHAP(I=I, dataset=dataset, background=background, p=contamination)
     else:
         _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)
 

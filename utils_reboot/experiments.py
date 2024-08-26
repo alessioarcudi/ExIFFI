@@ -239,7 +239,7 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
                                  background:float=0.1,
                                  pre_process:float=False,
                                  scenario:int=2,
-                                 n_anomalies:int=100) -> float: 
+                                 p:float=0.1) -> float: 
     
     """
     Compute the local importance score for a certain number of anomalies with KernelSHAP method 
@@ -251,7 +251,7 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
         p (float): The percentage of outliers in the dataset (i.e. contamination factor). Defaults to 0.1.
         pre_process (bool): Whether to pre process the dataset after computing the downsampled version according to the background. Defaults to False.
         scenario (int): The scenario of the experiment. Defaults to 2.
-        n_anomalies (int): Number of anomalies on which to compute the importance scores 
+        n_anomalies (int): Number of anomalies on which to compute the importance scores
     
     Returns:
         The time to compute the local feature importances for a single anomaly 
@@ -265,6 +265,8 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
     # y_pred=I._predict(dataset.X_test,p).astype(int)
     # anomalies=dataset.X_test[np.where(y_pred==1)[0]]
     # anomaly=anomalies[np.random.randint(0,anomalies.shape[0],1)[0],:]
+
+    n_anomalies=int(p*dataset.X_test.shape[0])
 
     print(f'Computing KernelSHAP importance scores for the {n_anomalies} most anomalous points')
     print('#'*50)
@@ -282,7 +284,7 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
     elif scenario==1 and not pre_process:
         dataset.initialize_train_test()
 
-    scores=EIF_score_function(dataset.X_test)
+    scores=EIF_score_function(I,dataset.X_test)
     # Find the n_anomalies most anomalous points
     anomalies_idx=np.argsort(scores)[:n_anomalies]
     anomalies=dataset.X_test[anomalies_idx]
