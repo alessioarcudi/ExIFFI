@@ -58,6 +58,8 @@ class Dataset:
         """
         self.load()
 
+        # import ipdb; ipdb.set_trace()
+
         if self.feature_names_filepath is not None:
             self.dataset_feature_names()
 
@@ -108,36 +110,23 @@ class Dataset:
         try:
             datapath=glob.glob(self.path+'/*.mat')
             index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
-            try:
-                mat = loadmat(datapath[index[0]])
-            except NotImplementedError:
-                mat = mat73.loadmat(datapath[index[0]])
-                
+            mat = loadmat(datapath[index[0]])
             self.X = mat['X'].astype(float)
             self.y = mat['y'].reshape(-1, 1).astype(float)
-        except FileNotFoundError:
+        except Exception as e:
             try:
                 datapath=glob.glob(self.path+'/*.csv')
                 index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
-                T = pd.read_csv(datapath)
+                if self.name == "glass":
+                    T = pd.read_csv(datapath[index[0]])
+                else:
+                    T = pd.read_csv(datapath[index[0]],index_col=0)
                 if 'Unnamed: 0' in T.columns:
                     T = T.drop(columns=['Unnamed: 0'])
-                self.X = T['X'].to_numpy(dtype=float)
-                self.y = T['y'].to_numpy(dtype=float).reshape(-1, 1)
-            except Exception as e:
-                try:
-                    datapath=glob.glob(self.path+'/*.csv')
-                    index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
-                    if self.name == "glass":
-                        T = pd.read_csv(datapath)
-                    else:
-                        T = pd.read_csv(datapath,index_col=0)
-                    if 'Unnamed: 0' in T.columns:
-                        T = T.drop(columns=['Unnamed: 0'])
-                    self.X = T.loc[:,T.columns != "Target"].to_numpy(float)
-                    self.y = T.loc[:,"Target"].to_numpy(float)
-                except:
-                    raise Exception("The dataset name is not valid") from e
+                self.X = T.loc[:,T.columns != "Target"].to_numpy(float)
+                self.y = T.loc[:,"Target"].to_numpy(float)
+            except:
+                raise Exception("The dataset name is not valid") from e
 
 
     def __repr__(self) -> str:
@@ -354,6 +343,22 @@ class Dataset:
                 self.feature_names=data_feature_names[self.name]
             else:
                 self.feature_names=None 
+
+# Old code load function
+
+# try:
+#     print('#'*50)
+#     print("I'm in the first try block of csv")
+#     print('#'*50)
+#     datapath=glob.glob(self.path+'/*.csv')
+#     index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
+#     T = pd.read_csv(datapath[index[0]])
+#     if 'Unnamed: 0' in T.columns:
+#         T = T.drop(columns=['Unnamed: 0'])
+#     import ipdb; ipdb.set_trace()
+#     self.X = T['X'].to_numpy(dtype=float)
+#     self.y = T['y'].to_numpy(dtype=float).reshape(-1, 1)
+#except Exception as e:
         
 
  
