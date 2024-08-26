@@ -181,11 +181,11 @@ def IF_score_function(model,data):
     return 0.5 * (- model.decision_function(data) + 1)
 
 def compute_imp_time_kernelSHAP(I: Type[ExtendedIsolationForest],
-                                 dataset: Type[Dataset],
-                                 p: float = 0.1,
-                                 background:float=0.1,
-                                 pre_process:float=False,
-                                 scenario:int=2) -> float: 
+                                dataset: Type[Dataset],
+                                p: float = 0.1,
+                                background:float=0.1,
+                                pre_process:float=False,
+                                scenario:int=2) -> float: 
     
     """
     Compute the time to compute the local feature importances for an anomalous point using the KernelSHAP method.
@@ -290,16 +290,20 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
     # Compute the shap_values for all the selected anomalies 
     imp_mat=np.zeros((n_anomalies,dataset.X_test.shape[1]))
     shap_explainer = shap.KernelExplainer(EIF_score_function_shap, dataset.X_test)
+    start_time=time.time()
     for i,anomaly in enumerate(anomalies):
         imp_mat[i,:] = shap_explainer.shap_values(anomaly)
 
         if i%5==0:
             print("#"*50)
             print(f'Computed importance score of {i} anomalies ')
+            print(f"Elapsed time: {time.time()-start_time}")
             print(imp_mat[i-5:i,:])
             print("#"*50)
 
-    return imp_mat
+    imp_time=time.time()-start_time
+
+    return imp_mat,imp_time
 
 def compute_plt_data(imp_path:str) -> dict:
 

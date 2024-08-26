@@ -42,7 +42,7 @@ parser.add_argument('--compute_fit_predict', type=bool, default=False, help='Wea
 args = parser.parse_args()
 
 assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16"], "Model not recognized"
-assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
+assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","KernelSHAP","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
     assert args.model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
@@ -171,7 +171,10 @@ if GFI:
     print('Global Feature Importances Experiment')
     print('#'*50)
 
-    _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)
+    if interpretation == "KernelSHAP":
+        _,imp_times = compute_local_importances_kernelSHAP(I, dataset)
+    else:
+        _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)
 
     print(f'Mean Importances Time: {imp_times}')
     imp_dict={"importances_time":imp_times}
