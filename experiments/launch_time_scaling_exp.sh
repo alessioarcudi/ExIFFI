@@ -2,7 +2,7 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
-DATASETS="bisect_6d"
+DATASETS="Xaxis_1000_6"
 
 DATASET_PATH="../data/syn/"
 
@@ -10,10 +10,10 @@ DATASET_PATH="../data/syn/"
 python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --change_ylim \
-        --model "IF" \
-        --interpretation "EXIFFI" \
-        --compute_GFI 1 
+        --model "EIF+" \
+        --interpretation "KernelSHAP" \
+        --compute_GFI 1 \
+        --background 1.0
 
 # python $SCRIPT_PATH \
 #         --dataset_name $DATASETS \
