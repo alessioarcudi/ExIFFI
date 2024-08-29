@@ -77,8 +77,8 @@ dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../d
 # import ipdb; ipdb.set_trace()
 dataset.drop_duplicates()
 
-if dataset.shape[0]>7500:
-    dataset.downsample(max_samples=7500)
+# if dataset.shape[0]>7500:
+#     dataset.downsample(max_samples=7500)
 
 if scenario==2:
     #dataset.split_dataset(train_size=0.8,contamination=0)
@@ -124,6 +124,7 @@ print(f'Dataset: {dataset.name}')
 print(f'Model: {model}')
 print(f'Interpretation Model: {interpretation}')
 print(f'Sample Size: {dataset.X.shape[0]}')
+print(f'SHAP background: {background}')
 print(f'Number of Features: {dataset.X.shape[1]}')
 print('#'*50)
 
