@@ -296,11 +296,11 @@ def compute_local_importances_kernelSHAP(I: Type[ExtendedIsolationForest],
     for i,anomaly in enumerate(anomalies):
         imp_mat[i,:] = shap_explainer.shap_values(anomaly)
 
-        if i%5==0:
+        if i%100==0:
             print("#"*50)
             print(f'Computed importance score of {i} anomalies ')
             print(f"Elapsed time: {time.time()-start_time}")
-            print(imp_mat[i-5:i,:])
+            # print(imp_mat[i-5:i,:])
             print("#"*50)
 
     imp_time=time.time()-start_time

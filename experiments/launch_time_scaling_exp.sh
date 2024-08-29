@@ -2,7 +2,7 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
-DATASETS="Xaxis_1000_6"
+DATASETS="Xaxis_50000_6"
 
 DATASET_PATH="../data/syn/"
 
@@ -13,7 +13,7 @@ python $SCRIPT_PATH \
         --model "EIF+" \
         --interpretation "KernelSHAP" \
         --compute_GFI 1 \
-        --background 1.0
+        --background 0.1
 
 # python $SCRIPT_PATH \
 #         --dataset_name $DATASETS \
