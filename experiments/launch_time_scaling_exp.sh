@@ -19,8 +19,8 @@ DATASET_PATH="../data/syn/"
 python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "IF" \
-        --interpretation "DIFFI" \
+        --model "EIF+_RF" \
+        --interpretation "RandomForest" \
         --compute_GFI 1 \
         --background 0.1
 
