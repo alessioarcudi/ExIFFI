@@ -19,16 +19,13 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_25000_6`  → ==ok==
 	- `Xaxis_50000_6`  → running 
 	- `Xaxis_100000_6` → running 
-	- `Xaxis_25000_6`
-	- `Xaxis_300000_6`
 - Datasets varying number of features and with 5000 samples
-	- `Xaxis_5000_6`
 	- `Xaxis_5000_16`
 	- `Xaxis_5000_32`
 	- `Xaxis_5000_64`
 	- `Xaxis_5000_128`
-	- `Xaxis_5000_1024`
-	- `Xaxis_5000_4096`
+	- `Xaxis_5000_256`
+	- `Xaxis_5000_512`
 
 # Experiments `ECOD` model 
 
