@@ -2,7 +2,7 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
-DATASETS="Xaxis_50000_6"
+DATASETS="Xaxis_100000_6"
 
 DATASET_PATH="../data/syn/"
 
