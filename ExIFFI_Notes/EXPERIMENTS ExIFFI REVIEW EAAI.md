@@ -17,15 +17,15 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_5000_6` → ==ok==
 	- `Xaxis_10000_6` → ==ok==
 	- `Xaxis_25000_6`  → ==ok==
-	- `Xaxis_50000_6`  → running 
+	- `Xaxis_50000_6`  → ==ok==
 	- `Xaxis_100000_6` → running 
 - Datasets varying number of features and with 5000 samples
-	- `Xaxis_5000_16`
-	- `Xaxis_5000_32`
-	- `Xaxis_5000_64`
-	- `Xaxis_5000_128`
-	- `Xaxis_5000_256`
-	- `Xaxis_5000_512`
+	- `Xaxis_5000_16` → 
+	- `Xaxis_5000_32` → 
+	- `Xaxis_5000_64` → 
+	- `Xaxis_5000_128` → 
+	- `Xaxis_5000_256` → 
+	- `Xaxis_5000_512` → 
 
 # Experiments `ECOD` model 
 
