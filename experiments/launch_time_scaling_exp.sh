@@ -2,7 +2,16 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
-DATASETS="Xaxis_100000_6"
+DATASETS="Xaxis_100_6"
+# DATASETS="Xaxis_250_6"
+# DATASETS="Xaxis_500_6"
+# DATASETS="Xaxis_1000_6"
+# DATASETS="Xaxis_2500_6"
+# DATASETS="Xaxis_5000_6"
+# DATASETS="Xaxis_10000_6"
+# DATASETS="Xaxis_25000_6"
+# DATASETS="Xaxis_50000_6"
+# DATASETS="Xaxis_100000_6"
 
 DATASET_PATH="../data/syn/"
 
@@ -11,7 +20,7 @@ python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
         --model "EIF+" \
-        --interpretation "KernelSHAP" \
+        --interpretation "EXIFFI+" \
         --compute_GFI 1 \
         --background 0.1
 

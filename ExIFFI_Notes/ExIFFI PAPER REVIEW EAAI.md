@@ -150,13 +150,7 @@ The paper focuses on unsupervised anomaly detection, proposing ExIFFI for interp
 > This may be an interesting analysis to do. The only thing to understand is what he/she intends with samples with high importance scores → the ones with the highest value in their most important feature? the ones with the highest sum of importance values?  Obviously since here we are talking about single samples we have to use the `LFI` scores. 
 
 > [!todo] 
-> Do this procedure for each interpretation method we compared inside the paper. 
-> - Do a table with the correlation values → add a column to the tables of the Average Precision,Time, 
-> - For each dataset
-> 	- Compute the `LFI` of all the samples 
-> 	- Compute the sum of the `LFI` scores over all the features
-> 	- Compute the Anomaly Score of the AD method 
-> 	- Compute the correlation 
+> See [[EXPERIMENTS ExIFFI REVIEW EAAI#^c65818|here]] 
 
 7. In addition to analyzing the differences of the model under different data distributions and anomaly types, the differences in the explanation quality of ExIFFI can also be analyzed, such as in which cases the model’s explanation is more reliable and more in line with human cognition. 
 
