@@ -194,7 +194,8 @@ def get_feature_indexes(dataset:Type[Dataset],
 def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[NewPrecisions],Type[Precisions_random]],
                  directory_path:str,
                  filename:str="",
-                 filetype:str="pickle") -> None:
+                 filetype:str="pickle",
+                 no_time:str=False) -> None:
     
     """
     Function to save an element produced by an experiment in a file (i.e. `npz` or `pickle` file) in the specified directory path.
@@ -204,6 +205,7 @@ def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[
         directory_path: Directory path where the file will be saved
         filename: Name of the file
         filetype: Type of the file (i.e. `npz` or `pickle`)
+        no_time: Boolean value to indicate whether the time should be included in the filename or not, by default False
 
     Returns:
         The method saves element and does not return any value 
@@ -213,7 +215,8 @@ def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[
     assert filetype in ["pickle", "npz"], "filetype must be either 'pickle' or 'npz'"
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-    filename = current_time + '_' + filename
+    if no_time == False:
+        filename = current_time + '_' + filename
     path = directory_path + '/' + filename
     if filetype == "pickle":
         with open(path+".pickle", 'wb') as fl:
@@ -222,7 +225,8 @@ def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[
         np.savez(path, element=element)
         
 def get_most_recent_file(directory_path:str,
-                         filetype:str="pickle")->str:
+                         filetype:str="pickle",
+                         file_pos:int=0)->str:
 
     """
     Function to get the most recent file (i.e. last modified file) in a directory path.
@@ -230,6 +234,7 @@ def get_most_recent_file(directory_path:str,
     Args:
         directory_path: Directory path where the files are stored
         filetype: Type of the file (i.e. `npz` or `pickle`)
+        file_pos: Position of the file in the sorted list of files (i.e. 0 for the most recent file, 1 for the second most recent file, etc.)
 
     Returns:
         Path to the most recent file in the directory path
@@ -240,7 +245,7 @@ def get_most_recent_file(directory_path:str,
     date_format = "%d-%m-%Y_%H-%M-%S"
     datetimes=[datetime.strptime(file[:19],date_format) for file in os.listdir(directory_path)]
     sorted_files=sorted(datetimes,reverse=True)
-    most_recent_file=sorted_files[0].strftime(date_format)+f'_.{filetype}'
+    most_recent_file=sorted_files[file_pos].strftime(date_format)+f'_.{filetype}'
     return os.path.join(directory_path,most_recent_file)
 
 def open_element(file_path:str,
