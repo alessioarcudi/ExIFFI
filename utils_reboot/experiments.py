@@ -26,7 +26,7 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/time_scaling_test_exiffi_1000.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_acq2.pickle"
 #filename = cwd + "/utils_reboot/time_scaling_test_dei.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
