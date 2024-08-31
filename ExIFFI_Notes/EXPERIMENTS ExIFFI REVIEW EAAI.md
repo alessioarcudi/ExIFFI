@@ -28,7 +28,11 @@ Let's use this note to keep track of the experiments I am running for the resubm
 
 # Experiments `ECOD` model 
 
-Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/pyod.models.html#module-pyod.models.ecod)
+Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/pyod.models.html#module-pyod.models.ecod). The `ECOD` model has some sort of interpretation but it is only local and only a graphical interpretation if I do remember correctly thus there should not be something like the `LFI` or `GFI` score to exploit for a comparison with `ExIFFI`. So we can use it as we used `DIF` and `Autoencoder`. So we will use it in the experiments:
+
+- Contamination Experiment
+- Precision metric experiment 
+- Time Scaling `fit-predict` experiment 
 
 # Experiments Correlation
 
