@@ -33,7 +33,7 @@ parser.add_argument('--n_runs', type=int, default=10, help='Global feature impor
 parser.add_argument('--train_size', type=float, default=0.9, help='Global feature importances parameter: train_size')
 parser.add_argument('--model_contamination', type=float, default=0.1, help='Contamination parameter for the ECOD model')
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
-
+parser.add_argument('--change_ylim', type=float, default=1.0, help='Upper bound for the y axis in the contamination plot')
 parser.add_argument('--model', type=str, default="IF", help='Name of the model')
 parser.add_argument('--interpretation', type=str, default="NA", help='Name of the interpretation algorithm')
 parser.add_argument('--pre_process', type=bool, default=False, help='If set, preprocess the dataset')
@@ -52,6 +52,7 @@ n_runs = args.n_runs
 train_size = args.train_size
 model_contamination = args.model_contamination
 GFI = args.compute_GFI
+change_ylim = args.change_ylim
 model = args.model
 interpretation = args.interpretation
 pre_process = args.pre_process
@@ -167,5 +168,5 @@ else:
 
 #plot contamination evaluation
 (precisions,contamination) = open_element(get_most_recent_file(path_experiment_contamination_model))
-plot_precision_over_contamination(precisions,dataset.name,model,path_plots, contamination, plot_image=False)
+plot_precision_over_contamination(precisions,dataset.name,model,path_plots,contamination,plot_image=False,change_ylim=change_ylim)
 

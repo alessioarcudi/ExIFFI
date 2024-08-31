@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description='Plot Contaminations')
 parser.add_argument('--dataset_name', type=str, default='annthyroid', help='Name of the dataset')
 parser.add_argument('--dataset_path', type=str, default='../data/real/', help='Path to the dataset')
 parser.add_argument("--change_ylim",action="store_true",help="If set, change the ylim of the plot")
-parser.add_argument('--models', nargs='+', type=str, default=["DIF","EIF","EIF+","IF","AnomalyAutoencoder"],help='List of models to use for the full contamination plot')
+parser.add_argument('--models', nargs='+', type=str, default=["DIF","EIF","EIF+","IF","AnomalyAutoencoder","ECOD"],help='List of models to use for the full contamination plot')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -38,7 +38,7 @@ dataset = Dataset(name=dataset_name, path=dataset_path,feature_names_filepath='.
 
 path_contamination = os.getcwd()+'/results/'+ dataset.name +'/experiments/contamination/'
 path_plots = os.getcwd()+'/results/'+ dataset.name +'/plots_new/contamination_plots'
-colors = ["tab:green","tab:blue","tab:orange","tab:red","tab:purple"]
+colors = ["tab:green","tab:blue","tab:orange","tab:red","tab:purple","tab:brown"]
 plt.style.use('default')
 plt.rcParams['axes.facecolor'] = '#F2F2F2'
 plt.grid(alpha = 0.7)
@@ -63,7 +63,7 @@ plt.legend()
 
 t = time.localtime()
 current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
-if models == ["DIF","EIF","EIF+","IF","AnomalyAutoencoder"]:
+if models == ["DIF","EIF","EIF+","IF","AnomalyAutoencoder","ECOD"]:
     nameplot = current_time+"_"+dataset.name+"_contamination_full_plot.pdf"
 else:
     nameplot = current_time+"_"+dataset.name+cont_name+".pdf"
