@@ -5,10 +5,18 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="Xaxis"
+DATASETS="bisect_6d"
 
 # Path to the datasets
 DATASET_PATHS="../data/syn/"
+
+# Experiment ECOD
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "ECOD" \
+    --change_ylim 1.1 
 
 # # Experiment EIF+
 
@@ -50,8 +58,3 @@ DATASET_PATHS="../data/syn/"
 #     --dataset_name $DATASETS \
 #     --dataset_path $DATASET_PATHS \
 #     --model "AnomalyAutoencoder" 
-
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "ECOD" 
