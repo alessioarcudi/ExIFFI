@@ -21,7 +21,7 @@ Let's use this note to keep track of the experiments I am running for the resubm
 - Datasets varying number of features and with 5000 samples
 	- `Xaxis_5000_16` → ==ok==
 	- `Xaxis_5000_32` → ==ok== 
-	- `Xaxis_5000_64` → 
+	- `Xaxis_5000_64` → running 
 	- `Xaxis_5000_128` → 
 	- `Xaxis_5000_256` → 
 	- `Xaxis_5000_512` → 
