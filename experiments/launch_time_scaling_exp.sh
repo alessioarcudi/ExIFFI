@@ -16,21 +16,21 @@ SCRIPT_PATH="test_time_scaling.py"
 
 # Varying number of features
 
-DATASETS="Xaxis_5000_16"
+# DATASETS="Xaxis_5000_16"
 # DATASETS="Xaxis_5000_32"
 # DATASETS="Xaxis_5000_64"
 # DATASETS="Xaxis_5000_128"
 # DATASETS="Xaxis_5000_256"
-# DATASETS="Xaxis_5000_512"
+DATASETS="Xaxis_5000_512"
 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/syn/syn_feat_gz"
 
 
 python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
         --model "EIF+" \
-        --interpretation "KernelSHAP" \
+        --interpretation "EXIFFI+" \
         --compute_GFI 1 \
         --background 0.1
 
