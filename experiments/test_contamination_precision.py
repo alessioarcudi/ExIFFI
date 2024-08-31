@@ -55,7 +55,7 @@ model = args.model
 interpretation = args.interpretation
 pre_process = args.pre_process
 
-assert model in ["IF", "EIF", "EIF+", "DIF", "AnomalyAutoencoder"], "Model not recognized"
+assert model in ["IF", "EIF", "EIF+", "DIF", "AnomalyAutoencoder","ECOD"], "Model not recognized"
 assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
@@ -103,6 +103,8 @@ elif model == "DIF":
     I = DIF(max_samples=max_samples)
 elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+elif model == "ECOD":
+    I = ECOD(contamination=contamination)
     
 
 print('#'*50)
