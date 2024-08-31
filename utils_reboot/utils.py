@@ -10,6 +10,7 @@ from utils_reboot.datasets import Dataset
 from sklearn.ensemble import IsolationForest 
 from pyod.models.dif import DIF as oldDIF
 from pyod.models.auto_encoder import AutoEncoder as oldAutoEncoder
+from pyod.models.ecod import ECOD as oldECOD
 from datetime import datetime
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
@@ -73,6 +74,59 @@ class DIF(oldDIF):
 
         """
         Overwrite the `predict` method of the parent class `DIF` from `pyod.models.dif` module to obtain the
+        Anomaly Scores instead of the class labels (i.e. inliers and outliers)
+
+        Args:
+            X: Input dataset
+
+        Returns:
+            Anomaly Scores 
+
+        """
+
+        score=self.decision_function(X)
+        return score
+    
+    def _predict(self,
+                 X:np.array,
+                 p:float)->np.array:
+
+        """
+        Method to predict the class labels based on the Anomaly Scores and the contamination factor `p`
+
+        Args:
+            X: Input dataset
+            p: Contamination factor
+
+        Returns:
+            Class labels (i.e. 0 for inliers and 1 for outliers)
+        """
+
+        An_score = self.predict(X)
+        y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
+        return y_hat
+    
+class ECOD(oldECOD):
+
+    """
+    Wrapper of `pyod.models.ecod.ECOD`
+    """
+
+    def __init__(self, **kwargs):
+
+        """
+        Constructor of the class `ECOD` which uses the constructor of the parent class `ECOD` from `pyod.models.ecod` module.
+        
+        Attributes:
+            name (str): Add the name attribute to the class.
+        """
+        super().__init__(**kwargs)
+        self.name = "ECOD"
+    
+    def predict(self, X:np.array) -> np.array:
+
+        """
+        Overwrite the `predict` method of the parent class `ECOD` from `pyod.models.ecod` module to obtain the
         Anomaly Scores instead of the class labels (i.e. inliers and outliers)
 
         Args:
@@ -226,7 +280,8 @@ def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[
         
 def get_most_recent_file(directory_path:str,
                          filetype:str="pickle",
-                         file_pos:int=0)->str:
+                         file_pos:int=0,
+                         filename:str="")->str:
 
     """
     Function to get the most recent file (i.e. last modified file) in a directory path.
@@ -235,6 +290,7 @@ def get_most_recent_file(directory_path:str,
         directory_path: Directory path where the files are stored
         filetype: Type of the file (i.e. `npz` or `pickle`)
         file_pos: Position of the file in the sorted list of files (i.e. 0 for the most recent file, 1 for the second most recent file, etc.)
+        filename: Name of the file after the current date, by default ""
 
     Returns:
         Path to the most recent file in the directory path
@@ -245,7 +301,7 @@ def get_most_recent_file(directory_path:str,
     date_format = "%d-%m-%Y_%H-%M-%S"
     datetimes=[datetime.strptime(file[:19],date_format) for file in os.listdir(directory_path)]
     sorted_files=sorted(datetimes,reverse=True)
-    most_recent_file=sorted_files[file_pos].strftime(date_format)+f'_.{filetype}'
+    most_recent_file=sorted_files[file_pos].strftime(date_format)+f'_{filename}.{filetype}'
     return os.path.join(directory_path,most_recent_file)
 
 def open_element(file_path:str,
