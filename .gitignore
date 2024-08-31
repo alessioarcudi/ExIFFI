@@ -8,5 +8,6 @@ notebooks/trial.ipynb
 old_staff/
 data/data_DIFFI/
 data/syn/syn_feat
+data/syn/syn_feat_gz
 utils_reboot/time_dict_backup/
 ACM-ExIFFI-latex/
