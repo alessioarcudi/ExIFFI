@@ -12,7 +12,7 @@ SCRIPT_PATH="test_metrics.py"
 #DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="wine"
+DATASETS="glass cardio pima"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
@@ -88,13 +88,13 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --model "ECOD" \
-        --scenario 2
+        --scenario 2 
 
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --model "ECOD" \
-        --scenario 1
+        --scenario 1 
 
 done
 
