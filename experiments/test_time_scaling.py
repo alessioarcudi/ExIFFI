@@ -42,7 +42,7 @@ parser.add_argument('--compute_fit_predict', type=bool, default=False, help='Wea
 # Parse the arguments
 args = parser.parse_args()
 
-assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16"], "Model not recognized"
+assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16","ECOD"], "Model not recognized"
 assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","KernelSHAP","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
@@ -111,6 +111,8 @@ elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
 elif model == "AnomalyAutoencoder_16":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 16, 16, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+elif model == "ECOD":
+    I = ECOD(contamination=contamination)
 
 if model == "DIF" and GFI:
     raise ValueError("DIF model does not support global feature importances")

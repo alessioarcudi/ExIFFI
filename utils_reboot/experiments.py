@@ -84,9 +84,9 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
     return fi
 
 def fit_predict_experiment(I: Type[ExtendedIsolationForest],
-                            dataset: Type[Dataset],
-                            n_runs:int = 40,
-                            model='EIF+') -> tuple[float,float]:
+                           dataset: Type[Dataset],
+                           n_runs:int = 40,
+                           model='EIF+') -> tuple[float,float]:
     
     """
     Fit and predict the model on the dataset for a number of runs and keep track of the fit and predict times.

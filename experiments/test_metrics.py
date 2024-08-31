@@ -90,7 +90,7 @@ elif scenario==1 and not pre_process:
     print("#"*50)
 
 
-assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
+assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder","ECOD"], "Evaluation Model not recognized"
 
 if model == "sklearn_IF":
     I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
@@ -104,6 +104,8 @@ elif model == "DIF":
     I = DIF(max_samples=max_samples)
 elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
+elif model == "ECOD":
+    I = ECOD(contamination=contamination)
 
 os.chdir('../')
 cwd=os.getcwd()
@@ -129,6 +131,7 @@ print('#'*50)
 print(f'Dataset: {dataset.name}')
 print(f'Model: {model}')
 print(f'Scenario: {scenario}')
+print(f'Contamination: {contamination}')
 print('#'*50)
 
 # Fit the model
