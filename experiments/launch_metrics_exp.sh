@@ -9,16 +9,16 @@ SCRIPT_PATH="test_metrics.py"
 #SCRIPT_PATH="test_time_scaling.py"
 
 # List of datasets
-#DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
+DATASETS="Xaxis Yaxis bisect bisect_3d bisect_6d"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
-DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
+# DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 
 # Split the DATASETS string into an array
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
 # Iterate over the datasets and call the Python command for each dataset
 for dataset in "${DATASET_ARRAY[@]}"; do
