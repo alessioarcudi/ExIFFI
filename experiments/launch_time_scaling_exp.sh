@@ -2,6 +2,7 @@
 
 SCRIPT_PATH="test_time_scaling.py"
 
+# Varying number of samples 
 # DATASETS="Xaxis_100_6"
 # DATASETS="Xaxis_250_6"
 # DATASETS="Xaxis_500_6"
@@ -11,16 +12,25 @@ SCRIPT_PATH="test_time_scaling.py"
 # DATASETS="Xaxis_10000_6"
 # DATASETS="Xaxis_25000_6"
 # DATASETS="Xaxis_50000_6"
-DATASETS="Xaxis_100000_6"
+# DATASETS="Xaxis_100000_6"
 
-DATASET_PATH="../data/syn/"
+# Varying number of features
+
+# DATASETS="Xaxis_5000_16"
+# DATASETS="Xaxis_5000_32"
+# DATASETS="Xaxis_5000_64"
+# DATASETS="Xaxis_5000_128"
+# DATASETS="Xaxis_5000_256"
+DATASETS="Xaxis_5000_512"
+
+DATASET_PATH="../data/syn/syn_feat_gz"
 
 
 python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF+_RF" \
-        --interpretation "RandomForest" \
+        --model "EIF+" \
+        --interpretation "EXIFFI+" \
         --compute_GFI 1 \
         --background 0.1
 
