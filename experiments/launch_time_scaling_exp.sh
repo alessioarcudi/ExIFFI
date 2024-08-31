@@ -16,12 +16,12 @@ SCRIPT_PATH="test_time_scaling.py"
 
 # Varying number of features
 
-DATASETS="Xaxis_5000_16"
+# DATASETS="Xaxis_5000_16"
 # DATASETS="Xaxis_5000_32"
 # DATASETS="Xaxis_5000_64"
 # DATASETS="Xaxis_5000_128"
 # DATASETS="Xaxis_5000_256"
-# DATASETS="Xaxis_5000_512"
+DATASETS="Xaxis_5000_512"
 
 DATASET_PATH="../data/syn/syn_feat_gz"
 
