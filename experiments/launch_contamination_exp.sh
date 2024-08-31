@@ -5,18 +5,19 @@
 SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
-DATASETS="bisect_6d"
+# DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
+DATASETS="moodify"
 
 # Path to the datasets
-DATASET_PATHS="../data/syn/"
+DATASET_PATHS="../data/real/"
 
 # Experiment ECOD
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
-    --model "ECOD" \
-    --change_ylim 1.1 
+    --model "ECOD" 
+    # --change_ylim 1.1 
 
 # # Experiment EIF+
 
