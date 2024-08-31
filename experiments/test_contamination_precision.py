@@ -31,6 +31,7 @@ parser.add_argument('--max_samples', type=str, default='auto', help='EIF paramet
 parser.add_argument('--contamination', type=npt.NDArray, default=np.linspace(0.0,0.1,10), help='Global feature importances parameter: contamination')
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
 parser.add_argument('--train_size', type=float, default=0.9, help='Global feature importances parameter: train_size')
+parser.add_argument('--model_contamination', type=float, default=0.1, help='Contamination parameter for the ECOD model')
 parser.add_argument('--compute_GFI', type=bool, default=False, help='Global feature importances parameter: compute_GFI')
 
 parser.add_argument('--model', type=str, default="IF", help='Name of the model')
@@ -49,7 +50,7 @@ max_samples = args.max_samples
 contamination = args.contamination
 n_runs = args.n_runs
 train_size = args.train_size
-
+model_contamination = args.model_contamination
 GFI = args.compute_GFI
 model = args.model
 interpretation = args.interpretation
@@ -104,7 +105,7 @@ elif model == "DIF":
 elif model == "AnomalyAutoencoder":
     I = AutoEncoder(hidden_neurons=[dataset.X.shape[1], 32, 32, dataset.X.shape[1]], contamination=0.1, epochs=50, random_state=42,verbose=0)
 elif model == "ECOD":
-    I = ECOD(contamination=contamination)
+    I = ECOD(contamination=model_contamination)
     
 
 print('#'*50)

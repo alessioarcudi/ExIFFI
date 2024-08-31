@@ -15,7 +15,7 @@ import copy
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from model_reboot.interpretability_module import *
 from utils_reboot.datasets import Dataset
-from utils_reboot.utils import save_element
+from utils_reboot.utils import *
 import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.ensemble import RandomForestRegressor
@@ -457,6 +457,7 @@ def contamination_in_training_precision_evaluation(I: Type[ExtendedIsolationFore
             if pre_process:
                 dataset.pre_process()
             
+            # import ipdb; ipdb.set_trace()
             start_time = time.time()
             I.fit(dataset.X_train)
             fit_time = time.time() - start_time
