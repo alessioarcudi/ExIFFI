@@ -1,10 +1,10 @@
 Let's use this note to keep track of the experiments I am running for the resubmission of `ExIFFI` after the review from `EAAI`. 
 # Experiments to perform
 
-- Time Scaling Experiments for `KernelSHAP`
-- Experiments for the `ECOD` AD model
-- Correlation between Feature Importance and Anomaly Score 
-- New synthetic dataset experiment
+ - [ ] Time Scaling Experiments for `KernelSHAP`
+ - [ ] Experiments for the `ECOD` AD model
+ - [ ] Correlation between Feature Importance and Anomaly Score 
+ - [ ] New synthetic dataset `bisect_3d_prop` experiment
 # Time Scaling `KernelSHAP`
 
 - Datasets varying samples and with 6 features
@@ -22,7 +22,7 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_5000_16` → ==ok==
 	- `Xaxis_5000_32` → ==ok== 
 	- `Xaxis_5000_64` → ==ok== 
-	- `Xaxis_5000_128` → 
+	- `Xaxis_5000_128` → running
 	- `Xaxis_5000_256` → 
 	- `Xaxis_5000_512` → 
 # Experiments `ECOD` model 
@@ -48,7 +48,7 @@ Looking at the results obtained with the Contamination plots we can see how `ECO
 > 	- Compute the correlation 
 
 ^c65818
-# New synthetic dataset experiment
+# New synthetic dataset `bisect_3d_prop` experiment
 
 The idea of this experiment is to create a new type of synthetic dataset. This dataset is similar to `Bisect3D` but instead of generating the three anomalous features using the same $[\text{min},\text{max}]$ interval for the Uniform distribution $\mathcal{U}_3$ we use three overlapping intervals of different lengths for example:
 
@@ -78,7 +78,7 @@ This is the complete list of experiments we do in general on any dataset:
 
 - [x] `GFI` experiment for (only the ones needed for the paper)
 - [x] Local Scoremaps `EXIFFI+` (only the ones needed for the paper)
-- [ ] `ablation_EIF+` experiment 
+- [x] `ablation_EIF+` experiment 
 - [x] Contamination Experiment 
 - [x] Feature Selection Experiment (only the ones needed for the paper)
 - [x] Metrics Experiment
