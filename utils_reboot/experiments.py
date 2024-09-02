@@ -26,8 +26,8 @@ import pickle
 import time
 import pandas as pd
 
-filename = cwd + "/utils_reboot/time_scaling_test_acq2_feat.pickle"
-#filename = cwd + "/utils_reboot/time_scaling_test_dei.pickle"
+# filename = cwd + "/utils_reboot/time_scaling_test_acq2_feat.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
@@ -110,19 +110,31 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
         fit_time = time.time() - start_time
         if i>3:  
             fit_times.append(fit_time)
-            dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time) 
+            try:
+                dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+            except:
+                print('Model not recognized: creating a new key in the dict_time for the new model')
+                dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time) 
         
         start_time = time.time()
-        if model in ['EIF','EIF+']:
-            _=I._predict(dataset.X_test,p=dataset.perc_outliers)
-            predict_time = time.time() - start_time
-        elif model in ['sklearn_IF','DIF','AnomalyAutoencoder']:
-            _=I.predict(dataset.X_test)
-            predict_time = time.time() - start_time
+        _=I._predict(dataset.X_test,p=dataset.perc_outliers)
+        predict_time = time.time() - start_time
 
+
+        # if model in ['EIF','EIF+']:
+        #     _=I._predict(dataset.X_test,p=dataset.perc_outliers)
+        #     predict_time = time.time() - start_time
+        # elif model in ['sklearn_IF','DIF','AnomalyAutoencoder']:
+        #     _=I.predict(dataset.X_test)
+        #     predict_time = time.time() - start_time
+    
         if i>3:
             predict_times.append(predict_time)
-            dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+            try:
+                dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+            except:
+                print('Model not recognized: creating a new key in the dict_time for the new model')
+                dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time) 
 
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
