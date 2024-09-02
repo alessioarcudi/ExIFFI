@@ -556,6 +556,7 @@ def get_time_scaling_files(dataset: Type[Dataset],
 
 def get_vals(model: str, 
             dataset_names: List[str],
+            dict_time:dict,
             type:str='predict') -> tuple[List,List,List]:
     
     """
@@ -564,6 +565,7 @@ def get_vals(model: str,
     Args:
         model: The model name.
         dataset_names: The list of dataset names.
+        dict_time: The dictionary containing the execution time values.
         type: The type of execution time. Defaults to 'predict'.
 
     Returns:
@@ -589,6 +591,7 @@ def get_vals(model: str,
 
 def plot_time_scaling(model_names:List[str],
                       dataset_names:List[str],
+                      dict_time:dict,
                       data_path:str,
                       type:str='predict',
                       plot_type:str='samples',
@@ -602,6 +605,7 @@ def plot_time_scaling(model_names:List[str],
     Args:
         model_names: The list of model names.
         dataset_names: The list of dataset names.
+        dict_time: The dictionary containing the execution time values.
         data_path: The path to the datasets.
         type: The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
         plot_type: The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
@@ -632,7 +636,7 @@ def plot_time_scaling(model_names:List[str],
     maxs=[]
     mins=[]
     for i,model in enumerate(model_names):
-        median_times,five_times,ninefive_times=get_vals(model,dataset_names,type=type)
+        median_times,five_times,ninefive_times=get_vals(model=model,dataset_names=dataset_names,dict_time=dict_time,type=type)
         maxs.append(np.max(median_times))
         mins.append(np.min(median_times))
 
