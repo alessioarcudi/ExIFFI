@@ -60,6 +60,8 @@ dataset.drop_duplicates()
 
 feats_plot=get_feature_indexes(dataset,feature1,feature2)
 
+# import ipdb; ipdb.set_trace()
+
 # Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
 if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
