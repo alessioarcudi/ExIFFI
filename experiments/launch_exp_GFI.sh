@@ -14,7 +14,42 @@ python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATH \
     --model "EIF+" \
-    --interpretation "EXIFFI+" \
+    --interpretation "RandomForest" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF+" \
+    --interpretation "RandomForest" \
+    --scenario 1
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF" \
+    --interpretation "RandomForest" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF" \
+    --interpretation "RandomForest" \
+    --scenario 1
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "RandomForest" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "RandomForest" \
     --scenario 1
 
 # python $SCRIPT_PATH \

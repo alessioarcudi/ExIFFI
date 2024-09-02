@@ -14,7 +14,7 @@ from model_reboot.EIF_reboot import IsolationForest as EIF_IsolationForest
 import argparse
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Performance Metrics')
+parser = argparse.ArgumentParser(description='Ablation Study eta EIF+')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='Xaxis', help='Name of the dataset')
@@ -88,17 +88,19 @@ I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max
 
 
 names = [
-    "Xaxis", "bisect", "bisect_3d", "bisect_6d", "annthyroid", "breastw", "cardio", "diabetes", 
+    "Xaxis", "bisect", "bisect_3d", "bisect_3d_prop", "bisect_6d", "annthyroid", "breastw", "cardio", "diabetes", 
     "glass", "ionosphere", "moodify", "pendigits", "pima", "shuttle", "wine"
 ]
 
-EIF_values = [0.99, 0.99, 0.99, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 0.27, 0.54, 0.97, 0.57]
+# Average precision values of the EIF model for the datasets (to compare it to the 
+# average precision values of the EIF+ model across the different eta values)
+EIF_values = [0.99, 0.99, 0.99, 0.99, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 0.27, 0.54, 0.97, 0.57]
 
 EIF_dataset_values_dict = dict(zip(names, EIF_values))
 
 eta_list = np.linspace(0.5,5,25)
-avg_prec = ablation_EIF_plus(I,dataset,eta_list)
 
+avg_prec = ablation_EIF_plus(I,dataset,eta_list)
 
 path_ablation = cwd+"/experiments/results/"+dataset.name+"/experiments/ablationEIF+"
 if not os.path.exists(path_ablation):
@@ -108,14 +110,15 @@ plot_path = cwd+"/experiments/results/"+dataset.name+"/plots_new/ablationEIF+"
 if not os.path.exists(plot_path):
     os.makedirs(plot_path)
 
-    
-#save_element(avg_prec, path_ablation, filetype="pickle")
+save_element(avg_prec, path_ablation, filetype="pickle")
 
 avg_prec_file = get_most_recent_file(path_ablation)
 avg_prec = open_element(avg_prec_file, filetype="pickle")
 EIF_value = EIF_dataset_values_dict[dataset_name]
 
-plot_ablation(eta_list,avg_prec,EIF_value,
-                        dataset_name,
-                        plot_path=plot_path,
-                        change_ylim=change_ylim)
+plot_ablation(eta_list=eta_list,
+              avg_prec=avg_prec,
+              EIF_value=EIF_value,
+              dataset_name=dataset_name,
+              plot_path=plot_path,
+              change_ylim=change_ylim)

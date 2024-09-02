@@ -2,46 +2,46 @@
 
 SCRIPT_PATH="test_feature_selection.py"
 
-DATASETS="moodify"
+DATASETS="bisect_3d_prop"
 
 # Path to the datasets 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --model_interpretation "IF" \
-        --interpretation "DIFFI" \
-        --scenario 2 \
-        --pre_process 
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "DIFFI" \
+    #     --scenario 2 \
+ 
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --model_interpretation "IF" \
-        --interpretation "DIFFI" \
-        --scenario 1 \
-        --pre_process
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "DIFFI" \
+    #     --scenario 1 \
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF" \
-        --model_interpretation "IF" \
-        --interpretation "DIFFI" \
-        --scenario 2 \
-        --pre_process 
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF" \
-        --model_interpretation "IF" \
-        --interpretation "DIFFI" \
-        --scenario 1 \
-        --pre_process
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "DIFFI" \
+    #     --scenario 2 \
+ 
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "IF" \
+    #     --interpretation "DIFFI" \
+    #     --scenario 1 \
+
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \
@@ -50,16 +50,52 @@ DATASET_PATH="../data/real/"
     #     --model_interpretation "EIF+" \
     #     --interpretation "EXIFFI+" \
     #     --scenario 2 \
-    #     --pre_process 
+    #     --compute_random
 
-    # python $SCRIPT_PATH \
-    #     --dataset_name $DATASETS \
-    #     --dataset_path $DATASET_PATH \
-    #     --model "EIF+" \
-    #     --model_interpretation "IF" \
-    #     --interpretation "EXIFFI" \
-    #     --scenario 2 \
-    #     --pre_process
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "EIF" \
+        --interpretation "EXIFFI" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "IF" \
+        --interpretation "EXIFFI" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "EIF+" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "EIF" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "IF" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \
