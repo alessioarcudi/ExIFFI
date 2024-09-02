@@ -66,14 +66,20 @@ This is the complete list of experiments we do in general on any dataset:
 - `local_importances` → Obtain the Local Scoremaps for each interpretation algorithm → also in this case we report just the `EXIFFI+` ones
 - `ablationEIF+` → Ablation study on the `EIF+` model were we try to see how the Average Precision changes as we change the hyperparameter $\eta$ 
 - Contamination Experiment → This one has to be done for each one for of the AD models under comparison (i.e. `Autoencoder`,`DIF`,`ECOD`,`EIF`,`EIF+`,`IF`) and then we have to use the `plot_contaminations.py` script to merge all the experiments into a single plot
-- Feature Selection Experiment → Here we have to do the Feature Selection experiment for all the 24 combinations, even though at the end we report just 6 of them in the final paper 
-- Metrics Experiment → Simarly to the Contamination Experiment this has to be done for each one of the `AD` models 
+- Feature Selection Experiment → Here we have to do the Feature Selection experiment for all the 24 combinations, even though at the end we report just 6 of them in the final paper (all evaluated using `EIF+` as the `AD` model) 
+	- `EIF+_EXIFFI+`
+	- `EIF+_EXIFFI`
+	- `EIF+_IF_EXIFFI`
+	- `EIF+_EIF+_RandomForest`
+	- `EIF+_EIF+_RandomForest`
+	- `EIF+_IF_RandomForest`
+- Metrics Experiment → Similarly to the Contamination Experiment this has to be done for each one of the `AD` models 
 - Time Scaling Experiment → This one is needed to put execution times on the metrics table for the `fit` and `predict` and also in the $AUC_{FS}$ table (the importance time in this case). Although in this case we can also copy the times we put for `bisect_3d` (in fact the shape of the two datasets are identical so also the execution times should be very similar) 
 
 - [x] `GFI` experiment for `EXIFFI+`
 - [x] Local Scoremaps `EXIFFI+`
 - [ ] `ablation_EIF+` experiment 
-- [ ] Contamination Experiment 
+- [x] Contamination Experiment 
 - [ ] Feature Selection Experiment
-- [ ] Metrics Experiment
+- [x] Metrics Experiment
 - [ ] Time Scaling Experiment 
