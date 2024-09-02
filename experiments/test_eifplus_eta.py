@@ -14,7 +14,7 @@ from model_reboot.EIF_reboot import IsolationForest as EIF_IsolationForest
 import argparse
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Performance Metrics')
+parser = argparse.ArgumentParser(description='Ablation Study eta EIF+')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='Xaxis', help='Name of the dataset')
@@ -109,7 +109,7 @@ if not os.path.exists(plot_path):
     os.makedirs(plot_path)
 
     
-#save_element(avg_prec, path_ablation, filetype="pickle")
+# save_element(avg_prec, path_ablation, filetype="pickle")
 
 avg_prec_file = get_most_recent_file(path_ablation)
 avg_prec = open_element(avg_prec_file, filetype="pickle")

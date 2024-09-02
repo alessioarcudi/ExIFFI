@@ -1,6 +1,7 @@
 import sys
 import os
-os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+# os.chdir('/Users/alessio/Documents/ExIFFI/experiments')
+cwd = os.getcwd()
 sys.path.append("..")
 from collections import namedtuple
 
@@ -14,7 +15,7 @@ from model_reboot.EIF_reboot import ExtendedIsolationForest
 import argparse
 
 # Create the argument parser
-parser = argparse.ArgumentParser(description='Test Global Importances')
+parser = argparse.ArgumentParser(description='GFI over contamination Experiment')
 
 # Add the arguments
 parser.add_argument('--dataset_name', type=str, default='wine', help='Name of the dataset')
@@ -47,7 +48,9 @@ dataset.drop_duplicates()
 
 I=ExtendedIsolationForest(plus, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
-cwd = '/Users/alessio/Documents/ExIFFI'
+# cwd = '/Users/alessio/Documents/ExIFFI'
+os.chdir('../')
+cwd=os.getcwd()
 
 path = cwd +"/experiments/results/"+dataset.name
 if not os.path.exists(path):
@@ -61,7 +64,8 @@ if not os.path.exists(path_plots):
     
 
 # Ablation study of the contamination parameter of the GIF --> the results come from the contamination over precision experiment
-path = "/Users/alessio/Documents/ExIFFI/experiments/results/wine/experiments/global_importances/matrices/contamination"
+# path = "/Users/alessio/Documents/ExIFFI/experiments/results/wine/experiments/global_importances/matrices/contamination"
+path = cwd +"/experiments/results/"+dataset.name+"/experiments/global_importances/matrices/contamination"
 try:
     (importances,contamination) = open_element(get_most_recent_file(path))
 except:
