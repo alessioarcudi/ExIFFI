@@ -76,10 +76,10 @@ This is the complete list of experiments we do in general on any dataset:
 - Metrics Experiment → Similarly to the Contamination Experiment this has to be done for each one of the `AD` models 
 - Time Scaling Experiment → This one is needed to put execution times on the metrics table for the `fit` and `predict` and also in the $AUC_{FS}$ table (the importance time in this case). Although in this case we can also copy the times we put for `bisect_3d` (in fact the shape of the two datasets are identical so also the execution times should be very similar) 
 
-- [x] `GFI` experiment for `EXIFFI+`
-- [x] Local Scoremaps `EXIFFI+`
+- [x] `GFI` experiment for (only the ones needed for the paper)
+- [x] Local Scoremaps `EXIFFI+` (only the ones needed for the paper)
 - [ ] `ablation_EIF+` experiment 
 - [x] Contamination Experiment 
-- [ ] Feature Selection Experiment
+- [x] Feature Selection Experiment (only the ones needed for the paper)
 - [x] Metrics Experiment
 - [ ] Time Scaling Experiment 
