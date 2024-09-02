@@ -15,7 +15,7 @@ python $SCRIPT_PATH \
     --dataset_path $DATASET_PATH \
     --model "EIF+" \
     --interpretation "EXIFFI+" \
-    --scenario 2 
+    --scenario 1
 
 # python $SCRIPT_PATH \
 #     --dataset_name $DATASETS \

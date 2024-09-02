@@ -2,29 +2,30 @@
 
 SCRIPT_PATH="test_local_importances.py"
 
-DATASETS="moodify"
+DATASETS="bisect_3d_prop"
 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "IF" \
-        --interpretation "EXIFFI" \
+        --model "EIF+" \
+        --interpretation "EXIFFI+" \
         --scenario 2 \
-        --feature1 "loudness" \
-        --feature2 "instrumentalness" \
-        --pre_process 1
+        --feature1 0 \
+        --feature2 2
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "IF" \
-        --interpretation "EXIFFI" \
+        --model "EIF+" \
+        --interpretation "EXIFFI+" \
         --scenario 1 \
-        --feature1 "loudness" \
-        --feature2 "instrumentalness" \
-        --pre_process 1
+        --feature1 0 \
+        --feature2 2
+
+# pre-process ONLY FOR REAL WORLD DATASET 
+# --pre_process 1 \ 
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \

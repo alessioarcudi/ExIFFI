@@ -57,3 +57,23 @@ The idea of this experiment is to create a new type of synthetic dataset. This d
 - $[2,8]$ for Feature 2
 
 In this way we should have the three anomalous features on top of the `GFI` ranking but not all with similar importance values but we should have Feature 2 on top followed by Feature 1 and Feature 0 because the `anomaly_interval` of Feature 2 is wider than the ones of Feature 1 and Feature 0 and thus the anomalies along that feature are more isolated. 
+
+## Experiments to perform on `bisect_3d_prop`
+
+This is the complete list of experiments we do in general on any dataset:
+
+- `global_importances` → For each interpretation method compute the `GFI` scores and produce the Bar and Score Plot. In any case then in the paper we just report the Bar and Score Plot of `EXIFFI+` so we can just stick to this experiment 
+- `local_importances` → Obtain the Local Scoremaps for each interpretation algorithm → also in this case we report just the `EXIFFI+` ones
+- `ablationEIF+` → Ablation study on the `EIF+` model were we try to see how the Average Precision changes as we change the hyperparameter $\eta$ 
+- Contamination Experiment → This one has to be done for each one for of the AD models under comparison (i.e. `Autoencoder`,`DIF`,`ECOD`,`EIF`,`EIF+`,`IF`) and then we have to use the `plot_contaminations.py` script to merge all the experiments into a single plot
+- Feature Selection Experiment → Here we have to do the Feature Selection experiment for all the 24 combinations, even though at the end we report just 6 of them in the final paper 
+- Metrics Experiment → Simarly to the Contamination Experiment this has to be done for each one of the `AD` models 
+- Time Scaling Experiment → This one is needed to put execution times on the metrics table for the `fit` and `predict` and also in the $AUC_{FS}$ table (the importance time in this case). Although in this case we can also copy the times we put for `bisect_3d` (in fact the shape of the two datasets are identical so also the execution times should be very similar) 
+
+- [x] `GFI` experiment for `EXIFFI+`
+- [x] Local Scoremaps `EXIFFI+`
+- [ ] `ablation_EIF+` experiment 
+- [ ] Contamination Experiment 
+- [ ] Feature Selection Experiment
+- [ ] Metrics Experiment
+- [ ] Time Scaling Experiment 
