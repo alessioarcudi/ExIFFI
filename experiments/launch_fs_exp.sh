@@ -23,15 +23,6 @@ DATASET_PATH="../data/syn/"
     #     --model_interpretation "IF" \
     #     --interpretation "DIFFI" \
     #     --scenario 1 \
-
-
-    # python $SCRIPT_PATH \
-    #     --dataset_name $DATASETS \
-    #     --dataset_path $DATASET_PATH \
-    #     --model "EIF" \
-    #     --model_interpretation "IF" \
-    #     --interpretation "DIFFI" \
-    #     --scenario 2 \
  
 
     # python $SCRIPT_PATH \
@@ -43,14 +34,14 @@ DATASET_PATH="../data/syn/"
     #     --scenario 1 \
 
 
-    # python $SCRIPT_PATH \
-    #     --dataset_name $DATASETS \
-    #     --dataset_path $DATASET_PATH \
-    #     --model "EIF+" \
-    #     --model_interpretation "EIF+" \
-    #     --interpretation "EXIFFI+" \
-    #     --scenario 2 \
-    #     --compute_random
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
+        --scenario 2 \
+        --compute_random
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -60,6 +51,14 @@ DATASET_PATH="../data/syn/"
         --interpretation "EXIFFI" \
         --scenario 2 \
         --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF+" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 2 \
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
