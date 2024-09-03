@@ -345,8 +345,8 @@ def plot_precision_over_contamination(precisions:np.ndarray,
                                       contamination:np.ndarray=np.linspace(0.0,0.1,10),
                                       save_image:bool=True,
                                       plot_image:bool=False,
-                                      ylim:tuple=(0,1),
-                                      change_ylim:float=1.0) -> None:
+                                      ylim:tuple=(0,1)
+                                      ) -> None:
     
     """
     Obtain the precision over contamination plot.
@@ -360,7 +360,7 @@ def plot_precision_over_contamination(precisions:np.ndarray,
         save_image: A boolean indicating whether the plot should be saved. Defaults to True.
         plot_image: A boolean indicating whether the plot should be displayed. Defaults to False.
         ylim: The y axis limits. Defaults to (0,1).
-        change_ylim: The y axis limit value. Defaults to 1.0.
+        change_ylim: Weather to change the y axis limits. Defaults to False.
 
     Returns:
         The function saves the plot in the specified path and displays it if the plot_image parameter is set to True.
@@ -376,7 +376,7 @@ def plot_precision_over_contamination(precisions:np.ndarray,
     plt.plot(contamination,precisions.mean(axis=1),marker="o",c="tab:blue",alpha=0.5,label=model_name)
     plt.fill_between(contamination, [np.percentile(x, 10) for x in precisions], [np.percentile(x, 90) for x in precisions],alpha=0.1, color="tab:blue")
 
-    plt.ylim((ylim[0],change_ylim))
+    plt.ylim(ylim)
         
     plt.xlabel("Contamination",fontsize = 20)
     plt.ylabel("Average Precision",fontsize = 20)

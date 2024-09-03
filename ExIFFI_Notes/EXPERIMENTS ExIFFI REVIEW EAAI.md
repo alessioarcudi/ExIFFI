@@ -2,9 +2,9 @@ Let's use this note to keep track of the experiments I am running for the resubm
 # Experiments to perform
 
  - [ ] Time Scaling Experiments for `KernelSHAP`
- - [ ] Experiments for the `ECOD` AD model
+ - [x] Experiments for the `ECOD` AD model
  - [ ] Correlation between Feature Importance and Anomaly Score 
- - [ ] New synthetic dataset `bisect_3d_prop` experiment
+ - [x] New synthetic dataset `bisect_3d_prop` experiment
 # Time Scaling `KernelSHAP`
 
 - Datasets varying samples and with 6 features
@@ -31,11 +31,18 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 
 - [x] Precision metric experiment
 - [x] Contamination experiment
-- [ ] Time Scaling `fit-predict` experiment 
+- [x] Time Scaling `fit-predict` experiment 
 
 ## `ECOD` Performances
 
 Looking at the results obtained with the Contamination plots we can see how `ECOD` has similar performances to the other model only on the `bisect` datasets while on the others the performances are not very good. A possible explanation for this behavior may be connected to the fact that `ECOD` makes the assumption that the **features in the dataset are independent**. In fact it computes the Anomaly Scores individually on each feature (using the `ECDF` function estimates on each single feature) and then combines all the univariate scores to obtain a single score for each sample. The problem is that this assumption likely does not hold on the benchmark datasets we used in this paper. This is certified by the fact that in most cases there are multiple features with high importance values. On the other hand in the synthetic datasets we can safely say that the features are independent (because we generated each one of them sampling from a certain distribution) and in fact in the `bisect` datasets the model works decently. The strange thing are probably the bad performances on `Xaxis` and `Yaxis`. 
+
+## `ECOD` Time Performances 
+
+Looking at the new Time Scaling plots for the `fit` and `predict` operations (that now include also the `ECOD` model) we can observe the following things:
+
+ - `samples` → In general `ECOD` is the fastest model considered but as the number of samples increases its computational time increase up to surpassing or becoming very close to the times of the isolation based models (i.e. `IF,EIF,EIF+`)
+ - `features` → Probably because of the exploitation of parallel computing in the Anomaly Score computation the computational time stays more or less constant as the number of features increases. Only in `predict` it is possible to notice a clear increase in time (from 256 to 512 features) probably due to the fact that after having computed the univariate Anomaly Score on all the features these values have to be combined in some way and that operation scales linearly with the data dimensionality. 
 # Experiments Correlation
 
 > [!todo] 
@@ -82,4 +89,4 @@ This is the complete list of experiments we do in general on any dataset:
 - [x] Contamination Experiment 
 - [x] Feature Selection Experiment (only the ones needed for the paper)
 - [x] Metrics Experiment
-- [ ] Time Scaling Experiment 
+- [x] Time Scaling Experiment 
