@@ -17,14 +17,14 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_10000_6` → ==ok==
 	- `Xaxis_25000_6`  → ==ok==
 	- `Xaxis_50000_6`  → ==ok==
-	- `Xaxis_100000_6` → running 
+	- `Xaxis_100000_6` → running on `tmux` session `KernelSHAP-second-session-3`
 - Datasets varying number of features and with 5000 samples
 	- `Xaxis_5000_16` → ==ok==
 	- `Xaxis_5000_32` → ==ok== 
 	- `Xaxis_5000_64` → ==ok== 
-	- `Xaxis_5000_128` → running
-	- `Xaxis_5000_256` → 
-	- `Xaxis_5000_512` → 
+	- `Xaxis_5000_128` → ==ok==
+	- `Xaxis_5000_256` → running on `tmux` session `KernelSHAP-feat-time-exp-8`
+	- `Xaxis_5000_512` → running on `tmux` session `KernelSHAP-feat-last-exp-9`
 # Experiments `ECOD` model 
 
 Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/pyod.models.html#module-pyod.models.ecod). The `ECOD` model has some sort of interpretation but it is only local and only a graphical interpretation if I do remember correctly thus there should not be something like the `LFI` or `GFI` score to exploit for a comparison with `ExIFFI`. So we can use it as we used `DIF` and `Autoencoder`. So we will use it in the experiments:
@@ -43,16 +43,25 @@ Looking at the new Time Scaling plots for the `fit` and `predict` operations (th
 
  - `samples` → In general `ECOD` is the fastest model considered but as the number of samples increases its computational time increase up to surpassing or becoming very close to the times of the isolation based models (i.e. `IF,EIF,EIF+`)
  - `features` → Probably because of the exploitation of parallel computing in the Anomaly Score computation the computational time stays more or less constant as the number of features increases. Only in `predict` it is possible to notice a clear increase in time (from 256 to 512 features) probably due to the fact that after having computed the univariate Anomaly Score on all the features these values have to be combined in some way and that operation scales linearly with the data dimensionality. 
+
+> [!note] 
+> Moreover in the Introduction to the [ECOD paper](https://arxiv.org/abs/2201.00382) the authors says that as the number of features increases there are some technical difficulties in using `ECDF`s to estimate the data distribution. In fact when we increase the dimensionality the `ECDF` converges slowly to the true `CDF` of the data. They solve this problem using the approach of dividing the joint `ECDF` into $p$ univariate `ECDF`s, where $p$ is the number of features. 
+> In this step they assume that the features are independent. In fact to combine the tail probabilities from the different features they simply multiply them (like if we have 2 independent random variables → we can compute the intersection probability as the product of the single probabilities). 
 # Experiments Correlation
 
-> [!todo] 
-> Do this procedure for each interpretation method we compared inside the paper. 
-> - Do a table with the correlation values → add a column to the tables of the Average Precision,Time, 
-> - For each dataset
-> 	- Compute the `LFI` of all the samples 
-> 	- Compute the sum of the `LFI` scores over all the features
-> 	- Compute the Anomaly Score of the AD method 
-> 	- Compute the correlation 
+This experiment was proposed by [[ExIFFI PAPER REVIEW EAAI#Reviewer 2|reviewer 2 comment 6]] and it may be considered as another experiment to evaluate the effectiveness of the `ExIFFI` interpretation algorithm. The idea is that since the importance scores we obtain with `ExIFFI` should quantify the relevance of certain features in detecting anomalies then **samples with high feature importance values should also have an high Anomaly Score**. We can quantify this effect computing the correlation between the importance scores and Anomaly Scores for each sample. We can use the following approach: 
+
+- For each different interpretation algorithm under comparison (i.e. `ExIFFI,ExIFFI+,DIFFI,RandomForest`)
+	- For each dataset
+		- Compute the `LFI` of all the samples 
+		- Compute the sum of the `LFI` scores over all the features
+		- Compute the Anomaly Score of the `AD` method (use the `predict` method that returns the Anomaly Scores for all points)
+		- Compute the correlation 
+
+At then end, add a column with the correlation values and add it to the $AUC_{FS}$ table.  
+
+- [x] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_2`
+- [ ] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_1`
 
 ^c65818
 # New synthetic dataset `bisect_3d_prop` experiment
