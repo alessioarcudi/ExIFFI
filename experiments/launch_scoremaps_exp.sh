@@ -13,7 +13,7 @@ DATASET_PATH="../data/syn/"
         --interpretation "EXIFFI+" \
         --scenario 2 \
         --feature1 0 \
-        --feature2 2
+        --feature2 1
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
@@ -22,7 +22,7 @@ DATASET_PATH="../data/syn/"
         --interpretation "EXIFFI+" \
         --scenario 1 \
         --feature1 0 \
-        --feature2 2
+        --feature2 1
 
 # pre-process ONLY FOR REAL WORLD DATASET 
 # --pre_process 1 \ 
