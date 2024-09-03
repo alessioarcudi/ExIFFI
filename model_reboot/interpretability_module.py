@@ -140,7 +140,7 @@ def local_diffi(iforest, x):
     estimators = iforest.estimators_
     cfi = np.zeros(len(x)).astype('float')
     counter = np.zeros(len(x)).astype('int')
-    max_depth = int(np.ceil(np.log2(iforest.max_samples)))
+    max_depth = int(np.ceil(np.log2(iforest.max_samples_)))
     # for every iTree in the iForest
     for estimator in estimators:
         n_nodes = estimator.tree_.node_count

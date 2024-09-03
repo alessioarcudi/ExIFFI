@@ -1,12 +1,7 @@
 #!/bin/bash
 
-# Path to the Python script to execute
-#SCRIPT_PATH="test_global_importancies.py"
-#SCRIPT_PATH="test_feature_selection.py"
 SCRIPT_PATH="test_metrics.py"
-#SCRIPT_PATH="test_GFI_FS.py"
-#SCRIPT_PATH="test_local_importances.py"
-#SCRIPT_PATH="test_time_scaling.py"
+
 
 # List of datasets
 DATASETS="bisect_3d_prop"
@@ -83,17 +78,17 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --model "AnomalyAutoencoder" \
         --scenario 1
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "ECOD" \
-        --scenario 2 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "ECOD" \
+    #     --scenario 2 
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "ECOD" \
-        --scenario 1 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "ECOD" \
+    #     --scenario 1 
 
 done
 

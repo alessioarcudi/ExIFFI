@@ -117,6 +117,7 @@ class Dataset:
             try:
                 datapath=glob.glob(self.path+'/*.csv')
                 index = [i for i, path in enumerate(datapath) if os.path.basename(path).startswith(self.name)]
+                # import ipdb; ipdb.set_trace()
                 if self.name == "glass":
                     T = pd.read_csv(datapath[index[0]])
                 else:

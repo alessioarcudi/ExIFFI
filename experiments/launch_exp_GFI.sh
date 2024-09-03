@@ -9,6 +9,61 @@ DATASETS="bisect_3d_prop"
 # Path to the datasets
 DATASET_PATH="../data/syn/"
 
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF+" \
+    --interpretation "EXIFFI+" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF+" \
+    --interpretation "EXIFFI+" \
+    --scenario 1
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF" \
+    --interpretation "EXIFFI" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "EIF" \
+    --interpretation "EXIFFI" \
+    --scenario 1
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "DIFFI" \
+    --scenario 1 
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "DIFFI" \
+    --scenario 2
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "EXIFFI" \
+    --scenario 1 
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATH \
+    --model "IF" \
+    --interpretation "EXIFFI" \
+    --scenario 2
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
@@ -52,13 +107,7 @@ python $SCRIPT_PATH \
     --interpretation "RandomForest" \
     --scenario 1
 
-# python $SCRIPT_PATH \
-#     --dataset_name $DATASETS \
-#     --dataset_path $DATASET_PATH \
-#     --model "IF" \
-#     --interpretation "DIFFI" \
-#     --scenario 1 \
-#     --pre_process 
+
 
 # Use pre_process ONLY ON THE REAL WORLD DATASETS
 

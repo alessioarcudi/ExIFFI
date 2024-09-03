@@ -110,7 +110,7 @@ elif model == "ECOD":
 os.chdir('../')
 cwd=os.getcwd()
 
-filename = cwd + "/utils_reboot/new_time_scenario.pickle"
+filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
 
 if not os.path.exists(filename):
     dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
@@ -139,20 +139,20 @@ start_time = time.time()
 I.fit(dataset.X_train)
 fit_time = time.time() - start_time
 try:
-    dict_time[scenario]["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
+    dict_time["fit"][I.name].setdefault(dataset.name, []).append(fit_time)
 except:
     print('Model not recognized: creating a new key in the dict_time for the new model')
-    dict_time[scenario]["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
+    dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time)
 
 start_time = time.time()
 score=I.predict(dataset.X_test)
 y_pred=I._predict(dataset.X_test,p=dataset.perc_outliers)
 predict_time = time.time() - start_time
 try:
-    dict_time[scenario]["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
+    dict_time["predict"][I.name].setdefault(dataset.name, []).append(predict_time)
 except:
     print('Model not recognized: creating a new key in the dict_time for the new model')
-    dict_time[scenario]["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
+    dict_time["predict"].setdefault(I.name, {}).setdefault(dataset.name, []).append(predict_time)
 
 with open(filename, "wb") as file:
     pickle.dump(dict_time, file)
