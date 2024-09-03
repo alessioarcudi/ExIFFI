@@ -24,11 +24,13 @@ SCRIPT_PATH="test_time_scaling.py"
 # DATASETS="Xaxis_5000_64"
 # DATASETS="Xaxis_5000_128"
 # DATASETS="Xaxis_5000_256"
-DATASETS="Xaxis_5000_512"
+# DATASETS="Xaxis_5000_512"
 
 # DATASETS="Xaxis_5000_16 Xaxis_5000_32 Xaxis_5000_64 Xaxis_5000_128 Xaxis_5000_256 Xaxis_5000_512"
 
-DATASET_PATH="../data/syn/syn_feat_gz"
+DATASETS="bisect_6d"
+
+DATASET_PATH="../data/syn/"
 
 # IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
@@ -41,13 +43,13 @@ DATASET_PATH="../data/syn/syn_feat_gz"
 #                 --compute_fit_predict 1 
 # done
 
-python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --interpretation "KernelSHAP" \
-        --compute_GFI 1 \
-        --background 0.1
+# python $SCRIPT_PATH \
+#         --dataset_name $DATASETS \
+#         --dataset_path $DATASET_PATH \
+#         --model "EIF+" \
+#         --interpretation "KernelSHAP" \
+#         --compute_GFI 1 \
+#         --background 0.1
 
 # python $SCRIPT_PATH \
 #         --dataset_name $DATASETS \
@@ -83,3 +85,9 @@ python $SCRIPT_PATH \
 #         --dataset_path $DATASET_PATH \
 #         --model "AnomalyAutoencoder" \
 #         --compute_fit_predict 1 
+
+python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "ECOD" \
+        --compute_fit_predict 1 

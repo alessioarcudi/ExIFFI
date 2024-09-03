@@ -9,7 +9,7 @@ SCRIPT_PATH="test_metrics.py"
 #SCRIPT_PATH="test_time_scaling.py"
 
 # List of datasets
-DATASETS="bisect_3d_prop"
+DATASETS="wine"
 #DATASETS="glass cardio pima breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 #DATASETS="Yaxis bisect bisect_3d bisect_6d"
 # DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
@@ -18,82 +18,84 @@ DATASETS="bisect_3d_prop"
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
 # Iterate over the datasets and call the Python command for each dataset
 for dataset in "${DATASET_ARRAY[@]}"; do
  
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF+" \
-        --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF+" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF+" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF+" \
+    #     --scenario 1
 
-    python $SCRIPT_PATH \
-            --dataset_name "$dataset" \
-            --dataset_path "$DATASET_PATH" \
-            --model "EIF" \
-            --scenario 2
+    # python $SCRIPT_PATH \
+    #         --dataset_name "$dataset" \
+    #         --dataset_path "$DATASET_PATH" \
+    #         --model "EIF" \
+    #         --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "EIF" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "EIF" \
+    #     --scenario 1
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "IF" \
-        --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "IF" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "IF" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "IF" \
+    #     --scenario 1
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "DIF" \
-        --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "DIF" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "DIF" \
-        --scenario 1
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "DIF" \
+    #     --scenario 1
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "AnomalyAutoencoder" \
-        --scenario 2
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "AnomalyAutoencoder" \
+    #     --scenario 2
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "AnomalyAutoencoder" \
-        --scenario 1
-
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path "$DATASET_PATH" \
-        --model "ECOD" \
-        --scenario 2 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path "$DATASET_PATH" \
+    #     --model "AnomalyAutoencoder" \
+    #     --scenario 1
 
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path "$DATASET_PATH" \
         --model "ECOD" \
-        --scenario 1 
+        --scenario 2 \
+        --pre_process 1
+
+    python $SCRIPT_PATH \
+        --dataset_name "$dataset" \
+        --dataset_path "$DATASET_PATH" \
+        --model "ECOD" \
+        --scenario 1 \
+        --pre_process 1
 
 done
 

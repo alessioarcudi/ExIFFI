@@ -28,6 +28,7 @@ import pandas as pd
 
 # filename = cwd + "/utils_reboot/time_scaling_test_acq2_feat.pickle"
 filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
+corr_filename = cwd + "/utils_reboot/corr_exp.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
@@ -44,10 +45,20 @@ if not os.path.exists(filename):
     
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
+
+if not os.path.exists(corr_filename):
+
+    corr_dict = {"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},
+                 "IF_RandomForest":{},"EIF_RandomForest":{},"EIF+_RandomForest":{}}
+    
+    with open(corr_filename, "wb") as file:
+        pickle.dump(corr_dict, file)
                
 with open(filename, "rb") as file:
     dict_time = pickle.load(file)
 
+with open(corr_filename, "rb") as file:
+    corr_dict = pickle.load(file)
     
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
@@ -618,7 +629,54 @@ def ablation_EIF_plus(I:Type[ExtendedIsolationForest],
             precision.append(average_precision_score(dataset.y_test, score))
         precisions.append(precision)
     return precisions
+
+def correlation_experiment(I:Type[ExtendedIsolationForest], 
+                           interpretation:str,
+                           dataset:Type[Dataset],
+                           nruns:int=10) -> float:
+    
+    """
+    Compute the correlation between the local feature importance scores and the Anomaly Score of all samples
+
+    Args:
+        I: The AD model.
+        interpretation: The name interpretation method.
+        dataset: Input dataset.
+        nruns: The number of runs. Defaults to 10.
+
+    Returns:
+        The mean correlation value over nruns 
+    """
+
+    corr_values = []
+
+    for run in range(nruns):
+        I.fit(dataset.X_train)
+        score = I.predict(dataset.X_test)
+
+        if interpretation == "DIFFI":
+            lfi=np.zeros((dataset.X_test.shape[0],dataset.X_test.shape[1]))
+            for i in range(dataset.X_test.shape[0]):
+                lfi[i],_=local_diffi(I,dataset.X_test[i,:])
+        else:
+            lfi = I.local_importances(dataset.X_test)
+            
+        lfi_sum = np.sum(lfi,axis=1)
+        corr = np.corrcoef(lfi_sum,score)[0,1]
+        corr_values.append(corr)
+        try:
+            corr_dict[interpretation].setdefault(dataset.name, []).append(corr)
+        except:
+            print('Interpretation not recognized: creating a new key in the corr_dict for the new interpretation')
+            corr_dict.setdefault(interpretation, {}).setdefault(dataset.name, []).append(corr)
+
+    with open(corr_filename, "wb") as file:
+        pickle.dump(corr_dict, file)
+
+    return np.mean(corr_values)
         
+
+
         
     
 
