@@ -106,7 +106,7 @@ print('#'*50)
 os.chdir('../')
 cwd=os.getcwd()
 
-corr_path = cwd +"/experiments/results/"+dataset.name+"/correlation/"
+corr_path = cwd +"/experiments/results/"+dataset.name+"experiments/correlation/"
 if not os.path.exists(corr_path):
     os.makedirs(corr_path)
 
