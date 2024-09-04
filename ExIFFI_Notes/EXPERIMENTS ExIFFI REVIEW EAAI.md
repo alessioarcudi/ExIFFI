@@ -23,8 +23,7 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_5000_32` → ==ok== 
 	- `Xaxis_5000_64` → ==ok== 
 	- `Xaxis_5000_128` → ==ok==
-	- `Xaxis_5000_256` → running on `tmux` session `KernelSHAP-feat-time-exp-8`
-		- From some calculations these execution should go on for approximately 11 hours → so it should end at 5:00 `am` of 4 September 2024
+	- `Xaxis_5000_256` → ==ok==
 	- `Xaxis_5000_512` → running on `tmux` session `KernelSHAP-feat-last-exp-9`
 		- From some calculations these execution should go on for approximately 25 hours → so it should end at 19:00 `pm` of 4 September 2024
 # Experiments `ECOD` model 
