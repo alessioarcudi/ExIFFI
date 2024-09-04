@@ -630,7 +630,8 @@ def ablation_EIF_plus(I:Type[ExtendedIsolationForest],
         precisions.append(precision)
     return precisions
 
-def correlation_experiment(I:Type[ExtendedIsolationForest], 
+def correlation_experiment(I:Type[ExtendedIsolationForest],
+                           corr_dict:dict, 
                            interpretation:str,
                            dataset:Type[Dataset],
                            nruns:int=10) -> float:
@@ -640,6 +641,7 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
 
     Args:
         I: The AD model.
+        corr_dict: The dictionary containing the correlation values.
         interpretation: The name interpretation method.
         dataset: Input dataset.
         nruns: The number of runs. Defaults to 10.
@@ -649,6 +651,9 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
     """
 
     corr_values = []
+
+    if I.name == "IF" and interpretation == "EXIFFI":
+        interpretation = "IF_EXIFFI"
 
     for run in range(nruns):
         I.fit(dataset.X_train)
