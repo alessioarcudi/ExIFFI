@@ -33,6 +33,60 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Precision metric experiment
 - [x] Contamination experiment
 - [x] Time Scaling `fit-predict` experiment 
+- [ ] `GFI` experiments with the new `ECOD` Feature Importance 
+- [ ] Feature Selection Experiments 
+- [ ] Time Scaling Experiments for the `importances` Time Scaling plot 
+
+## `ECOD` Feature Importance 
+
+According to the `ECOD` paper, and also to the `AcME-AD` paper, this model is intrinsically interpretable and so we can use it as another method to compare to our `EXIFFI,EXIFFI+` in terms of interpretability performances. However the concept of interpretability presented in the `ECOD` paper is not very similar to the one of `DIFFI,EXIFFI,EXIFFI+`. 
+
+In fact in the paper they present the so called *Dimensional Outlier Graph* which is dedicated to a single sample and simply reports the outlier scores for each feature (i.e. the value of the `ECDF` function for each feature) compared with the 99% percentile of that feature. 
+
+In order to obtain something similar to the `GFI` score we use to obtain the Score Plot, Bar Plot and to perform the Feature Selection experiments we worked a little bit with these outlier scores for each feature, which we can call $0_i^{(j)}$ (i.e. outlier score of feature $j$ for sample $i$). 
+
+Given an object representing the `ECOD` model in Python we can access these outlier scores with the attribute `O`. 
+
+> [!note] 
+> For some reason the importance matrix is doubled. So if I have a dataset $\mathcal{X}$ with shape `(100,10)` the `np.array` I obtain in output doing `model.O` will have shape `(200,10)` and the element in index 0 will be the same as the one with index 100.  
+
+Commenting the *Dimensional Outlier Graph* in the paper they say that the most important features (i.e. the most anomalous features) are the ones closer to the 99% percentile (so features on which that specific sample has very high values) → so we want to give an high importance score to these features and low importance scores to features which are far from this percentile. 
+
+ Let's consider to have $p$ input features and $n$ input samples, thus the input dataset is $\mathcal{X} \in \mathbb{R}^{n \times p}$. 
+
+So a possible way of assigning importance scores is to use the inverse of the distance between the  outlier scores and the 99% percentile of the feature we are considering. Thus the importance of feature $j$ for sample $i$ will be:
+
+$$
+	I_i^{(j)} = \frac{1}{1+(\alpha_{0.99}^{(j)} - \mathcal{X}^{(j)})}
+$$
+where $\alpha_{0.99}$ is the 99% percentile of the outlier scores for feature $j$.
+
+This is the Local Feature Importance score of feature $j$ for sample $i$. Putting together the scores for all the features $j=1,\dots,p$ we obtain the `LFI` score for sample $i$ (with $i \in \{1,\dots,n\})$: 
+
+$$
+	I_i = [I_i^{(1)},I_i^{(2)},\dots,I_i^{(p)}] \in \mathbb{R}^p
+$$
+
+Now to obtain the `GFI` score we can do the same thing that is done in `DIFFI` and `EXIFFI`. We divide the dataset into inliers and outliers according to the predictions done by the `AD` mode (i.e. `ECOD` in this case) and we compute the `LFI` scores separately on set of predicted inliers $\mathcal{P}_I$ and on the set of predicted outliers $\mathcal{P}_O$. Then we put together the inliers and outliers importances into two $p$ dimensional vectors with the mean:
+
+$$
+	\hat{I}_I = \frac{1}{N_I} \sum_{x \in \mathcal{P}_I} I_x
+$$
+$$
+	\hat{I}_O = \frac{1}{N_O} \sum_{x \in \mathcal{P}_O} I_x
+$$
+
+> [!note] 
+> In this case, differently from `DIFFI` and `EXIFFI`, we do not have to normalize divide by a counter or by the normal vectors because there is no randomness in the algorithm and thus there is no risk of being biased towards a certain feature → also because the features are considered independent and the $O_i^{(j)}$ computation are done independently
+
+Finally the `GFI` score is computed as:
+
+$$
+	GFI = \frac{\hat{I}_O}{\hat{I}_I}
+$$
+
+> [!important] 
+> Since the model is deterministic in determining the importance scores it does not make sense to perform multiple runs in the `GFI` experiments → they will be all the same.  
 
 ## `ECOD` Performances
 
