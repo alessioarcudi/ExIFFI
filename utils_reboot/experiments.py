@@ -62,10 +62,11 @@ with open(corr_filename, "rb") as file:
     
 
 def compute_global_importances(I: Type[ExtendedIsolationForest],
-                        dataset: Type[Dataset],
-                        p = 0.1,
-                        interpretation="EXIFFI+",
-                        fit_model = True) -> np.array: 
+                               dataset: Type[Dataset],
+                               p:float = 0.1,
+                               percentile:float = 0.99,
+                               interpretation="EXIFFI+",
+                               fit_model = True) -> np.array: 
     
     """
     Compute the global feature importances for an interpration model on a specific dataset.
@@ -86,13 +87,34 @@ def compute_global_importances(I: Type[ExtendedIsolationForest],
         I.fit(dataset.X_train)        
     if interpretation=="DIFFI":
         fi,_=diffi_ib(I,dataset.X_test)
-    elif interpretation=="EXIFFI" or interpretation=='EXIFFI+':
+    elif interpretation in ['EXIFFI','EXIFFI+']:
         fi=I.global_importances(dataset.X_test,p)
+    elif interpretation == "ECOD":
+        fi=I.global_importances(X=dataset.X_test,p=p,percentile=percentile)
     elif interpretation=="RandomForest":
         rf = RandomForestRegressor()
         rf.fit(dataset.X_test, I.predict(dataset.X_test))
         fi = rf.feature_importances_
     return fi
+
+def compute_global_importances_ecod(I:Type[ECOD],
+                                    dataset:Type[Dataset],
+                                    percentile:float=0.99,
+                                    fit_model:bool=True):
+    
+    """
+    Compute Global Importances score with the ECOD model
+
+    Args:
+        I: ECOD model 
+    """
+
+    assert I.name=="ECOD", "Model name not valid, only ECOD model available"
+
+    if fit_model:
+        I.fit(dataset.X_train)
+
+    return I.ecod_global_importance(dataset.X_test,percentile)
 
 def fit_predict_experiment(I: Type[ExtendedIsolationForest],
                            dataset: Type[Dataset],
@@ -153,12 +175,13 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
     return np.mean(fit_times), np.mean(predict_times)
                         
 def experiment_global_importances(I:Type[ExtendedIsolationForest],
-                               dataset:Type[Dataset],
-                               n_runs:int=10, 
-                               p:float=0.1,
-                               model:str="EIF+",
-                               interpretation:str="EXIFFI+"
-                               ) -> tuple[np.array,dict,str,str]:
+                                  dataset:Type[Dataset],
+                                  n_runs:int=10, 
+                                  p:float=0.1,
+                                  percentile:float=0.99,
+                                  model:str="EIF+",
+                                  interpretation:str="EXIFFI+"
+                                  ) -> tuple[np.array,dict,str,str]:
     
     """
     Compute the global feature importances for an interpration model on a specific dataset for a number of runs.
@@ -178,17 +201,28 @@ def experiment_global_importances(I:Type[ExtendedIsolationForest],
     imp_times=[]
     for i in tqdm(range(n_runs)):
         start_time = time.time()
-        fi[i,:]=compute_global_importances(I,
-                        dataset,
-                        p = p,
-                        interpretation=interpretation)
+        if interpretation=="ECOD":
+            fi[i,:]=compute_global_importances(I=I,
+                                               dataset=dataset,
+                                               p=p,
+                                               percentile=percentile,
+                                               interpretation=interpretation)
+        else:
+            fi[i,:]=compute_global_importances(I=I,
+                                               dataset=dataset,
+                                               p = p,
+                                               interpretation=interpretation)
         gfi_time = time.time() - start_time
-        if i>3:
+        if i>3 or n_runs<3:
             imp_times.append(gfi_time)
             if (model=="IF") and (interpretation=="EXIFFI"):
                 dict_time["importances"]["IF_EXIFFI"].setdefault(dataset.name, []).append(gfi_time)
             else:
-                dict_time["importances"][interpretation].setdefault(dataset.name, []).append(gfi_time)
+                try:
+                    dict_time["importances"][I.name].setdefault(dataset.name, []).append(gfi_time)
+                except:
+                    print('Model not recognized: creating a new key in the dict_time for the new model')
+                    dict_time["importances"].setdefault(I.name, {}).setdefault(dataset.name, []).append(gfi_time)
             #print(f'Added time {str(gfi_time)} to time dict')
     
     with open(filename, "wb") as file:
@@ -630,7 +664,8 @@ def ablation_EIF_plus(I:Type[ExtendedIsolationForest],
         precisions.append(precision)
     return precisions
 
-def correlation_experiment(I:Type[ExtendedIsolationForest], 
+def correlation_experiment(I:Type[ExtendedIsolationForest],
+                           corr_dict:dict, 
                            interpretation:str,
                            dataset:Type[Dataset],
                            nruns:int=10) -> float:
@@ -640,6 +675,7 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
 
     Args:
         I: The AD model.
+        corr_dict: The dictionary containing the correlation values.
         interpretation: The name interpretation method.
         dataset: Input dataset.
         nruns: The number of runs. Defaults to 10.
@@ -649,6 +685,9 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
     """
 
     corr_values = []
+
+    if I.name == "IF" and interpretation == "EXIFFI":
+        interpretation = "IF_EXIFFI"
 
     for run in range(nruns):
         I.fit(dataset.X_train)

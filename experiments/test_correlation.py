@@ -57,8 +57,22 @@ if dataset.shape[0]>7500:
     dataset.downsample(max_samples=7500)
 
 if scenario==2:
-    #dataset.split_dataset(train_size=0.8,contamination=0)
+    corr_filename = cwd + "/utils_reboot/corr_exp.pickle"
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
+else:
+    corr_filename = cwd + "/utils_reboot/corr_exp_scenario1.pickle"
+
+if not os.path.exists(corr_filename):
+
+    corr_dict = {"EXIFFI+":{},"EXIFFI":{},"DIFFI":{},"IF_EXIFFI":{}}
+    
+    with open(corr_filename, "wb") as file:
+        pickle.dump(corr_dict, file)
+
+with open(corr_filename, "rb") as file:
+    corr_dict = pickle.load(file)
+
+# import ipdb; ipdb.set_trace()
 
 # Preprocess the dataset
 if pre_process:
@@ -94,6 +108,8 @@ elif model == "EIF":
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
+# import ipdb; ipdb.set_trace()
+
 print('#'*50)
 print('Correlation Experiment')
 print('#'*50)
@@ -106,7 +122,7 @@ print('#'*50)
 os.chdir('../')
 cwd=os.getcwd()
 
-corr_path = cwd +"/experiments/results/"+dataset.name+"experiments/correlation/"
+corr_path = cwd +"/experiments/results/"+dataset.name+"/experiments/correlation/"
 if not os.path.exists(corr_path):
     os.makedirs(corr_path)
 
@@ -125,6 +141,7 @@ if not os.path.exists(corr_path_scenario):
 # Correlation experiment
 
 mean_corr = correlation_experiment(I=I,
+                                   corr_dict=corr_dict,
                                    interpretation=interpretation,
                                    dataset=dataset,
                                    nruns=n_runs)

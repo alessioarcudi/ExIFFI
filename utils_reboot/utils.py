@@ -158,6 +158,59 @@ class ECOD(oldECOD):
         An_score = self.predict(X)
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
+    
+    def local_importances(self,
+                          X:np.array,
+                          percentile:float=0.99) -> np.array:
+        
+        """
+        Compute the LFI scores for each sample in the input dataset
+
+        Args:
+            percentile: Percentile to be used in the calculation of the Global Importance Score, by default 0.99
+            X: Input dataset
+        Returns:
+            Local Importance Score
+        """
+
+        # The attribute O has the outliers scores doubled so we take the indexes
+        # up to the size of the dataset to consider all the scores needed 
+        feat_outlier_scores = self.O[:X.shape[0]]
+        dist=np.quantile(feat_outlier_scores, percentile, axis=0) - feat_outlier_scores
+        lfi = 1/(1+dist**2)
+
+        return lfi
+    
+    def global_importances(self,
+                            X:np.array,
+                            p:float=0.1,
+                            **kwargs) -> np.array:
+        
+        """
+        Compute the GFI scores for each sample in the input dataset
+
+        Args:
+            percentile: Percentile to be used in the calculation of the Global Importance Score, by default 0.99
+            X: Input dataset
+            p: Contamination factor, by default 0.1
+
+        Returns:
+            Global Importance Score
+        """
+
+        label=self._predict(X,p)
+        inliers=X[label==0]
+        outliers=X[label==1]
+        lfi_in=self.local_importances(inliers,**kwargs)
+        lfi_out=self.local_importances(outliers,**kwargs)
+        i_i=np.mean(lfi_in,axis=0)
+        i_o=np.mean(lfi_out,axis=0)
+        gfi=i_o/i_i
+        print(f'Sum of lfi_out: {np.sum(lfi_out,axis=0)}')
+        print(f'Sum of lfi_in: {np.sum(lfi_in,axis=0)}')
+        print(f'I_O: {i_o}')
+        print(f'I_I: {i_i}')
+        return gfi
 
     
 class AutoEncoder(oldAutoEncoder):

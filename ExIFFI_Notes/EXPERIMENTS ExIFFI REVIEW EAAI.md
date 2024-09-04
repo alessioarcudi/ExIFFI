@@ -23,8 +23,7 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_5000_32` → ==ok== 
 	- `Xaxis_5000_64` → ==ok== 
 	- `Xaxis_5000_128` → ==ok==
-	- `Xaxis_5000_256` → running on `tmux` session `KernelSHAP-feat-time-exp-8`
-		- From some calculations these execution should go on for approximately 11 hours → so it should end at 5:00 `am` of 4 September 2024
+	- `Xaxis_5000_256` → ==ok==
 	- `Xaxis_5000_512` → running on `tmux` session `KernelSHAP-feat-last-exp-9`
 		- From some calculations these execution should go on for approximately 25 hours → so it should end at 19:00 `pm` of 4 September 2024
 # Experiments `ECOD` model 
@@ -34,6 +33,60 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Precision metric experiment
 - [x] Contamination experiment
 - [x] Time Scaling `fit-predict` experiment 
+- [ ] `GFI` experiments with the new `ECOD` Feature Importance 
+- [ ] Feature Selection Experiments 
+- [ ] Time Scaling Experiments for the `importances` Time Scaling plot 
+
+## `ECOD` Feature Importance 
+
+According to the `ECOD` paper, and also to the `AcME-AD` paper, this model is intrinsically interpretable and so we can use it as another method to compare to our `EXIFFI,EXIFFI+` in terms of interpretability performances. However the concept of interpretability presented in the `ECOD` paper is not very similar to the one of `DIFFI,EXIFFI,EXIFFI+`. 
+
+In fact in the paper they present the so called *Dimensional Outlier Graph* which is dedicated to a single sample and simply reports the outlier scores for each feature (i.e. the value of the `ECDF` function for each feature) compared with the 99% percentile of that feature. 
+
+In order to obtain something similar to the `GFI` score we use to obtain the Score Plot, Bar Plot and to perform the Feature Selection experiments we worked a little bit with these outlier scores for each feature, which we can call $0_i^{(j)}$ (i.e. outlier score of feature $j$ for sample $i$). 
+
+Given an object representing the `ECOD` model in Python we can access these outlier scores with the attribute `O`. 
+
+> [!note] 
+> For some reason the importance matrix is doubled. So if I have a dataset $\mathcal{X}$ with shape `(100,10)` the `np.array` I obtain in output doing `model.O` will have shape `(200,10)` and the element in index 0 will be the same as the one with index 100.  
+
+Commenting the *Dimensional Outlier Graph* in the paper they say that the most important features (i.e. the most anomalous features) are the ones closer to the 99% percentile (so features on which that specific sample has very high values) → so we want to give an high importance score to these features and low importance scores to features which are far from this percentile. 
+
+ Let's consider to have $p$ input features and $n$ input samples, thus the input dataset is $\mathcal{X} \in \mathbb{R}^{n \times p}$. 
+
+So a possible way of assigning importance scores is to use the inverse of the distance between the  outlier scores and the 99% percentile of the feature we are considering. Thus the importance of feature $j$ for sample $i$ will be:
+
+$$
+	I_i^{(j)} = \frac{1}{1+(\alpha_{0.99}^{(j)} - \mathcal{X}^{(j)})}
+$$
+where $\alpha_{0.99}$ is the 99% percentile of the outlier scores for feature $j$.
+
+This is the Local Feature Importance score of feature $j$ for sample $i$. Putting together the scores for all the features $j=1,\dots,p$ we obtain the `LFI` score for sample $i$ (with $i \in \{1,\dots,n\})$: 
+
+$$
+	I_i = [I_i^{(1)},I_i^{(2)},\dots,I_i^{(p)}] \in \mathbb{R}^p
+$$
+
+Now to obtain the `GFI` score we can do the same thing that is done in `DIFFI` and `EXIFFI`. We divide the dataset into inliers and outliers according to the predictions done by the `AD` mode (i.e. `ECOD` in this case) and we compute the `LFI` scores separately on set of predicted inliers $\mathcal{P}_I$ and on the set of predicted outliers $\mathcal{P}_O$. Then we put together the inliers and outliers importances into two $p$ dimensional vectors with the mean:
+
+$$
+	\hat{I}_I = \frac{1}{N_I} \sum_{x \in \mathcal{P}_I} I_x
+$$
+$$
+	\hat{I}_O = \frac{1}{N_O} \sum_{x \in \mathcal{P}_O} I_x
+$$
+
+> [!note] 
+> In this case, differently from `DIFFI` and `EXIFFI`, we do not have to normalize divide by a counter or by the normal vectors because there is no randomness in the algorithm and thus there is no risk of being biased towards a certain feature → also because the features are considered independent and the $O_i^{(j)}$ computation are done independently
+
+Finally the `GFI` score is computed as:
+
+$$
+	GFI = \frac{\hat{I}_O}{\hat{I}_I}
+$$
+
+> [!important] 
+> Since the model is deterministic in determining the importance scores it does not make sense to perform multiple runs in the `GFI` experiments → they will be all the same.  
 
 ## `ECOD` Performances
 
@@ -67,28 +120,28 @@ At then end, add a column with the correlation values and add it to the $AUC_{FS
 
 ## Datasets missing the correlation experiments 
 
-- [ ] `scenario_2`
-	- [ ] `ionosphere`
-	- [ ] `glass`
-	- [ ] `cardio`
-	- [ ] `bisect_3d_prop`
-	- [ ] `bisect`
-- [ ] `scenario_1`
-	- [ ] `bisect` (only `IF_DIFFI`)
-	- [ ] `bisect_3d`
-	- [ ] `bisect_3d_prop`
-	- [ ] `bisect_6d`
-	- [ ] `annthyroid`
-	- [ ] `breastw`
-	- [ ] `cardio`
-	- [ ] `diabetes`
-	- [ ] `glass`
-	- [ ] `ionosphere`
-	- [ ] `moodify`
-	- [ ] `pendigits`
-	- [ ] `pima`
-	- [ ] `shuttle`
-	- [ ] `wine`
+- [x] `scenario_2`
+	- [x] `ionosphere`
+	- [x] `glass`
+	- [x] `cardio`
+	- [x] `bisect_3d_prop`
+	- [x] `bisect`
+- [x] `scenario_1`
+	- [x] `bisect` (only `IF_DIFFI`)
+	- [x] `bisect_3d`
+	- [x] `bisect_3d_prop`
+	- [x] `bisect_6d`
+	- [x] `annthyroid`
+	- [x] `breastw`
+	- [x] `cardio`
+	- [x] `diabetes`
+	- [x] `glass`
+	- [x] `ionosphere`
+	- [x] `moodify`
+	- [x] `pendigits`
+	- [x] `pima`
+	- [x] `shuttle`
+	- [x] `wine` 
 ^c65818
 # New synthetic dataset `bisect_3d_prop` experiment
 

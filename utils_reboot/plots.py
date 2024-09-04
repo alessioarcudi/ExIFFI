@@ -424,7 +424,8 @@ def importance_map(dataset: Type[Dataset],
                    col_names: List[str] = None,
                    isdiffi: Optional[bool] = False,
                    scenario: Optional[int] = 2,
-                   interpretation: Optional[str] = "EXIFFI+"
+                   interpretation: Optional[str] = "EXIFFI+",
+                   **kwargs: Optional[dict]
                    ) -> None:
         """
         Produce the Local Feature Importance Scoremap.   
@@ -463,7 +464,10 @@ def importance_map(dataset: Type[Dataset],
                 for i in range(importance_matrix.shape[0]):
                         importance_matrix[i] = local_diffi(model, mean[i])[0]
         else:
-            importance_matrix = model.local_importances(mean)
+                if interpretation == "ECOD":
+                    importance_matrix = model.local_importances(mean,**kwargs)
+                else:
+                    importance_matrix = model.local_importances(mean)
         
         sign = np.sign(importance_matrix[:,feats_plot[0]]-importance_matrix[:,feats_plot[1]])
         Score = sign*((sign>0)*importance_matrix[:,feats_plot[0]]+(sign<0)*importance_matrix[:,feats_plot[1]])
