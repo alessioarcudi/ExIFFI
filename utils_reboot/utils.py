@@ -206,10 +206,10 @@ class ECOD(oldECOD):
         i_i=np.mean(lfi_in,axis=0)
         i_o=np.mean(lfi_out,axis=0)
         gfi=i_o/i_i
-        print(f'Sum of lfi_out: {np.sum(lfi_out,axis=0)}')
-        print(f'Sum of lfi_in: {np.sum(lfi_in,axis=0)}')
-        print(f'I_O: {i_o}')
-        print(f'I_I: {i_i}')
+        # print(f'Sum of lfi_out: {np.sum(lfi_out,axis=0)}')
+        # print(f'Sum of lfi_in: {np.sum(lfi_in,axis=0)}')
+        # print(f'I_O: {i_o}')
+        # print(f'I_I: {i_i}')
         return gfi
 
     

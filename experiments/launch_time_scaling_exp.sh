@@ -15,7 +15,7 @@ SCRIPT_PATH="test_time_scaling.py"
 # DATASETS="Xaxis_50000_6"
 # DATASETS="Xaxis_100000_6"
 
-DATASETS="Xaxis_100_6 Xaxis_250_6 Xaxis_500_6 Xaxis_1000_6 Xaxis_2500_6 Xaxis_5000_6 Xaxis_10000_6 Xaxis_25000_6 Xaxis_50000_6 Xaxis_100000_6"
+# DATASETS="Xaxis_100_6 Xaxis_250_6 Xaxis_500_6 Xaxis_1000_6 Xaxis_2500_6 Xaxis_5000_6 Xaxis_10000_6 Xaxis_25000_6 Xaxis_50000_6 Xaxis_100000_6"
 
 # Varying number of features
 
@@ -26,11 +26,11 @@ DATASETS="Xaxis_100_6 Xaxis_250_6 Xaxis_500_6 Xaxis_1000_6 Xaxis_2500_6 Xaxis_50
 # DATASETS="Xaxis_5000_256"
 # DATASETS="Xaxis_5000_512"
 
-# DATASETS="Xaxis_5000_16 Xaxis_5000_32 Xaxis_5000_64 Xaxis_5000_128 Xaxis_5000_256 Xaxis_5000_512"
+DATASETS="Xaxis_5000_16 Xaxis_5000_32 Xaxis_5000_64 Xaxis_5000_128 Xaxis_5000_256 Xaxis_5000_512"
 
 # DATASETS="bisect_6d"
 
-DATASET_PATH="../data/syn/syn_samples"
+DATASET_PATH="../data/syn/syn_feat_gz"
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 

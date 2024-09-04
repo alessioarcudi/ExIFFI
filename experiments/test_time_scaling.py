@@ -30,6 +30,7 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
+parser.add_argument('--percentile', type=float, default=0.99, help='Percentile to use in the ECOD GFI computation')
 parser.add_argument('--background', type=float, default=0.1, help='Size of the background dataset for KernelSHAP')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
@@ -43,7 +44,7 @@ parser.add_argument('--compute_fit_predict', type=bool, default=False, help='Wea
 args = parser.parse_args()
 
 assert args.model in ["IF", "EIF", "EIF+","EIF+_RF","sklearn_IF","DIF","AnomalyAutoencoder","AnomalyAutoencoder_16","ECOD"], "Model not recognized"
-assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","KernelSHAP","NA"], "Interpretation not recognized"
+assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","KernelSHAP","ECOD","NA"], "Interpretation not recognized"
 
 if args.interpretation == "EXIFFI+":
     assert args.model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
@@ -53,6 +54,9 @@ if args.interpretation == "EXIFFI":
 
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "ECOD":
+    assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
 
 if args.interpretation == "RandomForest":
     assert args.model=='EIF+_RF', "For the time scaling experiments only EIF+_RF model is accepted for the RandomForest interpretation"
@@ -64,6 +68,7 @@ n_estimators = args.n_estimators
 max_depth = args.max_depth
 max_samples = args.max_samples
 contamination = args.contamination
+percentile = args.percentile
 background = args.background
 n_runs = args.n_runs
 pre_process = args.pre_process
@@ -129,6 +134,7 @@ print(f'Interpretation Model: {interpretation}')
 print(f'Sample Size: {dataset.X.shape[0]}')
 print(f'SHAP background: {background}')
 print(f'Number of Features: {dataset.X.shape[1]}')
+print(f'Percentile: {percentile}')
 print('#'*50)
 
 os.chdir('../')
@@ -181,7 +187,7 @@ if GFI:
     if interpretation == "KernelSHAP":
         _,imp_times = compute_local_importances_kernelSHAP(I=I, dataset=dataset, background=background, p=contamination)
     else:
-        _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)
+        _,imp_times = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, percentile=percentile)
 
     print(f'Mean Importances Time: {imp_times}')
     imp_dict={"importances_time":imp_times}
