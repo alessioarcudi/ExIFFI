@@ -2,13 +2,13 @@
 
 SCRIPT_PATH="test_correlation.py"
 
-DATASETS="bisect bisect_3d_prop"
+DATASETS="annthyroid breastw cardio diabetes glass ionosphere moodify pendigits pima shuttle wine"
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Next datasets → shuttle moodify
 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
 for dataset in "${DATASET_ARRAY[@]}"; do
 
@@ -17,28 +17,28 @@ for dataset in "${DATASET_ARRAY[@]}"; do
                 --dataset_path $DATASET_PATH \
                 --model "EIF+" \
                 --interpretation "EXIFFI+" \
-                --scenario 2
+                --scenario 1
 
         python $SCRIPT_PATH \
                 --dataset_name "$dataset" \
                 --dataset_path $DATASET_PATH \
                 --model "EIF" \
                 --interpretation "EXIFFI" \
-                --scenario 2 
+                --scenario 1 
 
         python $SCRIPT_PATH \
                 --dataset_name "$dataset" \
                 --dataset_path $DATASET_PATH \
                 --model "IF" \
                 --interpretation "EXIFFI" \
-                --scenario 2 
+                --scenario 1 
 
         python $SCRIPT_PATH \
                 --dataset_name "$dataset" \
                 --dataset_path $DATASET_PATH \
                 --model "IF" \
                 --interpretation "DIFFI" \
-                --scenario 2 
+                --scenario 1
 done
 
 # python $SCRIPT_PATH \
