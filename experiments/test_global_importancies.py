@@ -25,6 +25,7 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
+parser.add_argument('--percentile', type=float, default=0.99, help='Percentile to use in the ECOD GFI computation')
 parser.add_argument('--n_runs', type=int, default=40, help='Global feature importances parameter: n_runs')
 parser.add_argument('--pre_process',action='store_true', help='If set, preprocess the dataset')
 parser.add_argument('--model', type=str, default="EIF", help='Model to use: IF, EIF, EIF+')
@@ -33,10 +34,14 @@ parser.add_argument("--scenario", type=int, default=2, help="Scenario to run")
 # Parse the arguments
 args = parser.parse_args()
 
-assert args.model in ["IF", "EIF", "EIF+"], "Model not recognized"
-assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert args.model in ["IF", "EIF", "EIF+","ECOD"], "Model not recognized"
+assert args.interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest", "ECOD"], "Interpretation not recognized"
+
 if args.interpretation == "DIFFI":
     assert args.model=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "ECOD":
+    assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
 
 # Access the arguments
 dataset_name = args.dataset_name
@@ -45,6 +50,7 @@ n_estimators = args.n_estimators
 max_depth = args.max_depth
 max_samples = args.max_samples
 contamination = args.contamination
+percentile = args.percentile 
 n_runs = args.n_runs
 pre_process = args.pre_process
 model = args.model
@@ -60,7 +66,6 @@ dataset.drop_duplicates()
 # Downsample datasets with more than 7500 samples
 if dataset.shape[0] > 7500:
     dataset.downsample(max_samples=7500)
-
 
 if scenario==2:
     dataset.split_dataset(train_size=1-dataset.perc_outliers,contamination=0)
@@ -87,6 +92,8 @@ elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+elif model == "ECOD":
+    I=ECOD(contamination=contamination)
     
 os.chdir('../')
 cwd=os.getcwd()
@@ -98,6 +105,7 @@ print(f'Dataset: {dataset.name}')
 print(f'Model: {model}')
 print(f'Interpretation Model: {interpretation}')
 print(f'Scenario: {scenario}')
+print(f'Percentile: {percentile}')
 print('#'*50)
 
 path = cwd +"/experiments/results/"+dataset.name
@@ -129,11 +137,14 @@ if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
 
 #Compute global importances
-full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation)    
+full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=dataset.perc_outliers, interpretation=interpretation, percentile=percentile)    
 save_element(full_importances, path_experiment_model_interpretation_scenario, filetype="npz")
 
 # plot global importances
 most_recent_file = get_most_recent_file(path_experiment_model_interpretation_scenario,filetype="npz")
-bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
+
+if n_runs>1:
+    bar_plot(dataset, most_recent_file, filetype="npz", plot_path=path_plots, f=min(dataset.shape[1],6),show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
+
 score_plot(dataset, most_recent_file, plot_path=path_plots, show_plot=False, model=model, interpretation=interpretation, scenario=scenario)
 
