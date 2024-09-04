@@ -158,7 +158,27 @@ class ECOD(oldECOD):
         An_score = self.predict(X)
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
+    
+    def ecod_global_importance(self,
+                          X:np.array,
+                          percentile:float=0.99):
+        
+        """
+        Method to insert a Global Importance Score on the ECOD model using the outlier scores of each feature
 
+        Args:
+            percentile: Percentile to be used in the calculation of the Global Importance Score, by default 0.99
+            X: Input dataset
+        Returns:
+            Global Importance Score
+        """
+
+        # The attribute O has the outliers scores doubled so we take the indexes
+        # up to the size of the dataset to consider all the scores needed 
+        feat_outlier_scores = self.O[:X.shape[0]]
+        gfi = 1/(1+(np.quantile(feat_outlier_scores, percentile, axis=0) - feat_outlier_scores))
+
+        return gfi
     
 class AutoEncoder(oldAutoEncoder):
 
