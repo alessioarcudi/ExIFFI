@@ -65,6 +65,30 @@ At then end, add a column with the correlation values and add it to the $AUC_{FS
 - [x] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_2`
 - [ ] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_1`
 
+## Datasets missing the correlation experiments 
+
+- [ ] `scenario_2`
+	- [ ] `ionosphere`
+	- [ ] `glass`
+	- [ ] `cardio`
+	- [ ] `bisect_3d_prop`
+	- [ ] `bisect`
+- [ ] `scenario_1`
+	- [ ] `bisect` (only `IF_DIFFI`)
+	- [ ] `bisect_3d`
+	- [ ] `bisect_3d_prop`
+	- [ ] `bisect_6d`
+	- [ ] `annthyroid`
+	- [ ] `breastw`
+	- [ ] `cardio`
+	- [ ] `diabetes`
+	- [ ] `glass`
+	- [ ] `ionosphere`
+	- [ ] `moodify`
+	- [ ] `pendigits`
+	- [ ] `pima`
+	- [ ] `shuttle`
+	- [ ] `wine`
 ^c65818
 # New synthetic dataset `bisect_3d_prop` experiment
 
