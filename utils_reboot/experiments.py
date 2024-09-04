@@ -28,7 +28,7 @@ import pandas as pd
 
 # filename = cwd + "/utils_reboot/time_scaling_test_acq2_feat.pickle"
 filename = cwd + "/utils_reboot/time_scaling_test_dei_new.pickle"
-corr_filename = cwd + "/utils_reboot/corr_exp.pickle"
+corr_filename = cwd + "/utils_reboot/corr_exp_scenario1.pickle"
 
 # dict_time = {1:{"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
 #         "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
