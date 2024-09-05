@@ -4,7 +4,7 @@
 SCRIPT_PATH="test_global_importancies.py"
 
 # List of datasets
-DATASETS="bisect_3d"
+DATASETS="bisect"
 
 # Path to the datasets
 DATASET_PATH="../data/syn/"

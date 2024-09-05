@@ -272,7 +272,7 @@ class ECOD(oldECOD):
             return self._decision_function_parallel(X)
         if hasattr(self, 'X_train'):
             original_size = X.shape[0]
-            X = np.concatenate((self.X_train, X), axis=0)
+            X = np.concatenate((X, X), axis=0)
         self.U_l = -1 * np.log(column_ecdf(X))
         self.U_r = -1 * np.log(column_ecdf(-X))
 
@@ -281,7 +281,7 @@ class ECOD(oldECOD):
             skewness - 1) + self.U_r * np.sign(skewness + 1)
 
         O = np.maximum(self.U_l, self.U_r)
-        O = np.maximum(self.U_skew, self.O)
+        O = np.maximum(self.U_skew, O)
 
         return O
 
