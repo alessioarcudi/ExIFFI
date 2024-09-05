@@ -24,8 +24,7 @@ Let's use this note to keep track of the experiments I am running for the resubm
 	- `Xaxis_5000_64` → ==ok== 
 	- `Xaxis_5000_128` → ==ok==
 	- `Xaxis_5000_256` → ==ok==
-	- `Xaxis_5000_512` → running on `tmux` session `KernelSHAP-feat-last-exp-9`
-		- From some calculations these execution should go on for approximately 25 hours → so it should end at 19:00 `pm` of 4 September 2024
+	- `Xaxis_5000_512` → ==ok==
 # Experiments `ECOD` model 
 
 Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/pyod.models.html#module-pyod.models.ecod). The `ECOD` model has some sort of interpretation but it is only local and only a graphical interpretation if I do remember correctly thus there should not be something like the `LFI` or `GFI` score to exploit for a comparison with `ExIFFI`. So we can use it as we used `DIF` and `Autoencoder`. So we will use it in the experiments:
