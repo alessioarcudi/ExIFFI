@@ -58,9 +58,9 @@ feature2 = args.feature2
 dataset = Dataset(dataset_name, path = dataset_path,feature_names_filepath='../data/')
 dataset.drop_duplicates()
 
-feats_plot=get_feature_indexes(dataset,feature1,feature2)
-
 # import ipdb; ipdb.set_trace()
+
+feats_plot=get_feature_indexes(dataset,feature1,feature2)
 
 # Downsample datasets with more than 7500 samples (i.e. diabetes shuttle and moodify)
 if dataset.shape[0]>7500:
@@ -82,11 +82,14 @@ else:
     dataset.initialize_train_test()
     print("#"*50)
 
-assert model in ["IF", "EIF", "EIF+"], "Interpretable AD model not recognized"
-assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert model in ["IF", "EIF", "EIF+", "ECOD"], "Interpretable AD model not recognized"
+assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest", "ECOD"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
     assert model=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "ECOD":
+    assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
 
 if interpretation == "EXIFFI":
     assert model=="EIF" or model=="IF", "EXIFFI can be used with the EIF and IF models"
@@ -103,6 +106,8 @@ elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+elif model == "ECOD":
+    I=ECOD(contamination=contamination)
 
 print('#'*50)
 print('Local Importances Experiment')

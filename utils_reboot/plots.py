@@ -425,7 +425,7 @@ def importance_map(dataset: Type[Dataset],
                    isdiffi: Optional[bool] = False,
                    scenario: Optional[int] = 2,
                    interpretation: Optional[str] = "EXIFFI+",
-                   **kwargs: Optional[dict]
+                   percentile: float = 0.99
                    ) -> None:
         """
         Produce the Local Feature Importance Scoremap.   
@@ -443,6 +443,7 @@ def importance_map(dataset: Type[Dataset],
             isdiffi: A boolean indicating whether the local-DIFFI method should be used to compute the importance values. Defaults to False.
             scenario: The scenario number. Defaults to 2.
             interpretation: Name of the interpretation model used. Defaults to "EXIFFI+".
+            percentile: The percentile value. Defaults to 0.99.
         
         Returns:
             The function saves the plot in the specified path and displays it if the show_plot parameter is set to True.
@@ -465,7 +466,7 @@ def importance_map(dataset: Type[Dataset],
                         importance_matrix[i] = local_diffi(model, mean[i])[0]
         else:
                 if interpretation == "ECOD":
-                    importance_matrix = model.local_importances(mean,**kwargs)
+                    importance_matrix = model.local_importances(mean,percentile=percentile)
                 else:
                     importance_matrix = model.local_importances(mean)
         

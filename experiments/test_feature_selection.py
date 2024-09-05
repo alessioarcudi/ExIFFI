@@ -87,12 +87,15 @@ else:
 
 # import ipdb; ipdb.set_trace()
 
-assert model_interpretation in ["IF", "EIF", "EIF+"], "Model for Feature Order not recognized"
+assert model_interpretation in ["IF", "EIF", "EIF+","ECOD"], "Model for Feature Order not recognized"
 assert model in ["IF","EIF", "EIF+"], "Evaluation Model not recognized"
-assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest"], "Interpretation not recognized"
+assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest", "ECOD"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
     assert model_interpretation=="IF", "DIFFI can only be used with the IF model"
+
+if args.interpretation == "ECOD":
+    assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
 
 if interpretation == "EXIFFI":
     assert model_interpretation=="EIF" or model_interpretation=="IF", "EXIFFI can only be used with IF or EIF model"
@@ -110,6 +113,8 @@ elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+elif model == "ECOD":
+    I=ECOD(contamination=contamination)
 
 # import ipdb; ipdb.set_trace()
 

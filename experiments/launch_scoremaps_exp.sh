@@ -2,27 +2,38 @@
 
 SCRIPT_PATH="test_local_importances.py"
 
-DATASETS="bisect_3d_prop"
+# DATASETS="bisect bisect_3d bisect_3d_prop bisect_6d"
 
-DATASET_PATH="../data/syn/"
+# DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --interpretation "EXIFFI+" \
-        --scenario 2 \
-        --feature1 0 \
-        --feature2 1
+DATASETS="moodify"
 
-    python $SCRIPT_PATH \
-        --dataset_name $DATASETS \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --interpretation "EXIFFI+" \
-        --scenario 1 \
-        --feature1 0 \
-        --feature2 1
+IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
+
+for dataset in "${DATASET_ARRAY[@]}"; do
+
+    DATASET_PATH="../data/real/"
+
+        python $SCRIPT_PATH \
+            --dataset_name "$dataset" \
+            --dataset_path $DATASET_PATH \
+            --model "ECOD" \
+            --interpretation "ECOD" \
+            --scenario 2 \
+            --feature1 "loudness" \
+            --feature2 "spec_rate" \
+            --pre_process 1
+
+        python $SCRIPT_PATH \
+            --dataset_name "$dataset" \
+            --dataset_path $DATASET_PATH \
+            --model "ECOD" \
+            --interpretation "ECOD" \
+            --scenario 1 \
+            --feature1 "loudness" \
+            --feature2 "spec_rate" \
+            --pre_process 1
+done
 
 # pre-process ONLY FOR REAL WORLD DATASET 
 # --pre_process 1 \ 
