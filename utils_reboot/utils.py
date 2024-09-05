@@ -1,16 +1,19 @@
 import time
 from typing import Type,Union
 import pickle
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
 from collections import namedtuple
 from model_reboot.EIF_reboot import ExtendedIsolationForest
 from utils_reboot.datasets import Dataset
+from scipy.stats import skew as skew_sp
 from sklearn.ensemble import IsolationForest 
 from pyod.models.dif import DIF as oldDIF
 from pyod.models.auto_encoder import AutoEncoder as oldAutoEncoder
 from pyod.models.ecod import ECOD as oldECOD
+from pyod.utils.stat_models import column_ecdf
 from datetime import datetime
 
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, average_precision_score, balanced_accuracy_score
@@ -19,6 +22,9 @@ Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","valu
 NewPrecisions = namedtuple("NewPrecisions", ["direct", "inverse", "dataset", "model", "value", "aucfs"])
 Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
 
+# Utility function for ECOD
+def skew(X, axis=0):
+        return np.nan_to_num(skew_sp(X, axis=axis))
 
 class sklearn_IsolationForest(IsolationForest):
     
@@ -159,6 +165,126 @@ class ECOD(oldECOD):
         y_hat = An_score > sorted(An_score,reverse=True)[int(p*len(An_score))]
         return y_hat
     
+    def explain_outlier(self, ind, columns=None, cutoffs=None,
+                    feature_names=None, file_name=None,
+                    file_type=None):  # pragma: no cover
+    
+        """Plot dimensional outlier graph for a given data point within
+        the dataset.
+
+        Parameters
+        ----------
+        ind : int
+            The index of the data point one wishes to obtain
+            a dimensional outlier graph for.
+
+        columns : list
+            Specify a list of features/dimensions for plotting. If not
+            specified, use all features.
+
+        cutoffs : list of floats in (0., 1), optional (default=[0.95, 0.99])
+            The significance cutoff bands of the dimensional outlier graph.
+
+        feature_names : list of strings
+            The display names of all columns of the dataset,
+            to show on the x-axis of the plot.
+
+        file_name : string
+            The name to save the figure
+
+        file_type : string
+            The file type to save the figure
+
+        Returns
+        -------
+        Plot : matplotlib plot
+            The dimensional outlier graph for data point with index ind.
+        """
+        if columns is None:
+            columns = list(range(self.O.shape[1]))
+            column_range = range(1, self.O.shape[1] + 1)
+        else:
+            column_range = range(1, len(columns) + 1)
+
+        cutoffs = [1 - self.contamination,
+                    0.99] if cutoffs is None else cutoffs
+
+        # plot outlier scores
+        plt.scatter(column_range, self.O[ind, columns], marker='^', c='black',
+                    label='Outlier Score')
+
+        for i in cutoffs:
+            plt.plot(column_range,
+                        np.quantile(self.O[:, columns], q=i, axis=0),
+                        '--',
+                        label='{percentile} Cutoff Band'.format(percentile=i))
+        plt.xlim([1, max(column_range)])
+        plt.ylim([0, int(self.O[:, columns].max().max()) + 1])
+        plt.ylabel('Dimensional Outlier Score')
+        plt.xlabel('Dimension')
+
+        ticks = list(column_range)
+        if feature_names is not None:
+            assert len(feature_names) == len(ticks), \
+                "Length of feature_names does not match dataset dimensions."
+            plt.xticks(ticks, labels=feature_names)
+        else:
+            plt.xticks(ticks)
+
+        plt.yticks(range(0, int(self.O[:, columns].max().max()) + 1))
+        plt.xlim(0.95, ticks[-1] + 0.05)
+        label = 'Outlier' if self.labels_[ind] == 1 else 'Inlier'
+        plt.title(
+            'Outlier score breakdown for sample #{index} ({label})'.format(
+                index=ind + 1, label=label))
+        plt.legend()
+        plt.tight_layout()
+
+        # save the file if specified
+        if file_name is not None:
+            if file_type is not None:
+                plt.savefig(file_name + '.' + file_type, dpi=300)
+            # if not specified, save as png
+            else:
+                plt.savefig(file_name + '.' + 'png', dpi=300)
+        plt.show()
+
+        # todo: consider returning results
+        return self.O[ind, columns], np.quantile(self.O[:, columns], q=cutoffs[0], axis=0), np.quantile(self.O[:, columns], q=cutoffs[1], axis=0)
+
+    def feat_outlier_score(self, X):
+
+        """
+        Function to compute the feature outlier scores for the input dataset
+
+        Parameters
+        ----------
+        X : numpy array of shape (n_samples, n_features)
+            The training input samples. Sparse matrices are accepted only
+            if they are supported by the base estimator.
+        Returns
+        -------
+        feat_outlier_score : numpy array of shape (n_samples, n_features)
+            Feature outlier scores for the input dataset
+        """
+        # use multi-thread execution
+        if self.n_jobs != 1:
+            return self._decision_function_parallel(X)
+        if hasattr(self, 'X_train'):
+            original_size = X.shape[0]
+            X = np.concatenate((self.X_train, X), axis=0)
+        self.U_l = -1 * np.log(column_ecdf(X))
+        self.U_r = -1 * np.log(column_ecdf(-X))
+
+        skewness = np.sign(skew(X, axis=0))
+        self.U_skew = self.U_l * -1 * np.sign(
+            skewness - 1) + self.U_r * np.sign(skewness + 1)
+
+        O = np.maximum(self.U_l, self.U_r)
+        O = np.maximum(self.U_skew, self.O)
+
+        return O
+
     def local_importances(self,
                           X:np.array,
                           percentile:float=0.99) -> np.array:
@@ -168,14 +294,15 @@ class ECOD(oldECOD):
 
         Args:
             percentile: Percentile to be used in the calculation of the Global Importance Score, by default 0.99
-            X: Input dataset
+            X: Array of indexes of the samples in the input dataset
         Returns:
             Local Importance Score
         """
 
         # The attribute O has the outliers scores doubled so we take the indexes
-        # up to the size of the dataset to consider all the scores needed 
-        feat_outlier_scores = self.O[:X.shape[0]]
+        # up to the size of the dataset to consider all the scores needed
+
+        feat_outlier_scores=self.feat_outlier_score(X)[:X.shape[0],:]
         dist=np.quantile(feat_outlier_scores, percentile, axis=0) - feat_outlier_scores
         lfi = 1/(1+dist**2)
 
@@ -199,17 +326,21 @@ class ECOD(oldECOD):
         """
 
         label=self._predict(X,p)
-        inliers=X[label==0]
-        outliers=X[label==1]
-        lfi_in=self.local_importances(inliers,**kwargs)
-        lfi_out=self.local_importances(outliers,**kwargs)
-        i_i=np.mean(lfi_in,axis=0)
-        i_o=np.mean(lfi_out,axis=0)
+        inliers_idx=label==0
+        outliers_idx=label==1
+        # lfi_in=self.local_importances(inliers_idx,**kwargs)
+        # lfi_out=self.local_importances(outliers_idx,**kwargs)
+        # print(f'Shape of lfi_in: {lfi_in.shape}')
+        # print(f'Shape of lfi_out: {lfi_out.shape}')
+        lfi=self.local_importances(X,**kwargs)
+        i_i=np.mean(lfi[inliers_idx],axis=0)
+        i_o=np.mean(lfi[outliers_idx],axis=0)
         gfi=i_o/i_i
         # print(f'Sum of lfi_out: {np.sum(lfi_out,axis=0)}')
         # print(f'Sum of lfi_in: {np.sum(lfi_in,axis=0)}')
         # print(f'I_O: {i_o}')
         # print(f'I_I: {i_i}')
+        # return gfi,i_o,i_i,inliers_idx,outliers_idx,label
         return gfi
 
     
