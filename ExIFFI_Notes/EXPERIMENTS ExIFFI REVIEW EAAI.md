@@ -34,7 +34,7 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Time Scaling `fit-predict` experiment 
 - [ ] `GFI` experiments with the new `ECOD` Feature Importance 
 - [ ] Feature Selection Experiments 
-- [ ] Time Scaling Experiments for the `importances` Time Scaling plot 
+- [x] Time Scaling Experiments for the `importances` Time Scaling plot 
 
 ## `ECOD` Feature Importance 
 
@@ -53,12 +53,12 @@ Commenting the *Dimensional Outlier Graph* in the paper they say that the most i
 
  Let's consider to have $p$ input features and $n$ input samples, thus the input dataset is $\mathcal{X} \in \mathbb{R}^{n \times p}$. 
 
-So a possible way of assigning importance scores is to use the inverse of the distance between the  outlier scores and the 99% percentile of the feature we are considering. Thus the importance of feature $j$ for sample $i$ will be:
+So a possible way of assigning importance scores is to use the inverse of the distance between the  outlier scores and the 99% percentile of the feature outlier score we are considering (i.e. $0_i^{(j)}$). Thus the importance of feature $j$ for sample $i$ will be:
 
 $$
-	I_i^{(j)} = \frac{1}{1+(\alpha_{0.99}^{(j)} - \mathcal{X}^{(j)})}
+	I_i^{(j)} = \frac{1}{1+(\alpha_{0.99}^{(j)} - 0_i^{(j)})^2}
 $$
-where $\alpha_{0.99}$ is the 99% percentile of the outlier scores for feature $j$.
+where $\alpha_{0.99}$ is the 99% percentile of the outlier scores for feature $j$. We use the squared distance to avoid having negative values. We also add 1 to the squared distance to avoid having the importance exploding to $\infty$. In fact it may happen that the value of feature $j$ for sample $i$ coincides with $\alpha_{0.99}^{(j)}$ and thus the distance is 0. In this specific case $I_i^{(j)}$ will be 1 that is the maximum `LFI` score achievable. 
 
 This is the Local Feature Importance score of feature $j$ for sample $i$. Putting together the scores for all the features $j=1,\dots,p$ we obtain the `LFI` score for sample $i$ (with $i \in \{1,\dots,n\})$: 
 
@@ -66,7 +66,14 @@ $$
 	I_i = [I_i^{(1)},I_i^{(2)},\dots,I_i^{(p)}] \in \mathbb{R}^p
 $$
 
-Now to obtain the `GFI` score we can do the same thing that is done in `DIFFI` and `EXIFFI`. We divide the dataset into inliers and outliers according to the predictions done by the `AD` mode (i.e. `ECOD` in this case) and we compute the `LFI` scores separately on set of predicted inliers $\mathcal{P}_I$ and on the set of predicted outliers $\mathcal{P}_O$. Then we put together the inliers and outliers importances into two $p$ dimensional vectors with the mean:
+Now to obtain the `GFI` score we can do the same thing that is done in `DIFFI` and `EXIFFI`. We divide the dataset into inliers and outliers according to the predictions done by the `AD` mode (i.e. `ECOD` in this case) and we compute the `LFI` scores separately on set of predicted inliers $\mathcal{P}_I$ and on the set of predicted outliers $\mathcal{P}_O$. 
+
+> [!note] 
+> In this step when we do the predictions (to distinguish between inliers and outliers) we have to pass a contamination factor (i.e the percentage of anomalies in the dataset). This is used in the definition of the threshold applied on the Anomaly Score to perform the predictions. Here we can be in two scenarios:
+> - Unsupervised setting → In this case we have no labels so we have no idea on how much anomalies are there in the dataset so we usually try to guess a feasible value for the contamination, usually we use 0.1 → **this is the contamination I used in all the `GFI` experiments done for the paper**.  
+> - Supervised setting → In the case ground truth information are available we can easily compute the percentage of anomalies in the dataset and thus it makes sense to use this value as the contamination. In this way the model will always predict a number of anomalies that is equal to the true value (but it can in any case make errors). In the metrics experiment in the paper we can access the labels and thus in that case I used `p=dataset.perc_outliers`. 
+
+Then we put together the inliers and outliers importances into two $p$ dimensional vectors with the mean:
 
 $$
 	\hat{I}_I = \frac{1}{N_I} \sum_{x \in \mathcal{P}_I} I_x
