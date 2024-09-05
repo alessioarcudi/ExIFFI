@@ -4,28 +4,39 @@
 SCRIPT_PATH="test_global_importancies.py"
 
 # List of datasets
-DATASETS="bisect"
+
+# DATASETS="breastw"
+
+DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
+
+IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATH \
-    --model "ECOD" \
-    --interpretation "ECOD" \
-    --scenario 2 \
-    --n_runs 1 \
-    --percentile 0.99
+for dataset in "${DATASET_ARRAY[@]}"; do
 
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATH \
-    --model "ECOD" \
-    --interpretation "ECOD" \
-    --scenario 1 \
-    --n_runs 1 \
-    --percentile 0.99
+    python $SCRIPT_PATH \
+        --dataset_name "$dataset" \
+        --dataset_path $DATASET_PATH \
+        --model "ECOD" \
+        --interpretation "ECOD" \
+        --scenario 2 \
+        --n_runs 1 \
+        --percentile 0.99 \
+        --pre_process
+
+    python $SCRIPT_PATH \
+        --dataset_name "$dataset" \
+        --dataset_path $DATASET_PATH \
+        --model "ECOD" \
+        --interpretation "ECOD" \
+        --scenario 1 \
+        --n_runs 1 \
+        --percentile 0.99 \
+        --pre_process
+
+done
 
 # python $SCRIPT_PATH \
 #     --dataset_name $DATASETS \
