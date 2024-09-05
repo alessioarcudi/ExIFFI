@@ -4,7 +4,7 @@
 SCRIPT_PATH="test_global_importancies.py"
 
 # List of datasets
-DATASETS="Xaxis"
+DATASETS="bisect_3d"
 
 # Path to the datasets
 DATASET_PATH="../data/syn/"
@@ -16,7 +16,7 @@ python $SCRIPT_PATH \
     --interpretation "ECOD" \
     --scenario 2 \
     --n_runs 1 \
-    --percentile 0.95
+    --percentile 0.99
 
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
@@ -25,7 +25,7 @@ python $SCRIPT_PATH \
     --interpretation "ECOD" \
     --scenario 1 \
     --n_runs 1 \
-    --percentile 0.95
+    --percentile 0.99
 
 # python $SCRIPT_PATH \
 #     --dataset_name $DATASETS \

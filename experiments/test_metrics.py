@@ -146,6 +146,9 @@ except:
 
 start_time = time.time()
 score=I.predict(dataset.X_test)
+# In this metric experiment scenario we can use the true dataset contamination
+# because we exploit the fact that we have the true labels to compute the metrics (i.e. average precision, ROC)
+# that we cannot compute in general in the unsupervised setting
 y_pred=I._predict(dataset.X_test,p=dataset.perc_outliers)
 predict_time = time.time() - start_time
 try:

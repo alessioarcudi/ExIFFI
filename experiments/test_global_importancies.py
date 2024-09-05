@@ -136,8 +136,9 @@ path_experiment_model_interpretation_scenario = path_experiment_model_interpreta
 if not os.path.exists(path_experiment_model_interpretation_scenario):
     os.makedirs(path_experiment_model_interpretation_scenario)
 
-#Compute global importances
-full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=dataset.perc_outliers, interpretation=interpretation, percentile=percentile)    
+# Compute global importances → here we have to put p=contamination because we are 
+# in an unsupervised scenario where we do not know the true contamination of the dataset
+full_importances,_ = experiment_global_importances(I, dataset, n_runs=n_runs, p=contamination, interpretation=interpretation, percentile=percentile)    
 save_element(full_importances, path_experiment_model_interpretation_scenario, filetype="npz")
 
 # plot global importances
