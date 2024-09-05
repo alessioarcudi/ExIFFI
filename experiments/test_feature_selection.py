@@ -94,8 +94,8 @@ assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest", "ECOD"], 
 if interpretation == "DIFFI":
     assert model_interpretation=="IF", "DIFFI can only be used with the IF model"
 
-if args.interpretation == "ECOD":
-    assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
+if interpretation == "ECOD":
+    assert model_interpretation=="ECOD", "ECOD can only be used with the ECOD model"
 
 if interpretation == "EXIFFI":
     assert model_interpretation=="EIF" or model_interpretation=="IF", "EXIFFI can only be used with IF or EIF model"
@@ -174,8 +174,8 @@ most_recent_file = get_most_recent_file(path_experiment_feats,filetype="npz")
 matrix = open_element(most_recent_file,filetype="npz")
 feat_order = np.argsort(matrix.mean(axis=0))
 Precisions = namedtuple("Precisions",["direct","inverse","dataset","model","value"])
-direct = feature_selection(I, dataset, feat_order, 10, inverse=False, random=False, scenario=scenario)
-inverse = feature_selection(I, dataset, feat_order, 10, inverse=True, random=False, scenario=scenario)
+direct = feature_selection(I, dataset, feat_order, n_runs=n_runs, inverse=False, random=False, scenario=scenario)
+inverse = feature_selection(I, dataset, feat_order, n_runs=n_runs, inverse=True, random=False, scenario=scenario)
 #value = abs(sum(direct.mean(axis=1)-inverse.mean(axis=1)))
 value = abs(np.nansum(np.nanmean(direct,axis=1)-np.nanmean(inverse,axis=1)))
 data = Precisions(direct, inverse, dataset.name, model, value)
@@ -184,7 +184,7 @@ save_fs_prec(data, path_experiment_model_interpretation_scenario)
 # random feature selection
 if compute_random:
     Precisions_random = namedtuple("Precisions_random",["random","dataset","model"])
-    random = feature_selection(I, dataset, feat_order, 10, inverse=True, random=True, scenario=scenario)
+    random = feature_selection(I=I, dataset=dataset, importances_indexes=feat_order, n_runs=n_runs, inverse=True, random=True, scenario=scenario)
     data_random = Precisions_random(random, dataset.name, model)
     save_fs_prec_random(data_random, path_experiment_model_interpretation_random_scenario)
 
