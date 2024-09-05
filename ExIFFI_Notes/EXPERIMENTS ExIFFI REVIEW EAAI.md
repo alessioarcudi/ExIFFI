@@ -32,7 +32,8 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Precision metric experiment
 - [x] Contamination experiment
 - [x] Time Scaling `fit-predict` experiment 
-- [ ] `GFI` experiments with the new `ECOD` Feature Importance 
+- [x] `GFI` experiments with the new `ECOD` Feature Importance 
+- [ ] Local Scoremaps experiments 
 - [ ] Feature Selection Experiments 
 - [x] Time Scaling Experiments for the `importances` Time Scaling plot 
 
@@ -108,6 +109,42 @@ Looking at the new Time Scaling plots for the `fit` and `predict` operations (th
 > [!note] 
 > Moreover in the Introduction to the [ECOD paper](https://arxiv.org/abs/2201.00382) the authors says that as the number of features increases there are some technical difficulties in using `ECDF`s to estimate the data distribution. In fact when we increase the dimensionality the `ECDF` converges slowly to the true `CDF` of the data. They solve this problem using the approach of dividing the joint `ECDF` into $p$ univariate `ECDF`s, where $p$ is the number of features. 
 > In this step they assume that the features are independent. In fact to combine the tail probabilities from the different features they simply multiply them (like if we have 2 independent random variables → we can compute the intersection probability as the product of the single probabilities). 
+
+## Comments on `GFI` experiment results 
+
+Some very fast comments looking at the Score Plots returned by the `GFI` experiments performed on the `ECOD` interpretation model. 
+
+> [!note] 
+> If I just write ==ok== it means that the result make sense and are good compared to expectation 
+
+### Synthetic Datasets 
+
+| Dataset          | Description                                                                            |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| `Xaxis`          | No sense, because `ECOD` is very bad on `Xaxis` in the metrics experiments             |
+| `bisect`         | For some reason it selects Feature 0,1,2, as the most important (and not only 0 and 1) |
+| `bisect_3d`      | ==ok==                                                                                 |
+| `bisect_3d_prop` | ==ok==                                                                                 |
+| `bisect_6d`      | ==ok==                                                                                 |
+### Real World Datasets
+
+> [!note] 
+> Remember that in the Real World datasets we have to use `pre_process` 
+
+| Dataset      | Description                                                                                                                                                                                               |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `wine`       | Not aligned with the Score Plot of `EXIFFI+` and `DIFFI` but `ECOD` was very bad on `win                                                                                                                  |
+| `breastw`    | Makes sense, Feature 8 most important followed by 4 and 6. In any case `ECOD` was good on `breas                                                                                                          |
+| `annthyroi Feature 3 is on top (this is the top 2 in `EXIFFI+`) but Feature 1, which is very important in `EXIFFI+`, is among the last ones. The performances of `ECOD` on `annthyroid` were not very good though.  es.  |
+| `pima`       | Similar to `EXIFFI+`: it has `Insule,BMI` on top while `EXIFFI+` had `Blodd_Pressure,Insuline                                                                                                             |
+| `cardio`     | In `scenario_2` there is Feature 6 on top like in `EXIFFI+`, then top 2 and 3 are 17                                                                                                                      |
+| `glass`      | The most important features (i.e. `Ba,K`) are not on the top spots. In any case `ECOD` was good on                                                                                                        |
+| `ionosphere` | The most important feature is 0, differently from `EXIFFI+` where it is 1 but the result is the same as                                                                                                   |
+| `pendigits`  | Very similar to `EXIFFI+` with Feature 3 and                                                                                                                                                              |
+| `diabetes`   | Here we have `bmi` on top while on `EXIFFI+` we have `HbA1c_level` and `blodd_gluc                                                                                                                        |
+| `shuttle`    | Not very similar, there is only Feature 0 that is in the top 3 like i                                                                                                                                     |
+| `moodify`    | The most important features are `energy` and `loudness` while in `EXIFFI+` it'                                                                                                                            |
+
 # Experiments Correlation
 
 This experiment was proposed by [[ExIFFI PAPER REVIEW EAAI#Reviewer 2|reviewer 2 comment 6]] and it may be considered as another experiment to evaluate the effectiveness of the `ExIFFI` interpretation algorithm. The idea is that since the importance scores we obtain with `ExIFFI` should quantify the relevance of certain features in detecting anomalies then **samples with high feature importance values should also have an high Anomaly Score**. We can quantify this effect computing the correlation between the importance scores and Anomaly Scores for each sample. We can use the following approach: 
