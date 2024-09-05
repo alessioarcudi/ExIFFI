@@ -4,14 +4,14 @@ SCRIPT_PATH="test_feature_selection.py"
 
 # DATASETS="bisect"
 
-DATASETS="bisect_6d"
+# DATASETS="bisect_6d"
 
-# DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
+DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets 
-DATASET_PATH="../data/syn/"
+DATASET_PATH="../data/real/"
 
 for dataset in "${DATASET_ARRAY[@]}"; do
 
@@ -24,9 +24,8 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --scenario 2 \
         --n_runs 1 \
         --change_ylim \
-        --compute_random
+        --pre_process 
  
-
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path $DATASET_PATH \
@@ -36,7 +35,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --scenario 1 \
         --n_runs 1 \
         --change_ylim \
-        --compute_random
+        --pre_process 
 
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
@@ -47,9 +46,8 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --scenario 2 \
         --n_runs 1 \
         --change_ylim \
-        --compute_random
+        --pre_process 
  
-
     python $SCRIPT_PATH \
         --dataset_name "$dataset" \
         --dataset_path $DATASET_PATH \
@@ -59,7 +57,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         --scenario 1 \
         --n_runs 1 \
         --change_ylim \
-        --compute_random
+        --pre_process 
 
 done
  
