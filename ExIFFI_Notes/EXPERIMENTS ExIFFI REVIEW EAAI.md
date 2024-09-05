@@ -1,9 +1,9 @@
 Let's use this note to keep track of the experiments I am running for the resubmission of `ExIFFI` after the review from `EAAI`. 
 # Experiments to perform
 
- - [ ] Time Scaling Experiments for `KernelSHAP`
+ - [x] Time Scaling Experiments for `KernelSHAP`
  - [x] Experiments for the `ECOD` AD model
- - [ ] Correlation between Feature Importance and Anomaly Score 
+ - [x] Correlation between Feature Importance and Anomaly Score 
  - [x] New synthetic dataset `bisect_3d_prop` experiment
 # Time Scaling `KernelSHAP`
 
@@ -33,7 +33,7 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Contamination experiment
 - [x] Time Scaling `fit-predict` experiment 
 - [x] `GFI` experiments with the new `ECOD` Feature Importance 
-- [ ] Local Scoremaps experiments 
+- [x] Local Scoremaps experiments 
 - [ ] Feature Selection Experiments 
 	- [ ] Fix the `Xaxis` plot with `change_ylim`
 - [x] Time Scaling Experiments for the `importances` Time Scaling plot 
@@ -132,19 +132,19 @@ Some very fast comments looking at the Score Plots returned by the `GFI` experim
 > [!note] 
 > Remember that in the Real World datasets we have to use `pre_process` 
 
-| Dataset      | Description                                                                                                                                                                                               |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `wine`       | Not aligned with the Score Plot of `EXIFFI+` and `DIFFI` but `ECOD` was very bad on `win                                                                                                                  |
-| `breastw`    | Makes sense, Feature 8 most important followed by 4 and 6. In any case `ECOD` was good on `breas                                                                                                          |
-| `annthyroi Feature 3 is on top (this is the top 2 in `EXIFFI+`) but Feature 1, which is very important in `EXIFFI+`, is among the last ones. The performances of `ECOD` on `annthyroid` were not very good though.  es.  |
-| `pima`       | Similar to `EXIFFI+`: it has `Insule,BMI` on top while `EXIFFI+` had `Blodd_Pressure,Insuline                                                                                                             |
-| `cardio`     | In `scenario_2` there is Feature 6 on top like in `EXIFFI+`, then top 2 and 3 are 17                                                                                                                      |
-| `glass`      | The most important features (i.e. `Ba,K`) are not on the top spots. In any case `ECOD` was good on                                                                                                        |
-| `ionosphere` | The most important feature is 0, differently from `EXIFFI+` where it is 1 but the result is the same as                                                                                                   |
-| `pendigits`  | Very similar to `EXIFFI+` with Feature 3 and                                                                                                                                                              |
-| `diabetes`   | Here we have `bmi` on top while on `EXIFFI+` we have `HbA1c_level` and `blodd_gluc                                                                                                                        |
-| `shuttle`    | Not very similar, there is only Feature 0 that is in the top 3 like i                                                                                                                                     |
-| `moodify`    | The most important features are `energy` and `loudness` while in `EXIFFI+` it'                                                                                                                            |
+| Dataset      | Description                                                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `wine`       | Not aligned with the Score Plot of `EXIFFI+` and `DIFFI` but `ECOD` was very bad on `win                                                                                                                |
+| `breastw`    | Makes sense, Feature 8 most important followed by 4 and 6. In any case `ECOD` was good on `breas                                                                                                        |
+| `annthyroid` | Feature 3 is on top (this is the top 2 in `EXIFFI+`) but Feature 1, which is very important in `EXIFFI+`, is among the last ones. The performances of `ECOD` on `annthyroid` were not very good though. |
+| `pima`       | Similar to `EXIFFI+`: it has `Insule,BMI` on top while `EXIFFI+` had `Blodd_Pressure,Insuline                                                                                                           |
+| `cardio`     | In `scenario_2` there is Feature 6 on top like in `EXIFFI+`, then top 2 and 3 are 17                                                                                                                    |
+| `glass`      | The most important features (i.e. `Ba,K`) are not on the top spots. In any case `ECOD` was good on                                                                                                      |
+| `ionosphere` | The most important feature is 0, differently from `EXIFFI+` where it is 1 but the result is the same as                                                                                                 |
+| `pendigits`  | Very similar to `EXIFFI+` with Feature 3 and                                                                                                                                                            |
+| `diabetes`   | Here we have `bmi` on top while on `EXIFFI+` we have `HbA1c_level` and `blodd_gluc                                                                                                                      |
+| `shuttle`    | Not very similar, there is only Feature 0 that is in the top 3 like i                                                                                                                                   |
+| `moodify`    | The most important features are `energy` and `loudness` while in `EXIFFI+` it'                                                                                                                          |
 
 # Experiments Correlation
 
@@ -160,7 +160,7 @@ This experiment was proposed by [[ExIFFI PAPER REVIEW EAAI#Reviewer 2|reviewer 2
 At then end, add a column with the correlation values and add it to the $AUC_{FS}$ table.  
 
 - [x] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_2`
-- [ ] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_1`
+- [x] Correlation experiments on `EXIFFI+,EXIFFI,DIFFI,IF_EXIFFI` on `scenario_1`
 
 ## Datasets missing the correlation experiments 
 
