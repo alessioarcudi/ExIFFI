@@ -53,7 +53,7 @@ if args.interpretation == "EXIFFI":
     assert args.model=="EIF" or args.model=="IF", "EXIFFI can only be used with the IF and EIF model"
 
 if args.interpretation == "DIFFI":
-    assert args.model=="IF", "DIFFI can only be used with the IF model"
+    assert args.model in ["IF","sklearn_IF"], "DIFFI can only be used with the IF or sklearn_IF model"
 
 if args.interpretation == "ECOD":
     assert args.model=="ECOD", "ECOD can only be used with the ECOD model"
@@ -103,10 +103,13 @@ else:
     print("#"*50)
 
 if model == "IF":
-    if interpretation == "EXIFFI":
-        I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI" or interpretation == "RandomForest" or model=="sklearn_IF":
-        I = sklearn_IF(n_estimators=n_estimators, max_samples=max_samples)
+    I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+    # if interpretation == "EXIFFI":
+    #     I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+    # elif interpretation == "DIFFI" or interpretation == "RandomForest":
+    #     I = sklearn_IF(n_estimators=n_estimators, max_samples=max_samples)
+elif model == "sklearn_IF":
+    I = sklearn_IF(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+" or model=='EIF+_RF':

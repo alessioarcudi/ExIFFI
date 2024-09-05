@@ -39,9 +39,9 @@ corr_filename = cwd + "/utils_reboot/corr_exp_scenario1.pickle"
 
 if not os.path.exists(filename):
 
-    dict_time = {"fit":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
-            "predict":{"EIF+":{},"IF":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
-            "importances":{"EXIFFI+":{},"EXIFFI":{},"IF_EXIFFI":{},"DIFFI":{},"RandomForest":{}}}
+    dict_time = {"fit":{"EIF+":{},"ECOD":{},"DIF":{},"EIF":{},"sklearn_IF":{}}, 
+            "predict":{"EIF+":{},"ECOD":{},"DIF":{},"EIF":{},"sklearn_IF":{}},
+            "importances":{"EXIFFI+":{},"EXIFFI":{},"IF_EXIFFI":{},"DIFFI":{},"RandomForest":{},"ECOD":{}}}
     
     with open(filename, "wb") as file:
         pickle.dump(dict_time, file)
@@ -150,7 +150,10 @@ def fit_predict_experiment(I: Type[ExtendedIsolationForest],
                 dict_time["fit"].setdefault(I.name, {}).setdefault(dataset.name, []).append(fit_time) 
         
         start_time = time.time()
-        _=I._predict(dataset.X_test,p=dataset.perc_outliers)
+        if model == "sklearn_IF":
+            _=I.predict(dataset.X_test)
+        else:
+            _=I._predict(dataset.X_test,p=dataset.perc_outliers)
         predict_time = time.time() - start_time
 
 

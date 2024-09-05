@@ -26,11 +26,11 @@ SCRIPT_PATH="test_time_scaling.py"
 # DATASETS="Xaxis_5000_256"
 # DATASETS="Xaxis_5000_512"
 
-DATASETS="Xaxis_5000_16 Xaxis_5000_32 Xaxis_5000_64 Xaxis_5000_128 Xaxis_5000_256 Xaxis_5000_512"
+# DATASETS="Xaxis_5000_16 Xaxis_5000_32 Xaxis_5000_64 Xaxis_5000_128 Xaxis_5000_256 Xaxis_5000_512"
 
-# DATASETS="bisect_6d"
+DATASETS="bisect_3d_prop"
 
-DATASET_PATH="../data/syn/syn_feat_gz"
+DATASET_PATH="../data/syn"
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
@@ -39,9 +39,11 @@ for dataset in "${DATASET_ARRAY[@]}"; do
         python $SCRIPT_PATH \
                 --dataset_name "$dataset" \
                 --dataset_path $DATASET_PATH \
-                --model "ECOD" \
-                --interpretation "ECOD" \
-                --compute_GFI 1  
+                --model "sklearn_IF" \
+                --interpretation "DIFFI" \
+                --compute_GFI 1 \
+                --compute_fit_predict 1 \
+                --scenario 1
 done
 
 # python $SCRIPT_PATH \
