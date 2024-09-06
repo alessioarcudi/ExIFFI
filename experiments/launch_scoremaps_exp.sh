@@ -6,33 +6,31 @@ SCRIPT_PATH="test_local_importances.py"
 
 # DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
-DATASETS="moodify"
+DATASETS="bisect_3d_prop"
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 for dataset in "${DATASET_ARRAY[@]}"; do
 
-    DATASET_PATH="../data/real/"
+    DATASET_PATH="../data/syn/"
 
         python $SCRIPT_PATH \
             --dataset_name "$dataset" \
             --dataset_path $DATASET_PATH \
-            --model "ECOD" \
-            --interpretation "ECOD" \
+            --model "EIF+" \
+            --interpretation "EXIFFI+" \
             --scenario 2 \
-            --feature1 "loudness" \
-            --feature2 "spec_rate" \
-            --pre_process 1
+            --feature1 0 \
+            --feature2 1 
 
         python $SCRIPT_PATH \
             --dataset_name "$dataset" \
             --dataset_path $DATASET_PATH \
-            --model "ECOD" \
-            --interpretation "ECOD" \
+            --model "EIF+" \
+            --interpretation "EXIFFI+" \
             --scenario 1 \
-            --feature1 "loudness" \
-            --feature2 "spec_rate" \
-            --pre_process 1
+            --feature1 0 \
+            --feature2 1 
 done
 
 # pre-process ONLY FOR REAL WORLD DATASET 
