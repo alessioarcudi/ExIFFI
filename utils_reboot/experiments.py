@@ -671,7 +671,8 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
                            corr_dict:dict, 
                            interpretation:str,
                            dataset:Type[Dataset],
-                           nruns:int=10) -> float:
+                           nruns:int=10,
+                           percentile:float=0.99) -> float:
     
     """
     Compute the correlation between the local feature importance scores and the Anomaly Score of all samples
@@ -682,6 +683,7 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
         interpretation: The name interpretation method.
         dataset: Input dataset.
         nruns: The number of runs. Defaults to 10.
+        percentile: The percentile value. Defaults to 0.99.
 
     Returns:
         The mean correlation value over nruns 
@@ -700,6 +702,9 @@ def correlation_experiment(I:Type[ExtendedIsolationForest],
             lfi=np.zeros((dataset.X_test.shape[0],dataset.X_test.shape[1]))
             for i in range(dataset.X_test.shape[0]):
                 lfi[i],_=local_diffi(I,dataset.X_test[i,:])
+
+        elif interpretation == "ECOD":
+            lfi = I.local_importances(dataset.X_test,percentile=percentile)
         else:
             lfi = I.local_importances(dataset.X_test)
             

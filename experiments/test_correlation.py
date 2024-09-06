@@ -25,6 +25,7 @@ parser.add_argument('--n_estimators', type=int, default=100, help='EIF parameter
 parser.add_argument('--max_depth', type=str, default='auto', help='EIF parameter: max_depth')
 parser.add_argument('--max_samples', type=str, default='auto', help='EIF parameter: max_samples')
 parser.add_argument('--contamination', type=float, default=0.1, help='Global feature importances parameter: contamination')
+parser.add_argument('--percentile', type=float, default=0.99, help='Percentile to use in the ECOD GFI computation')
 parser.add_argument('--n_runs', type=int, default=10, help='Global feature importances parameter: n_runs')
 parser.add_argument('--model', type=str, default="EIF+", help='Name of the interpretable AD model. Accepted values are: [IF,EIF,EIF+]')
 parser.add_argument('--interpretation', type=str, default="EXIFFI+", help='Name of the interpretation model. Accepted values are: [EXIFFI+,EXIFFI,DIFFI,RandomForest]')
@@ -43,6 +44,7 @@ n_estimators = args.n_estimators
 max_depth = args.max_depth
 max_samples = args.max_samples
 contamination = args.contamination
+percentile = args.percentile
 n_runs = args.n_runs
 model = args.model
 interpretation = args.interpretation
@@ -86,11 +88,14 @@ else:
     dataset.initialize_train_test()
     print("#"*50)
 
-assert model in ["IF", "EIF", "EIF+"], "Interpretable AD model not recognized"
-assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest","EIF+_RandomForest","EIF_RandomForest","IF_RandomForest"], "Interpretation not recognized"
+assert model in ["IF", "EIF", "EIF+","ECOD"], "Interpretable AD model not recognized"
+assert interpretation in ["EXIFFI+","EXIFFI", "DIFFI", "RandomForest","EIF+_RandomForest","EIF_RandomForest","IF_RandomForest","ECOD"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
     assert model=="IF", "DIFFI can only be used with the IF model"
+
+if interpretation == "ECOD":
+    assert model=="ECOD", "ECOD can only be used with the ECOD model"
 
 if interpretation == "EXIFFI":
     assert model=="EIF" or model=="IF", "EXIFFI can be used with the EIF and IF models"
@@ -107,6 +112,8 @@ elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
+elif model == "ECOD":
+    I=ECOD(contamination=contamination)
 
 # import ipdb; ipdb.set_trace()
 
@@ -144,7 +151,8 @@ mean_corr = correlation_experiment(I=I,
                                    corr_dict=corr_dict,
                                    interpretation=interpretation,
                                    dataset=dataset,
-                                   nruns=n_runs)
+                                   nruns=n_runs,
+                                   percentile=percentile)
 
 print(f'Mean correlation: {mean_corr}')
 
