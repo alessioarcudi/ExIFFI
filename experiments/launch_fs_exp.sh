@@ -4,62 +4,185 @@ SCRIPT_PATH="test_feature_selection.py"
 
 # DATASETS="bisect"
 
-# DATASETS="bisect_6d"
+DATASETS="bisect_3d_prop"
 
-DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
+# DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 
 # Path to the datasets 
-DATASET_PATH="../data/real/"
+DATASET_PATH="../data/syn/"
 
 for dataset in "${DATASET_ARRAY[@]}"; do
 
     python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
+        --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --model_interpretation "ECOD" \
-        --interpretation "ECOD" \
-        --scenario 2 \
-        --n_runs 1 \
-        --change_ylim \
-        --pre_process 
- 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --model_interpretation "ECOD" \
-        --interpretation "ECOD" \
+        --model "EIF" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
         --scenario 1 \
-        --n_runs 1 \
-        --change_ylim \
-        --pre_process 
+        --change_ylim
 
     python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
+        --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
         --model "EIF" \
-        --model_interpretation "ECOD" \
-        --interpretation "ECOD" \
+        --model_interpretation "EIF+" \
+        --interpretation "EXIFFI+" \
         --scenario 2 \
-        --n_runs 1 \
-        --change_ylim \
-        --pre_process 
- 
+        --change_ylim
+
     python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
+        --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
         --model "EIF" \
-        --model_interpretation "ECOD" \
-        --interpretation "ECOD" \
+        --model_interpretation "EIF" \
+        --interpretation "EXIFFI" \
         --scenario 1 \
-        --n_runs 1 \
-        --change_ylim \
-        --pre_process 
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "EIF" \
+        --interpretation "EXIFFI" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "EXIFFI" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "EXIFFI" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "DIFFI" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "RandomForest" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "IF" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "EIF" \
+        --interpretation "RandomForest" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "EIF" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "EIF+" \
+        --interpretation "RandomForest" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "EIF" \
+        --model_interpretation "EIF+" \
+        --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
 
 done
+
+
+ # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "ECOD" \
+    #     --interpretation "ECOD" \
+    #     --scenario 2 \
+    #     --n_runs 1 \
+    #     --change_ylim  
+ 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --model_interpretation "ECOD" \
+    #     --interpretation "ECOD" \
+    #     --scenario 1 \
+    #     --n_runs 1 \
+    #     --change_ylim  
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "ECOD" \
+    #     --interpretation "ECOD" \
+    #     --scenario 2 \
+    #     --n_runs 1 \
+    #     --change_ylim  
+ 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF" \
+    #     --model_interpretation "ECOD" \
+    #     --interpretation "ECOD" \
+    #     --scenario 1 \
+    #     --n_runs 1 \
+    #     --change_ylim  
  
 
     # python $SCRIPT_PATH \
