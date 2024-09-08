@@ -145,7 +145,6 @@ Some very fast comments looking at the Score Plots returned by the `GFI` experim
 | `diabetes`   | Here we have `bmi` on top while on `EXIFFI+` we have `HbA1c_level` and `blodd_gluc                                                                                                                      |
 | `shuttle`    | Not very similar, there is only Feature 0 that is in the top 3 like i                                                                                                                                   |
 | `moodify`    | The most important features are `energy` and `loudness` while in `EXIFFI+` it'                                                                                                                          |
-
 # Experiments Correlation
 
 This experiment was proposed by [[ExIFFI PAPER REVIEW EAAI#Reviewer 2|reviewer 2 comment 6]] and it may be considered as another experiment to evaluate the effectiveness of the `ExIFFI` interpretation algorithm. The idea is that since the importance scores we obtain with `ExIFFI` should quantify the relevance of certain features in detecting anomalies then **samples with high feature importance values should also have an high Anomaly Score**. We can quantify this effect computing the correlation between the importance scores and Anomaly Scores for each sample. We can use the following approach: 
@@ -215,11 +214,13 @@ This is the complete list of experiments we do in general on any dataset:
 - Metrics Experiment → Similarly to the Contamination Experiment this has to be done for each one of the `AD` models 
 - Time Scaling Experiment → This one is needed to put execution times on the metrics table for the `fit` and `predict` and also in the $AUC_{FS}$ table (the importance time in this case). Although in this case we can also copy the times we put for `bisect_3d` (in fact the shape of the two datasets are identical so also the execution times should be very similar) 
 
-- [ ] `GFI` experiment for (only the ones needed for the paper) → redo for `bisect_3d_skewed` (`EIF+_EXIFFI+` already done)
-- [x] Local Scoremaps `EXIFFI+` (only the ones needed for the paper)
+- [x] `GFI` experiment for (only the ones needed for the paper) → redo for `bisect_3d_skewed` (`EIF+_EXIFFI+` already done)
+- [ ] Local Scoremaps `EXIFFI+` (only the ones needed for the paper) → redo with `bisect_3d_skewed`
 - [ ] `ablation_EIF+` experiment 
 - [ ] Contamination Experiment 
-- [ ] Feature Selection Experiment (only the ones needed for the paper)
+- [ ] Feature Selection Experiment (only the ones needed for the paper) → redo with `bisect_3d_skewed`
 - [ ] Metrics Experiment → redo with `bisect_3d_skewed`
 - [x] Time Scaling Experiment  
 	- [ ] → use the same as `bisect_3d_prop_old` (the dimension of the dataset is the same only the value change )
+
+
