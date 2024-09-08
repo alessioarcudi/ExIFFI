@@ -104,9 +104,9 @@ if interpretation == "EXIFFI+":
     assert model=="EIF+", "EXIFFI+ can only be used with the EIF+ model"
 
 if model == "IF":
-    if interpretation == "EXIFFI":
+    if interpretation in ["EXIFFI","RandomForest"]:
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation in ["DIFFI","EIF+_RandomForest","EIF_RandomForest","IF_RandomForest","RandomForest"]:
+    elif interpretation in ["DIFFI","EIF+_RandomForest","EIF_RandomForest","IF_RandomForest"]:
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
