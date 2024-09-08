@@ -12,7 +12,7 @@ from utils_reboot.utils import *
 
 
 from model_reboot.EIF_reboot import ExtendedIsolationForest, IsolationForest
-from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
+# from sklearn.ensemble import IsolationForest as sklearn_IsolationForest
 import argparse
 
 # Create the argument parser
@@ -83,10 +83,9 @@ else:
     print("#"*50)
 
 
-if model == "IF":
-    if interpretation == "EXIFFI":
+if model == "IF" and interpretation == "EXIFFI":
         I = IsolationForest(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
-    elif interpretation == "DIFFI" or interpretation == "RandomForest":
+elif model == "IF" and (interpretation in ["DIFFI","RandomForest"]):
         I = sklearn_IsolationForest(n_estimators=n_estimators, max_samples=max_samples)
 elif model == "EIF":
     I=ExtendedIsolationForest(0, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
@@ -94,6 +93,8 @@ elif model == "EIF+":
     I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 elif model == "ECOD":
     I=ECOD(contamination=contamination)
+
+# import ipdb; ipdb.set_trace()
     
 os.chdir('../')
 cwd=os.getcwd()

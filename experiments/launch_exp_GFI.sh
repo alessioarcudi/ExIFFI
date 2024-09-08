@@ -16,19 +16,19 @@ DATASET_PATH="../data/syn/"
 
 for dataset in "${DATASET_ARRAY[@]}"; do
 
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --interpretation "EXIFFI+" \
-        --scenario 2 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --interpretation "EXIFFI+" \
+    #     --scenario 2 
         
-    python $SCRIPT_PATH \
-        --dataset_name "$dataset" \
-        --dataset_path $DATASET_PATH \
-        --model "EIF+" \
-        --interpretation "EXIFFI+" \
-        --scenario 1 
+    # python $SCRIPT_PATH \
+    #     --dataset_name "$dataset" \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "EIF+" \
+    #     --interpretation "EXIFFI+" \
+    #     --scenario 1 
 
     # python $SCRIPT_PATH \
     #     --dataset_name "$dataset" \
@@ -44,12 +44,12 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     #     --interpretation "EXIFFI" \
     #     --scenario 1 
 
-    # python $SCRIPT_PATH \
-    #     --dataset_name $DATASETS \
-    #     --dataset_path $DATASET_PATH \
-    #     --model "IF" \
-    #     --interpretation "DIFFI" \
-    #     --scenario 1 
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "IF" \
+        --interpretation "DIFFI" \
+        --scenario 1 
 
     # python $SCRIPT_PATH \
     #     --dataset_name $DATASETS \
@@ -112,6 +112,20 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     #     --dataset_path $DATASET_PATH \
     #     --model "IF" \
     #     --interpretation "RandomForest" \
+    #     --scenario 1
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "ECOD" \
+    #     --interpretation "ECOD" \
+    #     --scenario 2
+
+    # python $SCRIPT_PATH \
+    #     --dataset_name $DATASETS \
+    #     --dataset_path $DATASET_PATH \
+    #     --model "ECOD" \
+    #     --interpretation "ECOD" \
     #     --scenario 1
         
 done
