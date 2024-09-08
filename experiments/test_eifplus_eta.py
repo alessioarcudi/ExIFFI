@@ -82,19 +82,19 @@ elif scenario==1 and not pre_process:
 os.chdir('../')
 cwd=os.getcwd()
 
-assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder"], "Evaluation Model not recognized"
+assert model in ["IF","sklearn_IF","EIF", "EIF+","DIF","AnomalyAutoencoder","ECOD"], "Evaluation Model not recognized"
 
 I=ExtendedIsolationForest(1, n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples)
 
 
 names = [
-    "Xaxis", "bisect", "bisect_3d", "bisect_3d_prop", "bisect_6d", "annthyroid", "breastw", "cardio", "diabetes", 
+    "Xaxis", "bisect", "bisect_3d", "bisect_3d_skewed", "bisect_6d", "annthyroid", "breastw", "cardio", "diabetes", 
     "glass", "ionosphere", "moodify", "pendigits", "pima", "shuttle", "wine"
 ]
 
 # Average precision values of the EIF model for the datasets (to compare it to the 
 # average precision values of the EIF+ model across the different eta values)
-EIF_values = [0.99, 0.99, 0.99, 0.99, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 0.27, 0.54, 0.97, 0.57]
+EIF_values = [0.99, 0.99, 0.99, 0.97, 0.99, 0.45, 0.98, 0.74, 0.55, 0.57, 0.90, 0.65, 0.27, 0.54, 0.97, 0.57]
 
 EIF_dataset_values_dict = dict(zip(names, EIF_values))
 
