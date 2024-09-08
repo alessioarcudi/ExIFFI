@@ -217,10 +217,10 @@ This is the complete list of experiments we do in general on any dataset:
 - [x] `GFI` experiment for (only the ones needed for the paper) → redo for `bisect_3d_skewed` (`EIF+_EXIFFI+` already done)
 - [x] Local Scoremaps `EXIFFI+` (only the ones needed for the paper) → redo with `bisect_3d_skewed`
 - [ ] `ablation_EIF+` experiment 
-- [ ] Contamination Experiment 
-- [ ] Feature Selection Experiment (only the ones needed for the paper) → redo with `bisect_3d_skewed`
-- [ ] Metrics Experiment → redo with `bisect_3d_skewed`
+- [x] Contamination Experiment 
+- [x] Feature Selection Experiment (only the ones needed for the paper) → redo with `bisect_3d_skewed`
+- [x] Metrics Experiment → redo with `bisect_3d_skewed`
 - [x] Time Scaling Experiment  
-	- [ ] → use the same as `bisect_3d_prop_old` (the dimension of the dataset is the same only the value change )
+	- [x] → use the same as `bisect_3d_prop_old` (the dimension of the dataset is the same only the value change )
 
 
