@@ -4,39 +4,43 @@ SCRIPT_PATH="test_feature_selection.py"
 
 # DATASETS="bisect"
 
-DATASETS="bisect_3d_prop"
+DATASETS="bisect_3d_skewed"
+
+MODELS="EIF+ EIF"
 
 # DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
-IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
+IFS=' ' read -ra MODELS_ARRAY <<< "$MODELS"
 
 # Path to the datasets 
 DATASET_PATH="../data/syn/"
 
-for dataset in "${DATASET_ARRAY[@]}"; do
+for model in "${MODELS_ARRAY[@]}"; do
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF+" \
         --interpretation "EXIFFI+" \
         --scenario 1 \
-        --change_ylim
+        --change_ylim \
+        --compute_random
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF+" \
         --interpretation "EXIFFI+" \
         --scenario 2 \
-        --change_ylim
+        --change_ylim \
+        --compute_random
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
@@ -45,7 +49,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
@@ -54,25 +58,27 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "EXIFFI" \
         --scenario 1 \
-        --change_ylim
+        --change_ylim \
+        --compute_random
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "EXIFFI" \
         --scenario 2 \
-        --change_ylim
+        --change_ylim \
+        --compute_random
 
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "DIFFI" \
         --scenario 1 \
@@ -81,7 +87,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "DIFFI" \
         --scenario 2 \
@@ -90,7 +96,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "RandomForest" \
         --scenario 1 \
@@ -99,7 +105,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "IF" \
         --interpretation "RandomForest" \
         --scenario 2 \
@@ -108,7 +114,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF" \
         --interpretation "RandomForest" \
         --scenario 1 \
@@ -117,7 +123,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF" \
         --interpretation "RandomForest" \
         --scenario 2 \
@@ -126,7 +132,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF+" \
         --interpretation "RandomForest" \
         --scenario 1 \
@@ -135,9 +141,27 @@ for dataset in "${DATASET_ARRAY[@]}"; do
     python $SCRIPT_PATH \
         --dataset_name $DATASETS \
         --dataset_path $DATASET_PATH \
-        --model "EIF" \
+        --model "$model" \
         --model_interpretation "EIF+" \
         --interpretation "RandomForest" \
+        --scenario 2 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "$model" \
+        --model_interpretation "ECOD" \
+        --interpretation "ECOD" \
+        --scenario 1 \
+        --change_ylim
+
+    python $SCRIPT_PATH \
+        --dataset_name $DATASETS \
+        --dataset_path $DATASET_PATH \
+        --model "$model" \
+        --model_interpretation "ECOD" \
+        --interpretation "ECOD" \
         --scenario 2 \
         --change_ylim
 

@@ -6,7 +6,7 @@ SCRIPT_PATH="test_local_importances.py"
 
 # DATASETS="wine breastw annthyroid pima cardio glass ionosphere pendigits shuttle diabetes moodify "
 
-DATASETS="bisect_3d_prop"
+DATASETS="bisect_3d_skewed"
 
 IFS=' ' read -ra DATASET_ARRAY <<< "$DATASETS"
 

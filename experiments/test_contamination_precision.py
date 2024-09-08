@@ -58,10 +58,13 @@ interpretation = args.interpretation
 pre_process = args.pre_process
 
 assert model in ["IF", "EIF", "EIF+", "DIF", "AnomalyAutoencoder","ECOD"], "Model not recognized"
-assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","NA"], "Interpretation not recognized"
+assert interpretation in ["EXIFFI+", "EXIFFI", "DIFFI", "RandomForest","ECOD", "NA"], "Interpretation not recognized"
 
 if interpretation == "DIFFI":
     assert model=="IF", "DIFFI can only be used with the IF model"
+
+if interpretation == "ECOD":
+    assert model=="ECOD", "ECOD can only be used with the ECOD model"
 
 if interpretation == "EXIFFI":
     assert model=="EIF", "EXIFFI can only be used with the EIF model"

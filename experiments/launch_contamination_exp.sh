@@ -5,7 +5,7 @@ SCRIPT_PATH="test_contamination_precision.py"
 
 # Dataset 
 # DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
-DATASETS="bisect_3d_prop"
+DATASETS="bisect_3d_skewed"
 
 # Path to the datasets
 DATASET_PATHS="../data/syn/"
@@ -56,4 +56,6 @@ python $SCRIPT_PATH \
 python $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
-    --model "ECOD" 
+    --model "ECOD" \
+    --interpretation "ECOD" \
+    --compute_GFI 1
