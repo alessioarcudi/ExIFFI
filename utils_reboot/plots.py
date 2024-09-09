@@ -448,9 +448,12 @@ def importance_map(dataset: Type[Dataset],
         mins = dataset.X_test.min(axis=0)[list(feats_plot)]
         maxs = dataset.X_test.max(axis=0)[list(feats_plot)]  
         mean = dataset.X_test.mean(axis = 0)
-        mins = list(mins-(maxs-mins)*factor/10)
+        mins = list(mins-(maxs-mins)*factor/10) 
         maxs = list(maxs+(maxs-mins)*factor/10)
-        xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[1], maxs[1], resolution))
+        if dataset.name == "bisect_3d_skewed":
+            xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[0], maxs[0], resolution))
+        else:
+            xx, yy = np.meshgrid(np.linspace(mins[0], maxs[0], resolution), np.linspace(mins[1], maxs[1], resolution))
         mean = np.repeat(np.expand_dims(mean,0),len(xx)**2,axis = 0)
         mean[:,feats_plot[0]]=xx.reshape(len(xx)**2)
         mean[:,feats_plot[1]]=yy.reshape(len(yy)**2)
@@ -494,10 +497,15 @@ def importance_map(dataset: Type[Dataset],
         elif col_names is not None:
             ax.set_xlabel(col_names[feats_plot[0]],fontsize=20)
             ax.set_ylabel(col_names[feats_plot[1]],fontsize=20)
-        
+
+        # # Set aspect ratio to 'equal' so both axes are on the same scale
+        # ax.set_aspect('equal', 'box')
+
+        # ax.set_xlim(-15, 15)  # Set the x-axis limits
+        # ax.set_ylim(-15, 15)  # Set the y-axis limits to match the x-axis
+
         ax.legend()
 
-        
         t = time.localtime()
         current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
         if isdiffi:

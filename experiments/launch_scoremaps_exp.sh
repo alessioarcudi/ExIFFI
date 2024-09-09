@@ -21,7 +21,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
             --interpretation "EXIFFI+" \
             --scenario 2 \
             --feature1 0 \
-            --feature2 1 
+            --feature2 2
 
         python $SCRIPT_PATH \
             --dataset_name "$dataset" \
@@ -30,7 +30,7 @@ for dataset in "${DATASET_ARRAY[@]}"; do
             --interpretation "EXIFFI+" \
             --scenario 1 \
             --feature1 0 \
-            --feature2 1 
+            --feature2 2
 done
 
 # pre-process ONLY FOR REAL WORLD DATASET 
