@@ -223,4 +223,33 @@ This is the complete list of experiments we do in general on any dataset:
 - [x] Time Scaling Experiment  
 	- [x] → use the same as `bisect_3d_prop_old` (the dimension of the dataset is the same only the value change )
 
+# Final things TO DO 
+
+- [ ] Insert captions on the paper where it is written <span style="color:red">CAPTION DA FARE</span>. In particular the captions need to be done for the following images:
+	- [x] Full Contamination plot of `Xaxis` and `bisect_3d_skewed`
+	- [x] Score Plot + Local Scoremap of `Xaxis` and `bisect_3d_skewed`
+	- [x] Full Contamination plot of `glass`
+	- [x] Score Plot + Local Scoremap of `glass`
+- [ ] Update the bold numbers in the:
+	- [ ] Average Precision Table (put in bold the best Average Precision values for each different dataset)
+	- [ ] $AUC_{FS}$ score table 
+
+# New paper titles
+
+[[ExIFFI PAPER REVIEW EAAI#Reviewer 3|Reviewer 3]] pointed out that the title of the paper is a bit confusing. That's one of the drawbacks of introducing two novel contributions (i.e. `ExIFFI` and `EIF+`) in a single paper. It would have probably been simpler to do two different smaller papers, one for `ExIFFI` and one for `EIF+` but at this point we have to stick with what we have. 
+
+Possible new title ideas given by ChatGPT:
+
+- **"ExIFFI: Interpretable Anomaly Detection via Enhanced Isolation Forest Feature Importance"**
+- **"Explaining Anomalies: A Novel Approach with ExIFFI and EIF+"**
+- **"Improving Anomaly Detection Interpretability with ExIFFI and EIF+"**
+- **"ExIFFI and EIF+: A Comprehensive Framework for Explainable Unsupervised Anomaly Detection"** → **N.B.**
+- **"Enhancing Isolation Forest for Generalized Anomaly Detection and Interpretability"** → **N.B.**
+- **"Unveiling Anomalies: Feature Importance and Generalization in Isolation Forest Models"**
+- **"ExIFFI: Bridging the Gap Between Anomaly Detection and Interpretability in Isolation Forests"**
+- **"EIF+ and ExIFFI: A Unified Approach for Generalized and Interpretable Anomaly Detection"** → **N.B.**
+- **"A Novel Interpretability Framework for Isolation Forest Anomaly Detection: ExIFFI and EIF+"**
+- **"Feature Importance in Unsupervised Anomaly Detection: The ExIFFI Approach to EIF+"**
+
+
 
