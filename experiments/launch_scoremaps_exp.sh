@@ -23,14 +23,14 @@ for dataset in "${DATASET_ARRAY[@]}"; do
             --feature1 0 \
             --feature2 2
 
-        python $SCRIPT_PATH \
-            --dataset_name "$dataset" \
-            --dataset_path $DATASET_PATH \
-            --model "EIF+" \
-            --interpretation "EXIFFI+" \
-            --scenario 1 \
-            --feature1 0 \
-            --feature2 2
+        # python $SCRIPT_PATH \
+        #     --dataset_name "$dataset" \
+        #     --dataset_path $DATASET_PATH \
+        #     --model "EIF+" \
+        #     --interpretation "EXIFFI+" \
+        #     --scenario 1 \
+        #     --feature1 0 \
+        #     --feature2 2
 done
 
 # pre-process ONLY FOR REAL WORLD DATASET 
