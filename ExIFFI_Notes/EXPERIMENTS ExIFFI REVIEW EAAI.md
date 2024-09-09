@@ -34,8 +34,8 @@ Use the `PyOD` implementation of [ECOD](https://pyod.readthedocs.io/en/latest/py
 - [x] Time Scaling `fit-predict` experiment 
 - [x] `GFI` experiments with the new `ECOD` Feature Importance 
 - [x] Local Scoremaps experiments 
-- [ ] Feature Selection Experiments 
-	- [ ] Fix the `Xaxis` plot with `change_ylim`
+- [x] Feature Selection Experiments 
+	- [x] Fix the `Xaxis` plot with `change_ylim`
 - [x] Time Scaling Experiments for the `importances` Time Scaling plot 
 
 ## `ECOD` Feature Importance 
