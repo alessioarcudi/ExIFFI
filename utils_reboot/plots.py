@@ -21,7 +21,6 @@ from matplotlib import colors, cm
 from sklearn.ensemble import IsolationForest
 from model_reboot.interpretability_module import local_diffi
 
-
 def bar_plot(dataset: Type[Dataset], 
             global_importances_file: str,
             filetype: str = "npz", 
@@ -130,8 +129,6 @@ def bar_plot(dataset: Type[Dataset],
 
     return fig, ax, bars
     
-    
-
 def score_plot(dataset: Type[Dataset], 
             global_importances_file: str,
             plot_path: str = os.getcwd(), 
@@ -337,7 +334,6 @@ def plot_feature_selection(
     if plot_image:
         plt.show()
         
-
 def plot_precision_over_contamination(precisions:np.ndarray,
                                       dataset_name:str,
                                       model_name:str,
@@ -514,7 +510,6 @@ def importance_map(dataset: Type[Dataset],
         if save_plot:
             plt.savefig(path_plot + '/{}'.format(filename), bbox_inches='tight')
 
-
 def gfi_over_contamination(importances, contamination, model_index, plot_path,col_names=None, save_plot=True, show_plot=False):
     importances_mean = importances[model_index].mean(axis=0)
     importances_95_upper = np.percentile(importances[model_index], 95, axis=0)
@@ -542,7 +537,6 @@ def gfi_over_contamination(importances, contamination, model_index, plot_path,co
         plt.savefig(plot_path + '/'+ current_time + 'gfi_over_contamination_model_contamination=' +str(contamination[model_index]) + '.pdf', bbox_inches='tight')
     if show_plot:
         plt.show()
-
 
 def get_time_scaling_files(dataset: Type[Dataset],
                            model: Type[ExtendedIsolationForest],
@@ -594,32 +588,32 @@ def get_vals(model: str,
 
     return median_val_times,five_val_times,ninefive_val_times
 
-def plot_time_scaling(model_names:List[str],
-                      dataset_names:List[str],
-                      dict_time:dict,
-                      data_path:str,
-                      type:str='predict',
-                      plot_type:str='samples',
-                      plot_path:str=os.getcwd(),
-                      show_plot:bool=True,
-                      save_plot:bool=True)-> tuple[plt.figure, plt.axes]:
+def plot_time_scaling(basepath,
+                      model_names,
+                      dataset_names,
+                      data_path,
+                      type='predict',
+                      plot_type='samples',
+                      plot_path=os.getcwd(),
+                      show_plot=True,
+                      save_plot=True,
+                      dict_name:str='time_scaling_test_shap.pickle'
+                      ) -> tuple[plt.figure, plt.axes]:
     
     """
-    Obtain the time scaling plot.
+    Obtain the Time Scaling plot.
 
     Args:
+        basepath: The base path from where to retrieve the files needed to obtain the plot.
         model_names: The list of model names.
         dataset_names: The list of dataset names.
-        dict_time: The dictionary containing the execution time values.
-        data_path: The path to the datasets.
-        type: The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
-        plot_type: The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
+        data_path: The path to the data.
+        type: The type of execution time. Defaults to 'predict'.
+        plot_type: The type of plot. Defaults to 'samples'.
         plot_path: The path where the plot will be saved. Defaults to os.getcwd().
         show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.
         save_plot: A boolean indicating whether the plot should be saved. Defaults to True.
-
-    Returns:
-        The figure and axes objects used to create the plot.
+        dict_name: The name of the dictionary containing the execution time values. Defaults to 'time_scaling_test_shap.pickle'.
     """
 
     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
@@ -632,20 +626,34 @@ def plot_time_scaling(model_names:List[str],
     elif plot_type == "features":
         sample_sizes=[data.shape[1] for data in datasets]
 
+    with open(basepath + "/utils_reboot/" + dict_name, "rb") as file:
+        dict_time = pickle.load(file)
+
     fig, ax = plt.subplots()
     plt.style.use('default')
     plt.rcParams['axes.facecolor'] = '#F2F2F2'
     plt.grid(alpha = 0.7)
-    colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
+    colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:purple","tab:brown"]
 
     maxs=[]
     mins=[]
     for i,model in enumerate(model_names):
-        median_times,five_times,ninefive_times=get_vals(model=model,dataset_names=dataset_names,dict_time=dict_time,type=type)
+        median_times,five_times,ninefive_times=get_vals(model=model,
+                                                        dataset_names=dataset_names,
+                                                        type=type,
+                                                        dict_time=dict_time)
         maxs.append(np.max(median_times))
         mins.append(np.min(median_times))
 
-        ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",label=model)
+        if model == 'sklearn_IF':
+            ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",markersize=4,label='IF')
+        elif model in ['EIF','EXIFFI']:
+            ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",markersize=4,label=model)
+        elif model in ['EIF+','EXIFFI+']:
+            ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="s",markersize=6,label=model)
+        else:
+            ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",markersize=4,label=model)
+        
         ax.fill_between(sample_sizes,five_times,ninefive_times,alpha=0.1,color=colors[i])
     
     if plot_type == "samples":
@@ -654,16 +662,36 @@ def plot_time_scaling(model_names:List[str],
         ax.yaxis.set_major_locator(AutoLocator())
         ax.yaxis.set_major_formatter(ScalarFormatter())
         ax.minorticks_off()
-        ax.set_xticks(sample_sizes,sample_sizes,rotation=45,fontsize = 12)
-        ax.set_yticks([1,10,25,100,250],fontsize = 14)
-        
-    ax.set_xlabel('Sample Size',fontsize = 20)
+        ax.set_xticks(sample_sizes,sample_sizes,rotation=45)
+        ax.tick_params(axis='x',which='minor',labelsize=12)
+        ax.set_yticks([1,10,25,100,250])
+        ax.tick_params(axis='y',which='minor',labelsize=14)
+    else:
+        ax.set_xscale("log",base=2)
+        if type == "importances":
+            ax.set_yscale('log',base=2)
+        ax.yaxis.set_major_locator(AutoLocator())
+        ax.yaxis.set_major_formatter(ScalarFormatter())
+        ax.minorticks_off()
+        ax.set_xticks(sample_sizes,sample_sizes,rotation=45)
+        ax.tick_params(axis='x',which='minor',labelsize=12)
+        if type=='predict':
+            ax.set_yticks([0.02,0.5,1,2,5,10])
+        elif type=='fit':
+            ax.set_yticks([0.06,3,8,15,30])
+        elif type=='importances':
+            ax.set_yticks([1,10,25,100,250])
+            # ax.set_yticks([1,10,25,100,250,500,1000])
+    if plot_type == "samples":
+        ax.set_xlabel('Sample Size',fontsize = 20)
+    elif plot_type == "features":
+        ax.set_xlabel('N. Features',fontsize = 20)
     ax.set_ylabel(f'{type} Time (s)',fontsize = 20)
-    #plt.ylim(np.min(mins)-0.2*np.min(mins),np.max(maxs)+0.2*np.max(maxs))
-
     
-    ax.legend()
-    ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    # plt.ylim(np.min(mins)-0.2*np.min(mins),np.max(maxs)+0.2*np.max(maxs))
+
+    ax.legend(framealpha=0.5)
+    ax.grid(visible=True, alpha=0.3, which='major', color='gray', linestyle='-')
     
     t = time.localtime()
     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
@@ -742,3 +770,86 @@ def plot_ablation(eta_list:List[float],
     
     return fig,ax
 
+# Old version of plot_time_scaling 
+
+# def plot_time_scaling(model_names:List[str],
+#                       dataset_names:List[str],
+#                       dict_time:dict,
+#                       data_path:str,
+#                       type:str='predict',
+#                       plot_type:str='samples',
+#                       plot_path:str=os.getcwd(),
+#                       show_plot:bool=True,
+#                       save_plot:bool=True)-> tuple[plt.figure, plt.axes]:
+    
+#     """
+#     Obtain the time scaling plot.
+
+#     Args:
+#         model_names: The list of model names.
+#         dataset_names: The list of dataset names.
+#         dict_time: The dictionary containing the execution time values.
+#         data_path: The path to the datasets.
+#         type: The type of execution time, accepted values are: ['fit','predict','importances'] Defaults to 'predict'.
+#         plot_type: The type of plot, accepted values are ['samples','features']. Defaults to 'samples'.
+#         plot_path: The path where the plot will be saved. Defaults to os.getcwd().
+#         show_plot: A boolean indicating whether the plot should be displayed. Defaults to True.
+#         save_plot: A boolean indicating whether the plot should be saved. Defaults to True.
+
+#     Returns:
+#         The figure and axes objects used to create the plot.
+#     """
+
+#     assert type in ['predict','fit','importances'], "Type not valid. Accepted values: ['predict','fit','importances'] "
+#     assert plot_type in ['samples','features'], "Plot Type not valid. Accepted values: ['samples','features']"
+    
+#     datasets=[Dataset(name,path=data_path) for name in dataset_names]
+
+#     if plot_type == "samples":
+#         sample_sizes=[data.shape[0] for data in datasets]
+#     elif plot_type == "features":
+#         sample_sizes=[data.shape[1] for data in datasets]
+
+#     fig, ax = plt.subplots()
+#     plt.style.use('default')
+#     plt.rcParams['axes.facecolor'] = '#F2F2F2'
+#     plt.grid(alpha = 0.7)
+#     colors = ["tab:red","tab:blue","tab:orange","tab:green","tab:blue"]
+
+#     maxs=[]
+#     mins=[]
+#     for i,model in enumerate(model_names):
+#         median_times,five_times,ninefive_times=get_vals(model=model,dataset_names=dataset_names,dict_time=dict_time,type=type)
+#         maxs.append(np.max(median_times))
+#         mins.append(np.min(median_times))
+
+#         ax.plot(sample_sizes,median_times,alpha=0.85,c=colors[i],marker="o",label=model)
+#         ax.fill_between(sample_sizes,five_times,ninefive_times,alpha=0.1,color=colors[i])
+    
+#     if plot_type == "samples":
+#         ax.set_yscale('log')
+#         ax.set_xscale("log")
+#         ax.yaxis.set_major_locator(AutoLocator())
+#         ax.yaxis.set_major_formatter(ScalarFormatter())
+#         ax.minorticks_off()
+#         ax.set_xticks(sample_sizes,sample_sizes,rotation=45,fontsize = 12)
+#         ax.set_yticks([1,10,25,100,250],fontsize = 14)
+        
+#     ax.set_xlabel('Sample Size',fontsize = 20)
+#     ax.set_ylabel(f'{type} Time (s)',fontsize = 20)
+#     #plt.ylim(np.min(mins)-0.2*np.min(mins),np.max(maxs)+0.2*np.max(maxs))
+
+    
+#     ax.legend()
+#     ax.grid(visible=True, alpha=0.5, which='major', color='gray', linestyle='-')
+    
+#     t = time.localtime()
+#     current_time = time.strftime("%d-%m-%Y_%H-%M-%S", t)
+
+#     if save_plot:
+#         plt.savefig(f'{plot_path}/{current_time}_time_scaling_plot_{plot_type}_{type}.pdf',bbox_inches='tight')
+
+#     if show_plot:
+#         plt.show()
+    
+#     return fig,ax

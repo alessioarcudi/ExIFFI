@@ -1,5 +1,5 @@
 import time
-from typing import Type,Union
+from typing import Type,Union,List
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -510,6 +510,36 @@ def get_corr_value(dataset:Type[Dataset],
     file_path=get_most_recent_file(directory_path=path)
     results=open_element(file_path)
     return results['mean_corr']
+
+def get_vals(dict_time:dict,
+             model:str, 
+             dataset_names:List[str],
+             type:str='predict') -> tuple[List,List,List]:
+    
+    """
+    Function to get the median, 5th and 95th percentile of the time values for each dataset.
+    Used to produce the Time Scaling plots
+
+    Args:
+        dict_time: Dictionary containing the time values
+        model: Model used in the experiment
+        dataset_names: List of dataset names
+        type: Type of the experiment, by default 'predict'
+
+    Returns:
+        Median, 5th and 95th percentile of the time values for each dataset
+    """
+    
+    val_times=[]
+    for d_name in dataset_names:
+        time=np.array(dict_time[type][model][d_name])
+        val_times.append(time)
+
+    median_val_times=[np.percentile(x,50) for x in val_times]
+    five_val_times=[np.percentile(x,5) for x in val_times]
+    ninefive_val_times=[np.percentile(x,95) for x in val_times]
+
+    return median_val_times,five_val_times,ninefive_val_times
 
 def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[NewPrecisions],Type[Precisions_random]],
                  directory_path:str,
