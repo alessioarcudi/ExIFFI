@@ -342,8 +342,7 @@ class ECOD(oldECOD):
         # print(f'I_I: {i_i}')
         # return gfi,i_o,i_i,inliers_idx,outliers_idx,label
         return gfi
-
-    
+   
 class AutoEncoder(oldAutoEncoder):
 
     """
@@ -427,7 +426,90 @@ def get_feature_indexes(dataset:Type[Dataset],
         print('Feature name not valid')
 
     return idx1,idx2
+
+def get_precision_file(dataset:Type[Dataset],
+                       model:Type[ExtendedIsolationForest],
+                       scenario:int,
+                       filename:str,
+                       file_pos:int=0,
+                       basepath:str='../experiments/results/') -> dict:
+
+    """
+    Function to get the most recent file containing the results of the 
+    metrics experiments and open it
+
+    Args:
+        dataset: Dataset used in the experiment
+        model: Model used in the experiment
+        scenario: Scenario number
+        filename: Name of the file
+        file_pos: Position of the file in the sorted list of files, by default 0
+        basepath: Base path where the results are stored, by default '../experiments/results/'
+
+    Returns:
+        Dictionary containing the results of the metrics experiments
+    """
+
+    path=os.path.join(basepath,dataset.name,'experiments','metrics',model,f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(directory_path=path,filename=filename,file_pos=file_pos)
+    results=open_element(file_path)
+    return results
+
+def get_aucfs_value(dataset:Type[Dataset],
+                    model_interpretation:str,
+                    model:str,
+                    interpretation:str,
+                    scenario:int,
+                    basepath:str='../experiments/results/') -> float:
     
+    """
+    Function to get the AUCFS value of the most recent file containing the results of the
+    Feature Selection experiments
+
+    Args:
+        dataset: Dataset used in the experiment
+        model_interpretation: AD model used to compute the Average Precision values
+        model: Model explained by the interpretation algorithm
+        interpretation: Interpretation algorithm used in the experiment
+        scenario: Scenario number
+        basepath: Base path where the results are stored, by default '../experiments/results/'
+
+    Returns:
+        AUCFS value
+    """
+    
+    path=os.path.join(basepath,dataset.name,'experiments','feature_selection',
+                      model_interpretation,f'{model}_{interpretation}',f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(directory_path=path)
+    results=open_element(file_path)
+    return results.aucfs
+
+def get_corr_value(dataset:Type[Dataset],
+                   model:str,
+                   interpretation:str,
+                   scenario:int,
+                   basepath:str='../experiments/results/') -> float:
+
+    """
+    Function to get the mean correlation value of the most recent file containing the results of the
+    Correlation experiments
+    
+    Args:
+        dataset: Dataset used in the experiment
+        model: Model used in the experiment
+        interpretation: Interpretation algorithm used in the experiment
+        scenario: Scenario number
+        basepath: Base path where the results are stored, by default '../experiments/results/'
+
+    Returns:
+        Mean correlation value
+    """
+
+    path=os.path.join(basepath,dataset.name,'experiments','correlation',
+                      model,interpretation,f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(directory_path=path)
+    results=open_element(file_path)
+    return results['mean_corr']
 
 def save_element(element:Union[np.array,list,pd.DataFrame,Type[Precisions],Type[NewPrecisions],Type[Precisions_random]],
                  directory_path:str,
