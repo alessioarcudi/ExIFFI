@@ -511,6 +511,35 @@ def get_corr_value(dataset:Type[Dataset],
     results=open_element(file_path)
     return results['mean_corr']
 
+def get_ndcg_value(dataset:Type[Dataset],
+                   model:str,
+                   interpretation:str,
+                   scenario:int,
+                   basepath:str='../experiments/results/') -> float:
+    
+    """
+    Function to get the NDCG value of the most recent file containing the results of theù
+    NDCG experiments
+
+    Args:
+        dataset: Dataset used in the experiment
+        model: Model used in the experiment
+        interpretation: Interpretation algorithm used in the experiment
+        scenario: Scenario number
+        basepath: Base path where the results are stored, by default '../experiments/results/'
+
+    Returns:
+        NDCG value
+    """
+
+    assert dataset.name in ['Xaxis','bisect','bisect_3d','bisect_3d_skewed','bisect_6d'], "NCGD value not available for real world datasets"
+
+    path=os.path.join(basepath,dataset.name,'experiments','ndcg',
+                      model,interpretation,f'scenario_{str(scenario)}')
+    file_path=get_most_recent_file(directory_path=path)
+    results=open_element(file_path)
+    return results['NDCG']
+
 def get_vals(dict_time:dict,
              model:str, 
              dataset_names:List[str],
