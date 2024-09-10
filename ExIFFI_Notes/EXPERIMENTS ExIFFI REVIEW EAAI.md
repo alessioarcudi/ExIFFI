@@ -225,14 +225,14 @@ This is the complete list of experiments we do in general on any dataset:
 
 # Final things TO DO 
 
-- [ ] Insert captions on the paper where it is written <span style="color:red">CAPTION DA FARE</span>. In particular the captions need to be done for the following images:
+- [x] Insert captions on the paper where it is written <span style="color:red">CAPTION DA FARE</span>. In particular the captions need to be done for the following images:
 	- [x] Full Contamination plot of `Xaxis` and `bisect_3d_skewed`
 	- [x] Score Plot + Local Scoremap of `Xaxis` and `bisect_3d_skewed`
 	- [x] Full Contamination plot of `glass`
 	- [x] Score Plot + Local Scoremap of `glass`
-- [ ] Update the bold numbers in the:
-	- [ ] Average Precision Table (put in bold the best Average Precision values for each different dataset)
-	- [ ] $AUC_{FS}$ score table 
+- [x] Update the bold numbers in the:
+	- [x] Average Precision Table (put in bold the best Average Precision values for each different dataset)
+	- [x] $AUC_{FS}$ score table 
 
 # New paper titles
 
@@ -251,5 +251,32 @@ Possible new title ideas given by ChatGPT:
 - **"A Novel Interpretability Framework for Isolation Forest Anomaly Detection: ExIFFI and EIF+"**
 - **"Feature Importance in Unsupervised Anomaly Detection: The ExIFFI Approach to EIF+"**
 
+# Cover Letter 
 
+In the Cover Letter we can keep track at all the comments left by the reviewers and se which one of them we have solved and which not to see what are the little things missing. Here I will write the things that we are still missing:
+
+- Comment 4 reviewer 1 → Strange comment on the old citations 16,17,18 → it is not clear why he/she thinks that citations 16 is not in the same format of citations 17 and 18
+- Comment 14 reviewer 1 → Here since Feature 0 is the most important one in the synthetic datasets and in some of the real world one he thinks that it is always the most important. In any case discussing about the impact of feature importance in real-world scenarios should solve the comment
+- Comment 3 reviewer 2 → Probably here we should create a dedicated section to go deeper in explaining why `EIF+` is better than `EIF` putting together the results coming from the other sections. `EIF+` is though to work well in Scenario II, so, taking in consideration the paper talking about the *normality assumption*, when the training data are composed of only inliers. Results are on our side because from the Average Precision table if we compute the mean Average Precision across all the datasets we can see how the best AD model in Scenario I is `EIF` while `EIF+` is the best one in Scenario II. 
+- Comment 6 reviewer 2 → Chiara suggests to also insert the `NDCG` metric as a quantitative evaluation of the interpretation algorithms. This can be done for the synthetic dataset where we have a ground truth on the most important features → the main problem is to how exactly decide the what is the correct ground truth feature ranking. For example in `Xaxis` we only care that the model is able to put Feature 0 at the first place, since the remaining 5 features are just noise we do not care about their order. 
+- Comment 1 reviewer 3 → Here it suggests to change the title and the content to make the paper simpler to follow. With the modifications we did making the paper shorter it may probable be simpler to read. For what concerns the titles there are some ideas from us and also from [[EXPERIMENTS ExIFFI REVIEW EAAI#New paper titles|ChatGPT]] we can consider.
+- Comment 7 reviewer 3 → Search the papers from the `C-RISE` research group the reviewer is referring to → in fact he/she just mentions the research group and the topics of the papers (i.e. Bayesian Network-based methods, scores of fault diagnosis and isolation models, methods extended to complex engineering, system safety and risk analysis) without giving us the titles and authors
+- Comment 1 reviewer 4 → Verify that the numerical results reported in the Abstract coincide with the results showed in the big tables → OK 
+- Comment 9 reviewer 4 → Elaborate on the potential limitations of your work → Say that the model is model specific and, as a consequence, it works only on isolation based AD models → for `EXIFFI`. For `EIF+` → it's surely better than `IF` but it still uses linear cuts and thus it may struggle in detecting anomalies with complex non linear shapes. 
+- Comment 10 reviewer 4 → *More carefully proofread your manuscript* → Do not really understand what they mean here → re read the paper multiple times to avoid any orthographic error.
+
+## C-RISE Papers to cite
+
+The C-RISE research group focuses on Risk Assesment, Risk Management, Security, Fault Detection and all these kind of stuff. They focus on offshore oil and gas as well as mining industries operating in harsh and remote environments including the Arctic and Canadian North. This topic can be considered connected to Anomaly Detection because AD and Fault Detection are similar and in any case anomalies can signal potential risks to avoid and manage. 
+
+The head of the research group is Faisal Khan, so searching him on Google Scholar I found these papers:
+
+- [Safety analysis in process facilities: Comparison of fault tree and Bayesian network approaches](https://www.sciencedirect.com/science/article/pii/S0951832011000408?casa_token=b6iwYsUpnZsAAAAA:plNa_yjewrrIHiOri7Yce36tbiuoP-6HxYy7Cmed4wfjQqYJ4e28MnezKiRfVNKKENIFQvaEmw) (August 2011) → Here they compare Bayesian Networks to Fault Trees as two safety analysis methods. Fault Trees is a method developed for Accident Analysis that determines the potential causes of an undesired event (i.e. the top event) using a tree that represents the logical connections between primary events that lead to the top event. This is somehow similar to what our Feature Importance score do → giving a feature ranking we provide a list of the most probable causes under an anomalous point. In the paper they highlight some limitations of Fault Trees and introduce the usage of Bayesian Networks as an alternative method for this task. 
+- [Methods and models in process safety and risk management: Past, present and future](https://www.sciencedirect.com/science/article/pii/S0957582015001275?casa_token=7t1TMp8XgyMAAAAA:6O3WWVO1k4aHhl8P7NzrqDGqcjZ6MfqY1atwV6cdkyNAmeD-H0kXk1zb1UWiLGaddbz9B9dj_A) (November 2015) → This is survey on risk analysis, process safety and risk management tools. 
+
+Another member of the C-RISE research group is Syed Imtiaz. Among its papers on Google Scholar we find:
+
+- [An analysis of process fault diagnosis methods from safety perspectives](https://www.sciencedirect.com/science/article/pii/S0098135420312400?casa_token=cyOW0iNQr6IAAAAA:AQMnd_jqx2KSi5Q_Eo5MOxc0goWR5Z6jJxTCdsBRuvbN5fpUZsojiMGD-qmiI3gGjF0I3w5hSw) (February 2021) → This is another survey that talks also about Industry 4.0. They focus on three essential aspects of process safety: Fault Detection and Diagnosis (FDD), Risk Assessment (RA) and Abnormal Situation Management (ASM). This survey is very interesting because it also talks about Anomaly Detection when it talks about Fault Detection and thus we can include it in the Introduction when we talk about the different applications of Anomaly Detection. 
+- [A data-driven Bayesian network learning method for process fault diagnosis](https://www.sciencedirect.com/science/article/pii/S0957582021001804) (June 2021) → This is probably the paper the reviewer was referring to when he/she wrote *Bayesian Network-based models*. It introduces a new data driven Fault Detection and Diagnosis (FDD) model that combined PCA with Bayesian Networks. We can insert this citation in the Related Work section when we talk about the Bayesian Network approach. 
+- [Fault detection and pathway analysis using a dynamic Bayesian network](https://www.sciencedirect.com/science/article/pii/S0009250918307371) (February 2019) → More or less a similar work to the previous one. Here they also talk about a Bayesian anomaly index (DBAI) based control chart. 
 
