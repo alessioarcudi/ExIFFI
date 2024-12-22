@@ -6,10 +6,18 @@ SCRIPT_PATH="test_contamination_precision.py"
 # Dataset 
 # DATASETS="breastw ionosphere annthyroid pendigits diabetes shuttle moodify"
 # DATASETS="cardio ionosphere pima"
-DATASETS="cardio"
+DATASETS="pima"
 
 # Path to the datasets
-DATASET_PATHS="../data/syn/"
+DATASET_PATHS="../data/real/"
+
+# Experiment ECOD
+
+python $SCRIPT_PATH \
+    --dataset_name $DATASETS \
+    --dataset_path $DATASET_PATHS \
+    --model "ECOD" \
+    --interpretation "ECOD" \
 
 # Experiment EIF+
 
@@ -52,10 +60,3 @@ DATASET_PATHS="../data/syn/"
 #     --dataset_path $DATASET_PATHS \
 #     --model "AnomalyAutoencoder" 
 
-# Experiment ECOD
-
-python $SCRIPT_PATH \
-    --dataset_name $DATASETS \
-    --dataset_path $DATASET_PATHS \
-    --model "ECOD" \
-    --interpretation "ECOD" \
