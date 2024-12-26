@@ -12,7 +12,7 @@ DATASET_PATHS="../data/syn/"
 
 # Experiment EIF+
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "EIF+" \
@@ -21,7 +21,7 @@ python $SCRIPT_PATH \
 
 # Experiment EIF
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "EIF" \
@@ -30,7 +30,7 @@ python $SCRIPT_PATH \
 
 # Experiment IF
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "IF" \
@@ -39,21 +39,21 @@ python $SCRIPT_PATH \
 
 # Experiment DIF
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "DIF" 
 
 # Experiment AnomalyAutoencoder
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "AnomalyAutoencoder" 
 
 # Experiment ECOD
 
-python $SCRIPT_PATH \
+python3 $SCRIPT_PATH \
     --dataset_name $DATASETS \
     --dataset_path $DATASET_PATHS \
     --model "ECOD" \
