@@ -5,7 +5,7 @@ import numpy.typing as npt
 from dataclasses import dataclass, field
 
 import numpy as np
-from numba import njit, prange, float64, int64, boolean
+from numba import njit, prange, float64, int64, boolean, float32, int32, int8
 from numba.experimental import jitclass
 from joblib import Parallel, delayed
 
@@ -146,27 +146,50 @@ def calculate_importances(paths:np.ndarray,
     return importances_sum, normals_sum
 
 
+# tree_spec = [
+#     ("plus", boolean),
+#     ("locked_dims", int64),
+#     ("max_depth", int64),
+#     ("min_sample", int64),
+#     ("n", int64),
+#     ("d", int64),
+#     ("node_count", int64),
+#     ("max_nodes", int64),
+#     ("path_to", int64[:, :]),
+#     ("path_to_Right_Left", int64[:, :]) ,    
+#     ("child_left", int64[:]),
+#     ("child_right", int64[:]),
+#     ("normals", float64[:, :]),
+#     ("intercepts", float64[:]),
+#     ("node_size", int64[:]),      
+#     ("depth", int64[:]),          
+#     ("corrected_depth", float64[:]),
+#     ("importances_right", float64[:, :]),
+#     ("importances_left", float64[:, :]),
+#     ("eta", float64)
+# ]
+
 tree_spec = [
     ("plus", boolean),
-    ("locked_dims", int64),
-    ("max_depth", int64),
-    ("min_sample", int64),
-    ("n", int64),
-    ("d", int64),
-    ("node_count", int64),
-    ("max_nodes", int64),
-    ("path_to", int64[:, :]),
-    ("path_to_Right_Left", int64[:, :]) ,    
-    ("child_left", int64[:]),
-    ("child_right", int64[:]),
-    ("normals", float64[:, :]),
-    ("intercepts", float64[:]),
-    ("node_size", int64[:]),      
-    ("depth", int64[:]),          
-    ("corrected_depth", float64[:]),
-    ("importances_right", float64[:, :]),
-    ("importances_left", float64[:, :]),
-    ("eta", float64)
+    ("locked_dims", int8),
+    ("max_depth", int8),
+    ("min_sample", int8),
+    ("n", int8),
+    ("d", int8),
+    ("node_count", int8),
+    ("max_nodes", int8),
+    ("path_to", int8[:, :]),
+    ("path_to_Right_Left", int8[:, :]) ,    
+    ("child_left", int8[:]),
+    ("child_right", int8[:]),
+    ("normals", float32[:, :]),
+    ("intercepts", float32[:]),
+    ("node_size", int8[:]),      
+    ("depth", int8[:]),          
+    ("corrected_depth", float32[:]),
+    ("importances_right", float32[:, :]),
+    ("importances_left", float32[:, :]),
+    ("eta", float32)
 ]
 
 @jitclass(tree_spec)
