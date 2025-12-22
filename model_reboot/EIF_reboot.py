@@ -146,51 +146,51 @@ def calculate_importances(paths:np.ndarray,
     return importances_sum, normals_sum
 
 
-# tree_spec = [
-#     ("plus", boolean),
-#     ("locked_dims", int64),
-#     ("max_depth", int64),
-#     ("min_sample", int64),
-#     ("n", int64),
-#     ("d", int64),
-#     ("node_count", int64),
-#     ("max_nodes", int64),
-#     ("path_to", int64[:, :]),
-#     ("path_to_Right_Left", int64[:, :]) ,    
-#     ("child_left", int64[:]),
-#     ("child_right", int64[:]),
-#     ("normals", float64[:, :]),
-#     ("intercepts", float64[:]),
-#     ("node_size", int64[:]),      
-#     ("depth", int64[:]),          
-#     ("corrected_depth", float64[:]),
-#     ("importances_right", float64[:, :]),
-#     ("importances_left", float64[:, :]),
-#     ("eta", float64)
-# ]
-
 tree_spec = [
     ("plus", boolean),
-    ("locked_dims", int8),
-    ("max_depth", int8),
-    ("min_sample", int8),
-    ("n", int8),
-    ("d", int8),
-    ("node_count", int8),
-    ("max_nodes", int8),
-    ("path_to", int8[:, :]),
-    ("path_to_Right_Left", int8[:, :]) ,    
-    ("child_left", int8[:]),
-    ("child_right", int8[:]),
-    ("normals", float32[:, :]),
-    ("intercepts", float32[:]),
-    ("node_size", int8[:]),      
-    ("depth", int8[:]),          
-    ("corrected_depth", float32[:]),
-    ("importances_right", float32[:, :]),
-    ("importances_left", float32[:, :]),
-    ("eta", float32)
+    ("locked_dims", int64),
+    ("max_depth", int64),
+    ("min_sample", int64),
+    ("n", int64),
+    ("d", int64),
+    ("node_count", int64),
+    ("max_nodes", int64),
+    ("path_to", int64[:, :]),
+    ("path_to_Right_Left", int64[:, :]) ,    
+    ("child_left", int64[:]),
+    ("child_right", int64[:]),
+    ("normals", float64[:, :]),
+    ("intercepts", float64[:]),
+    ("node_size", int64[:]),      
+    ("depth", int64[:]),          
+    ("corrected_depth", float64[:]),
+    ("importances_right", float64[:, :]),
+    ("importances_left", float64[:, :]),
+    ("eta", float64)
 ]
+
+# tree_spec = [
+#     ("plus", boolean),
+#     ("locked_dims", int64),  
+#     ("max_depth", int64),    
+#     ("min_sample", int64),   
+#     ("n", int64),           
+#     ("d", int64),           
+#     ("node_count", int64),  
+#     ("max_nodes", int64),   
+#     ("path_to", int8[:, :]),
+#     ("path_to_Right_Left", int8[:, :]) ,    
+#     ("child_left", int8[:]),
+#     ("child_right", int8[:]),
+#     ("normals", float32[:, :]),
+#     ("intercepts", float32[:]),
+#     ("node_size", int8[:]),      
+#     ("depth", int8[:]),          
+#     ("corrected_depth", float32[:]),
+#     ("importances_right", float32[:, :]),
+#     ("importances_left", float32[:, :]),
+#     ("eta", float32)
+# ]
 
 @jitclass(tree_spec)
 class ExtendedTree:
@@ -477,13 +477,15 @@ class ExtendedIsolationForest():
         """
 
         self.ids = None
-        if not locked_dims:
-            locked_dims = 0
+        if locked_dims is None:
+            locked_dims_int = 0
+        else:
+            locked_dims_int = int(locked_dims)
 
         if self.max_depth == "auto":
             self.max_depth = int(np.ceil(np.log2(self.max_samples)))
         subsample_size = np.min((self.max_samples, len(X)))
-        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims, plus=self.plus, eta=self.eta)
+        self.trees = [ExtendedTree(subsample_size, X.shape[1], self.max_depth, locked_dims=locked_dims_int, plus=self.plus, eta=self.eta)
                       for _ in range(self.n_estimators)]
         for T in self.trees:
             T.fit(X[np.random.randint(len(X), size=subsample_size)])
@@ -618,9 +620,10 @@ class IsolationForest(ExtendedIsolationForest):
                  n_estimators:int=400,
                  max_depth:Union[str,int]="auto",
                  max_samples:Union[str,int]="auto") -> None:
+        
+
         super().__init__(plus=False,n_estimators=n_estimators,max_depth=max_depth,max_samples=max_samples)
         self.name="IF"
-            
     def fit(self,
             X:np.array) -> None:
         
