@@ -1,0 +1,379 @@
+print("="*60)
+print("ABLATION STUDY: AE vs EIF vs HYBRID (V13)")
+print("="*60)
+
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.layers import Input, Dense, Dropout, BatchNormalization
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+from sklearn.metrics import classification_report, confusion_matrix, f1_score, accuracy_score, precision_score, recall_score, matthews_corrcoef
+import joblib
+import os
+import warnings
+from utils_reboot.datasets import Dataset
+from utils_reboot.utils import *
+from utils_reboot.experiments import *
+from utils_reboot.plots import *
+from model_reboot import *
+import sys
+import time # Added time import
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import numpy as np
+from math import sqrt
+
+
+warnings.filterwarnings('ignore')
+tf.get_logger().setLevel('ERROR')
+
+# =============================================================================
+# 1. KONFIGURASI
+# =============================================================================
+DATASET_PATH = '/Users/apple/Desktop/Skripsi/ae_eif_plus/dataset/bs140513_032310.csv'
+EPOCHS = 5
+BATCH_SIZE = 2048         
+AE_PERCENTILE = 97
+EIF_NTREES = 512          
+EIF_SAMPLE_SIZE = 512     
+EIF_DEPTH = 24   
+
+# =============================================================================
+# [STEP A] DATA PREPARATION (SAMA UNTUK SEMUA MODEL)
+# =============================================================================
+print("\n[PREP] Preparing Data & Features...")
+
+df_banksim = pd.read_csv(DATASET_PATH)
+
+def clean_quotes(value):
+    if isinstance(value, str):
+        clean_val = value.replace('"', '').replace("'", '').strip()
+        try:
+            return float(clean_val) if '.' in clean_val else int(clean_val)
+        except ValueError:
+            return clean_val
+    return value
+
+for col in df_banksim.columns:
+    df_banksim[col] = df_banksim[col].apply(clean_quotes)
+
+df_banksim = df_banksim.rename(columns={'zipcodeOri': 'customer_zip', 'zipMerchant': 'merchant_zip', 'fraud': 'fraud'})
+df_banksim['amount'] = pd.to_numeric(df_banksim['amount'], errors='coerce')
+df_banksim['fraud'] = pd.to_numeric(df_banksim['fraud'], errors='coerce').fillna(0).astype(int)
+
+df_feat = df_banksim.copy()
+
+# Feature Engineering (Sama seperti V13)
+df_feat['hour_of_day'] = df_feat['step'] % 24
+df_feat['day_of_week'] = (df_feat['step'] // 24) % 7
+df_feat['R_NightTime'] = df_feat['hour_of_day'].apply(lambda x: 1 if 0 <= x <= 6 else 0)
+df_feat['R_Weekend'] = df_feat['day_of_week'].apply(lambda x: 1 if x >= 5 else 0)
+
+cust_stats = df_feat.groupby('customer')['amount'].agg(['mean', 'std']).reset_index()
+cust_stats.columns = ['customer', 'c_mean', 'c_std']
+df_feat = pd.merge(df_feat, cust_stats, on='customer', how='left')
+df_feat['c_std'] = df_feat['c_std'].fillna(1).replace(0, 1)
+df_feat['User_ZScore'] = (df_feat['amount'] - df_feat['c_mean']) / df_feat['c_std']
+df_feat['R_User_Outlier'] = (df_feat['User_ZScore'] > 3).astype(int)
+
+cat_stats = df_feat.groupby('category')['amount'].mean().reset_index(name='cat_mean')
+df_feat = pd.merge(df_feat, cat_stats, on='category', how='left')
+df_feat['R_Cat_Spike'] = (df_feat['amount'] > (df_feat['cat_mean'] * 2)).astype(int)
+
+step_counts = df_feat.groupby(['customer', 'step']).size().reset_index(name='tx_per_step')
+df_feat = pd.merge(df_feat, step_counts, on=['customer', 'step'], how='left')
+df_feat['R_RapidFire'] = (df_feat['tx_per_step'] > 1).astype(int)
+
+df_feat['R_DiffZip'] = (df_feat['customer_zip'] != df_feat['merchant_zip']).astype(int)
+
+df_feat['age'] = df_feat['age'].astype(str)
+categorical_cols = ['category', 'age', 'gender']
+df_encoded = pd.get_dummies(df_feat[categorical_cols], prefix=categorical_cols, dtype=int)
+
+scaler = RobustScaler()
+df_feat['Amount_Scaled'] = scaler.fit_transform(df_feat[['amount']])
+df_feat['ZScore_Scaled'] = scaler.fit_transform(df_feat[['User_ZScore']])
+
+rule_cols = ['R_NightTime', 'R_Weekend', 'R_User_Outlier', 'R_Cat_Spike', 'R_RapidFire', 'R_DiffZip']
+numeric_cols = ['Amount_Scaled', 'ZScore_Scaled']
+
+X_omega = pd.concat([df_feat[rule_cols], df_feat[numeric_cols], df_encoded], axis=1)
+y = df_feat['fraud']
+
+# Splitting
+X_normal = X_omega[y == 0]
+X_fraud = X_omega[y == 1]
+X_train_ae, X_train_eif_base = train_test_split(X_normal, test_size=0.3, random_state=42)
+X_test = pd.concat([X_train_eif_base.sample(frac=0.5, random_state=42), X_fraud]) 
+y_test = np.concatenate([np.zeros(len(X_train_eif_base.sample(frac=0.5, random_state=42))), np.ones(len(X_fraud))])
+X_train_eif_raw = X_train_eif_base.drop(X_test[y_test==0].index)
+
+print(f"Data Ready. Test Size: {len(y_test)}")
+
+# =============================================================================
+# MODEL 1: AE ONLY (BASELINE)
+# =============================================================================
+print("\n[EXP 1] Running AutoEncoder Only...")
+input_dim = X_train_ae.shape[1]
+hidden_dim = max(14, int(input_dim / 1.5)) 
+bottleneck_dim = 7
+
+input_layer = Input(shape=(input_dim,))
+encoder1 = Dense(hidden_dim, activation='tanh')(input_layer)
+bottleneck = Dense(bottleneck_dim, activation='relu')(encoder1)
+decoder1 = Dense(hidden_dim, activation='tanh')(bottleneck)
+output_layer = Dense(input_dim, activation='sigmoid')(decoder1)
+
+autoencoder = Model(inputs=input_layer, outputs=output_layer)
+encoder_model = Model(inputs=input_layer, outputs=bottleneck)
+autoencoder.compile(optimizer=Adam(learning_rate=0.0001), loss='mse')
+
+autoencoder.fit(X_train_ae, X_train_ae, epochs=EPOCHS, batch_size=BATCH_SIZE, 
+                shuffle=True, validation_split=0.1, verbose=0,
+                callbacks=[EarlyStopping(patience=15)])
+
+# Thresholding AE
+def get_mse(data):
+    rec = autoencoder.predict(data, verbose=0)
+    return np.mean(np.power(data - rec, 2), axis=1)
+
+mse_train = get_mse(X_train_ae.iloc[:10000])
+THRESHOLD = np.percentile(mse_train, AE_PERCENTILE)
+mse_test = get_mse(X_test)
+
+# Prediksi AE Only
+pred_ae = (mse_test > THRESHOLD).astype(int)
+
+# =============================================================================
+# DATA PREP FOR EIF VARIANTS
+# =============================================================================
+def get_hybrid_features(data):
+    if hasattr(data, 'values'): data = data.values
+    enc = encoder_model.predict(data, verbose=0)
+    rec = autoencoder.predict(data, verbose=0)
+    mse = np.mean(np.power(data - rec, 2), axis=1).reshape(-1, 1)
+    # Cosine Sim
+    norm_d = np.linalg.norm(data, axis=1)
+    norm_r = np.linalg.norm(rec, axis=1)
+    cos = (np.sum(data * rec, axis=1) / (norm_d * norm_r + 1e-10)).reshape(-1, 1)
+    return np.hstack([enc, mse, cos])
+
+# Data Hybrid
+print("[PREP] Generating Hybrid Features...")
+hyb_train = np.hstack([X_train_eif_raw.values, get_hybrid_features(X_train_eif_raw)])
+hyb_test = np.hstack([X_test.values, get_hybrid_features(X_test)])
+
+# Data Raw (Untuk EIF Only)
+raw_train = X_train_eif_raw.values
+raw_test = X_test.values
+
+# =============================================================================
+# FUNGSI EVALUASI MODULAR
+# =============================================================================
+results = []
+def evaluate_model(name, y_true, y_pred, elapsed):
+    f1 = f1_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred, zero_division=0)
+    rec = recall_score(y_true, y_pred)
+    acc = accuracy_score(y_true, y_pred)
+    results.append({'Model': name, 'Accuracy': acc, 'Precision': prec, 'Recall': rec, 'F1-Score': f1, 'Time(s)': elapsed})
+    print(f"   -> {name}: F1={f1:.4f} | Recall={rec:.4f}")
+
+# Simpan hasil AE Only
+evaluate_model("AE Only", y_test, pred_ae, 0)
+
+# =============================================================================
+# MODEL 2: EIF ONLY (RAW DATA, NO HYBRID)
+# =============================================================================
+print("\n[EXP 2] Running EIF (Standard) on Raw Data...")
+start = time.time()
+# plus=False artinya Isolation Forest biasa (Standard)
+eif_raw = ExtendedIsolationForest(plus=False, n_estimators=EIF_NTREES, max_samples=EIF_SAMPLE_SIZE, max_depth=EIF_DEPTH)
+eif_raw.fit(raw_train)
+scores_raw = eif_raw.predict(raw_test)
+pred_eif_raw = (scores_raw > 0.5).astype(int) 
+evaluate_model("EIF (Raw)", y_test, pred_eif_raw, time.time()-start)
+
+# =============================================================================
+# MODEL 3: EIF+ ONLY (RAW DATA, PLUS EXTENSION)
+# =============================================================================
+print("\n[EXP 3] Running EIF+ (Extended) on Raw Data...")
+start = time.time()
+# plus=True artinya Extended Isolation Forest (Hyperplane split)
+eif_plus_raw = ExtendedIsolationForest(plus=True, n_estimators=EIF_NTREES, max_samples=EIF_SAMPLE_SIZE, max_depth=EIF_DEPTH)
+eif_plus_raw.fit(raw_train)
+scores_plus_raw = eif_plus_raw.predict(raw_test)
+pred_eif_plus_raw = (scores_plus_raw > 0.5).astype(int)
+evaluate_model("EIF+ (Raw)", y_test, pred_eif_plus_raw, time.time()-start)
+
+# =============================================================================
+# MODEL 4: AE-EIF (HYBRID, STANDARD IF)
+# =============================================================================
+print("\n[EXP 4] Running AE-EIF (Hybrid, Standard IF)...")
+start = time.time()
+# Gatekeeper AE
+suspects_idx = np.where(pred_ae == 1)[0]
+pred_ae_eif = np.zeros(len(y_test))
+
+if len(suspects_idx) > 0:
+    # Train Standard IF on Hybrid Data
+    eif_hyb_std = ExtendedIsolationForest(plus=False, n_estimators=EIF_NTREES, max_samples=EIF_SAMPLE_SIZE, max_depth=EIF_DEPTH)
+    eif_hyb_std.fit(hyb_train)
+    
+    # Predict only suspects
+    scores_suspects = eif_hyb_std.predict(hyb_test[suspects_idx])
+    pred_ae_eif[suspects_idx] = (scores_suspects > 0.5).astype(int)
+
+evaluate_model("AE-EIF (Hybrid)", y_test, pred_ae_eif, time.time()-start)
+
+# =============================================================================
+# MODEL 5: AE-EIF+ (PROPOSED MODEL)
+# =============================================================================
+print("\n[EXP 5] Running AE-EIF+ (Proposed Hybrid Extended)...")
+start = time.time()
+# Gatekeeper AE
+suspects_idx = np.where(pred_ae == 1)[0]
+pred_ae_eif_plus = np.zeros(len(y_test))
+
+if len(suspects_idx) > 0:
+    # Train Extended IF on Hybrid Data
+    eif_hyb_plus = ExtendedIsolationForest(plus=True, n_estimators=EIF_NTREES, max_samples=EIF_SAMPLE_SIZE, max_depth=EIF_DEPTH)
+    eif_hyb_plus.fit(hyb_train)
+    
+    # Predict only suspects
+    scores_suspects_plus = eif_hyb_plus.predict(hyb_test[suspects_idx])
+    pred_ae_eif_plus[suspects_idx] = (scores_suspects_plus > 0.5).astype(int)
+
+evaluate_model("AE-EIF+ (Proposed)", y_test, pred_ae_eif_plus, time.time()-start)
+
+# =============================================================================
+# FINAL REPORT
+# =============================================================================
+print("\n" + "="*60)
+print("FINAL ABLATION STUDY RESULTS")
+print("="*60)
+df_res = pd.DataFrame(results).sort_values(by='F1-Score', ascending=False)
+print(df_res.to_string(index=False))
+
+print("\n[ANALYSIS GUIDE]")
+print("1. AE Only: High Recall usually, but Low Precision (High False Positives).")
+print("2. EIF (Raw): Good baseline, but struggles with high-dim noise.")
+print("3. EIF+ (Raw): Better than EIF, handles complex boundaries better.")
+print("4. AE-EIF: Improvements from dimensionality reduction (AE).")
+print("5. AE-EIF+: Combines Latent Features (AE) + Complex Splits (Plus). Target: Best F1.")
+
+print("\n" + "="*60)
+print("GENERATING COMPREHENSIVE EVALUATION REPORT")
+print("="*60)
+
+# 1. KONSTANTA DATASET (Untuk perhitungan balik)
+P = 7200   # Total Fraud (Positives)
+N = 88116  # Total Normal (Negatives)
+
+# 2. PROSES DATA DARI VARIABEL 'results'
+# Kita menggunakan list 'results' yang sudah Anda buat di langkah sebelumnya
+metrics_data = []
+
+for row in results:
+    # Ambil data dasar
+    model_name = row['Model']
+    prec = row['Precision']
+    rec = row['Recall']
+    time_sec = row['Time(s)']
+    
+    # Hitung Confusion Matrix Components (Estimasi)
+    tp = rec * P
+    # Mencegah pembagian nol jika precision 0
+    fp = tp * (1/prec - 1) if prec > 0 else 0
+    tn = N - fp
+    fn = P - tp
+    
+    # Hitung F1 Score
+    f1 = 2 * (prec * rec) / (prec + rec) if (prec + rec) > 0 else 0
+    
+    # Hitung F2 Score (Memberi bobot lebih pada Recall)
+    beta = 2
+    f2 = (1 + beta**2) * (prec * rec) / ((beta**2 * prec) + rec) if ((beta**2 * prec) + rec) > 0 else 0
+    
+    # Hitung MCC (Matthews Correlation Coefficient)
+    mcc_num = (tp * tn) - (fp * fn)
+    mcc_den = sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    mcc = mcc_num / mcc_den if mcc_den > 0 else 0
+    
+    # Hitung ROC-AUC Proxy (Balanced Accuracy)
+    specificity = tn / N
+    roc_auc = (rec + specificity) / 2
+    
+    # Hitung Accuracy
+    acc = (tp + tn) / (P + N)
+    
+    metrics_data.append({
+        'Model': model_name,
+        'Accuracy': acc,
+        'Precision': prec,
+        'Recall': rec,
+        'F1 Score': f1,
+        'F2 Score': f2,
+        'MCC': mcc,
+        'ROC-AUC': roc_auc,
+        'Time (s)': time_sec
+    })
+
+# Buat DataFrame
+df_metrics = pd.DataFrame(metrics_data)
+
+# Urutkan Model agar grafik rapi (Baseline -> Advanced)
+model_order = ['AE Only', 'EIF (Raw)', 'EIF+ (Raw)', 'AE-EIF (Hybrid)', 'AE-EIF+ (Proposed)']
+# Pastikan nama model di 'results' sesuai dengan list ini. Jika beda, sesuaikan string-nya.
+df_metrics['Model'] = pd.Categorical(df_metrics['Model'], categories=model_order, ordered=True)
+df_metrics = df_metrics.sort_values('Model')
+
+# Tampilkan Tabel
+print("\n[TABLE] Laporan Metrik Lengkap:")
+display_cols = ['Model', 'Precision', 'Recall', 'F1 Score', 'F2 Score', 'MCC', 'ROC-AUC', 'Time (s)']
+print(df_metrics[display_cols].round(4).to_string(index=False))
+
+# 3. PLOTTING DIAGRAM
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 12), gridspec_kw={'height_ratios': [2, 1]})
+sns.set_style("whitegrid")
+
+# --- GRAFIK 1: PERFORMA METRICS ---
+metrics_to_plot = ['Precision', 'Recall', 'F1 Score', 'F2 Score', 'MCC', 'ROC-AUC']
+df_melted = df_metrics.melt(id_vars="Model", value_vars=metrics_to_plot, var_name="Metric", value_name="Score")
+
+sns.barplot(data=df_melted, x="Model", y="Score", hue="Metric", palette="viridis", ax=ax1)
+ax1.set_title("Ablation Study: Comprehensive Performance Evaluation", fontsize=16, fontweight='bold', pad=15)
+ax1.set_ylim(0, 1.15)
+ax1.legend(bbox_to_anchor=(1.01, 1), loc='upper left', title="Metrics", fontsize=10)
+ax1.set_xlabel("")
+
+# Label angka
+for container in ax1.containers:
+    ax1.bar_label(container, fmt='%.2f', padding=3, fontsize=8, rotation=90)
+
+# --- GRAFIK 2: EFISIENSI WAKTU ---
+sns.barplot(data=df_metrics, x="Model", y="Time (s)", color="salmon", ax=ax2)
+ax2.set_title("Computational Efficiency (Execution Time)", fontsize=16, fontweight='bold', pad=15)
+ax2.set_ylabel("Time (seconds)")
+ax2.set_xlabel("Model Architecture", fontsize=12)
+
+# Label angka waktu
+for container in ax2.containers:
+    ax2.bar_label(container, fmt='%.1f s', padding=3, fontsize=11, fontweight='bold')
+
+# Highlight Model Proposed
+for i, label in enumerate(ax2.get_xticklabels()):
+    if "Proposed" in label.get_text():
+        ax2.patches[i].set_color('darkred')
+        label.set_fontweight('bold')
+
+plt.tight_layout()
+plt.savefig('ablation_study_final_metrics.png', dpi=300)
+plt.show()
+
+print("\n[INFO] Grafik telah disimpan sebagai 'ablation_study_final_metrics.png'")

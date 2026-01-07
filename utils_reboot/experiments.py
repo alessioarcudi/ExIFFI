@@ -4,9 +4,15 @@ import sys
 sys.path.append('..')
 
 import os
-os.chdir("../")
+import sys
 cwd = os.getcwd()
-os.chdir("experiments")
+
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+EXPERIMENTS_DIR = os.path.join(BASE_DIR, "experiments")
+
+if EXPERIMENTS_DIR not in sys.path:
+    sys.path.append(EXPERIMENTS_DIR)
 import numpy as np
 import numpy.typing as npt
 from tqdm import tqdm,trange

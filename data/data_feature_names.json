@@ -1,7 +1,43 @@
-{"pima": ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"], 
-"moodify": ["duration (ms)", "danceability", "energy", "loudness", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "spec_rate"], 
-"diabetes": ["age", "bmi", "HbA1c_level", "blood_glucose_level"], 
-"glass": ["RI", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe"], 
-"wine": ["Alcohol", "Malic acid", "Ash", "Alcalinity of ash", "Magnesium", 
-        "Phenols", "Flavanoids", "Nonflavanoid phenols", 
-        "Proanthocyanins", "Color intensity", "Hue", "OD280/OD315 of diluted wines", "Proline"]}
+{
+  "pima": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "moodify": [
+    "duration (ms)",
+    "danceability",
+    "energy",
+    "loudness",
+    "speechiness",
+    "acousticness",
+    "instrumentalness",
+    "liveness",
+    "valence",
+    "tempo",
+    "spec_rate"
+  ],
+  "diabetes": ["age", "bmi", "HbA1c_level", "blood_glucose_level"],
+  "creditcard": ["Time", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12","V13", "V14", "V15", "V16", "V17", "V18",  "V19", "V20", "V21", "V22", "V23", "V24", "V25", "V26", "V27", "V28", "Amount", "Class"],
+  "glass": ["RI", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe"],
+  "wine": [
+    "Alcohol",
+    "Malic acid",
+    "Ash",
+    "Alcalinity of ash",
+    "Magnesium",
+    "Phenols",
+    "Flavanoids",
+    "Nonflavanoid phenols",
+    "Proanthocyanins",
+    "Color intensity",
+    "Hue",
+    "OD280/OD315 of diluted wines",
+    "Proline"
+  ]
+}

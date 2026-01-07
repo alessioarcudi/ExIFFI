@@ -33,7 +33,7 @@
 
 from sklearn.ensemble._iforest import _average_path_length
 from sklearn.utils.validation import  _num_samples
-from sklearn.utils import gen_batches, get_chunk_n_rows
+from sklearn.utils import gen_batches
 import numpy as np 
 
 # The functions below have been adapted from the sklearn source code
